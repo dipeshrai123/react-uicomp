@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
-import {
-  AuthContext,
-  NavigationContext,
-  PrivatePathParams,
-  PublicPathParams,
-} from "../contexts";
+import { AuthContext, NavigationContext } from "../contexts";
 
 // PRIVATE ROUTES
-export const PrivateRoute = (props: PrivatePathParams) => {
+export const PrivateRoute = (props: {
+  key: string | number;
+  path: string;
+  component: React.Component;
+  exact: boolean;
+}) => {
   const { component: Component, ...rest } = props;
   const { publicPaths: PUBLIC_PATHS, userRoles: USER_ROLES } = useContext(
     NavigationContext,
@@ -40,7 +40,13 @@ export const PrivateRoute = (props: PrivatePathParams) => {
 };
 
 // PUBLIC OR RESTRICTED ROUTES
-export const PublicRoute = (props: PublicPathParams) => {
+export const PublicRoute = (props: {
+  key: string | number;
+  path: string;
+  component: React.Component;
+  restricted: boolean;
+  exact: boolean;
+}) => {
   const { component: Component, restricted, ...rest } = props;
   const { privatePaths: PRIVATE_PATHS, userRoles: USER_ROLES } = useContext(
     NavigationContext,

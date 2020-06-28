@@ -1,7 +1,7 @@
 import React from "react";
 
 export interface PublicPathParams {
-  key: string;
+  key: string | number;
   name: string;
   path: string;
   component: React.Component;
@@ -11,7 +11,7 @@ export interface PublicPathParams {
 }
 
 export interface PrivatePathParams {
-  key: string;
+  key: string | number;
   name: string;
   path: string;
   component: React.Component;
