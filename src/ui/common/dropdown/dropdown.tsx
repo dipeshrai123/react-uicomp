@@ -10,7 +10,7 @@ export const useDropdown = (elementRef: React.RefObject<HTMLElement>) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const toggleOpen = useCallback(() => {
-    let measurement: DOMRect = (elementRef as any).current.getBoundingClientRect();
+    const measurement: DOMRect = (elementRef as any).current.getBoundingClientRect();
     setPosition({ x: measurement.x, y: measurement.y + window.scrollY });
     setOpen((prev) => !prev);
   }, [elementRef]);
@@ -73,27 +73,22 @@ export const Dropdown = React.forwardRef<HTMLSpanElement, DropdownParams>(
     const { x, y } = position;
 
     return (
-      <>
-        <span
-          style={{ position: "relative", display: "inline-block" }}
-          ref={ref}
-        >
-          <span ref={dropdownRef}>{render()}</span>
-          <DropdownPortal {...{ open }}>
-            <div
-              style={{
-                left: x,
-                top: y - 10,
-                ...dropdownStyles,
-                position: "absolute",
-                zIndex: 100,
-              }}
-            >
-              {children}
-            </div>
-          </DropdownPortal>
-        </span>
-      </>
+      <span style={{ position: "relative", display: "inline-block" }} ref={ref}>
+        <span ref={dropdownRef}>{render()}</span>
+        <DropdownPortal {...{ open }}>
+          <div
+            style={{
+              left: x,
+              top: y - 10,
+              ...dropdownStyles,
+              position: "absolute",
+              zIndex: 100,
+            }}
+          >
+            {children}
+          </div>
+        </DropdownPortal>
+      </span>
     );
-  }
+  },
 );
