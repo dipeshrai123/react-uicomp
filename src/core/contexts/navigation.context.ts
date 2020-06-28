@@ -1,6 +1,6 @@
 import React from "react";
 
-interface PublicPathParams {
+export interface PublicPathParams {
   key: string;
   name: string;
   path: string;
@@ -10,7 +10,7 @@ interface PublicPathParams {
   restricted?: boolean;
 }
 
-interface PrivatePathParams {
+export interface PrivatePathParams {
   key: string;
   name: string;
   path: string;
@@ -19,7 +19,7 @@ interface PrivatePathParams {
   visible?: boolean;
 }
 
-interface NavigationConfigParams {
+export interface NavigationConfigParams {
   publicPaths: PublicPathParams[];
   privatePaths: PrivatePathParams[];
   userRoles: object;

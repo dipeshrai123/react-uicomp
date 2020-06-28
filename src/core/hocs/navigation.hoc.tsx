@@ -1,35 +1,28 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { NavigationContext } from "../contexts";
+// eslint-disable-next-line no-unused-vars
+import { NavigationContext, NavigationConfigParams } from "../contexts";
 
-export const NavigationContainer = props => {
+interface NavigationContainerParams extends NavigationConfigParams {
+  children: React.Component;
+}
+
+export const NavigationContainer = (props: NavigationContainerParams) => {
   const { children, privatePaths, publicPaths, userRoles } = props;
-  const {privatePaths: privateP, publicPaths: publicP, userRoles: roles } = React.useMemo(() => ({ privatePaths, publicPaths, userRoles }), [ privatePaths, publicPaths, userRoles ]);
-  return (
-    <NavigationContext.Provider value={{ privatePaths: privateP, publicPaths: publicP, userRoles: roles }}>
-      { children }
-    </NavigationContext.Provider>
-  )
-};
+  const {
+    privatePaths: privateP,
+    publicPaths: publicP,
+    userRoles: roles,
+  } = React.useMemo(() => ({ privatePaths, publicPaths, userRoles }), [
+    privatePaths,
+    publicPaths,
+    userRoles,
+  ]);
 
-NavigationContainer.propTypes = {
-  privatePaths: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.string,
-    name: PropTypes.string,
-    path: PropTypes.string,
-    component: PropTypes.any,
-    exact: PropTypes.bool,
-    visible: PropTypes.bool
-  })).isRequired,
-  publicPaths: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.string,
-    name: PropTypes.string,
-    path: PropTypes.string,
-    component: PropTypes.any,
-    exact: PropTypes.bool,
-    visible: PropTypes.bool,
-    restricted: PropTypes.bool
-  })).isRequired,
-  userRoles: PropTypes.object.isRequired,
-  children: PropTypes.any.isRequired
+  return (
+    <NavigationContext.Provider
+      value={{ privatePaths: privateP, publicPaths: publicP, userRoles: roles }}
+    >
+      {children}
+    </NavigationContext.Provider>
+  );
 };

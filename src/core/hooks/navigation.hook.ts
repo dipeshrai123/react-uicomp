@@ -1,4 +1,3 @@
-
 import { useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { AuthContext, NavigationContext } from "../contexts";
@@ -7,38 +6,47 @@ export const useNavigation = () => {
   const history = useHistory();
   const location = useLocation();
 
-  
   const { isLoggedIn, userRole } = useContext(AuthContext);
-  const { privatePaths: PRIVATE_PATHS, publicPaths: PUBLIC_PATHS, userRoles: USER_ROLES } = useContext(NavigationContext);
+  const {
+    privatePaths: PRIVATE_PATHS,
+    publicPaths: PUBLIC_PATHS,
+    userRoles: USER_ROLES,
+  } = useContext(NavigationContext);
 
-  const filteredPublicRoutes = PUBLIC_PATHS.filter(({ path, restricted, visible = true }) => {
-    const canAccess = userRole && USER_ROLES[userRole]['access'].indexOf(path) < 0 ? false : true;
+  const filteredPublicRoutes = PUBLIC_PATHS.filter(
+    ({ path, restricted, visible = true }) => {
+      const canAccess =
+        userRole && USER_ROLES[userRole].access.indexOf(path) >= 0;
 
-    return restricted && isLoggedIn ? false : visible && canAccess ? true : false
-  });
+      return restricted && isLoggedIn ? false : visible && canAccess;
+    },
+  );
 
   const publicRoutes = {};
-  filteredPublicRoutes.forEach(({key, name, path}) => {
+  filteredPublicRoutes.forEach(({ key, name, path }) => {
     publicRoutes[key] = Object.assign({}, { name, path });
   });
 
-  const filteredPrivateRoutes = PRIVATE_PATHS.filter(({ path, visible = true }) => {
-    const canAccess = userRole && USER_ROLES[userRole]['access'].indexOf(path) < 0 ? false : true;
+  const filteredPrivateRoutes = PRIVATE_PATHS.filter(
+    ({ path, visible = true }) => {
+      const canAccess =
+        userRole && USER_ROLES[userRole].access.indexOf(path) >= 0;
 
-    return isLoggedIn ? 
-      visible && canAccess ? true : false : false
-  });
+      return isLoggedIn ? visible && canAccess : false;
+    },
+  );
 
   const privateRoutes = {};
-  filteredPrivateRoutes.forEach(({key, name, path}) => {
+  filteredPrivateRoutes.forEach(({ key, name, path }) => {
     privateRoutes[key] = Object.assign({}, { name, path });
   });
 
   return {
     navigation: {
-      routes: {...publicRoutes, ...privateRoutes}
+      routes: { ...publicRoutes, ...privateRoutes },
+      navigate: (path: string) => history.push(path),
     },
     history,
-    location
+    location,
   };
-}
+};

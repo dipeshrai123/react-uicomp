@@ -28,5 +28,4 @@ export const DefaultThemeConfig: DefaultThemeConfigParams = {
   },
 };
 
-// Default Theme Context
 export const ThemeContext = createContext({});

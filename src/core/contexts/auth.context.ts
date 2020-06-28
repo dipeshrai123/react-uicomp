@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-interface DefaultAuthConfigParams {
+export interface DefaultAuthConfigParams {
   isLoggedIn: boolean;
   userRole: null | string;
 }
