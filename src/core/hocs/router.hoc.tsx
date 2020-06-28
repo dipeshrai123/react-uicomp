@@ -8,13 +8,13 @@ import {
 } from "../contexts";
 import { PrivateRoute, PublicRoute } from "../modules";
 
-interface AuthContainerParams {
-  children: React.Component;
+interface AuthProviderParams {
+  children: React.ReactNode;
   authConfig: DefaultAuthConfigParams;
   authHandlers: object;
 }
 
-const AuthContainer = (props: AuthContainerParams) => {
+const AuthProvider = (props: AuthProviderParams) => {
   const { children, authConfig, authHandlers } = props;
   return (
     <AuthContext.Provider value={{ ...authConfig, ...authHandlers }}>
@@ -23,7 +23,7 @@ const AuthContainer = (props: AuthContainerParams) => {
   );
 };
 
-const ScreensContainer = () => {
+const AuthScreens = () => {
   const { publicPaths: PUBLIC_PATHS, privatePaths: PRIVATE_PATHS } = useContext(
     NavigationContext,
   );
@@ -70,6 +70,6 @@ const ScreensContainer = () => {
 };
 
 export const Auth = {
-  Provider: AuthContainer,
-  Screens: ScreensContainer,
+  Provider: AuthProvider,
+  Screens: AuthScreens,
 };

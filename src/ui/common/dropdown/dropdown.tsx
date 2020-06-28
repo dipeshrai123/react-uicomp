@@ -55,7 +55,7 @@ interface DropdownParams {
   setOpen: (prev: boolean) => boolean;
   position: PositionType;
   render: () => React.Component;
-  children: React.Component;
+  children: React.ReactNode;
   dropdownStyles: React.CSSProperties;
 }
 

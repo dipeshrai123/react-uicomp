@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import { ThemeContext, DefaultThemeConfigParams } from "../contexts";
 
 interface ThemeProviderParams {
-  children: React.Component;
+  children: React.ReactNode;
   theme: DefaultThemeConfigParams;
   toggleTheme: () => void;
 }

@@ -2,11 +2,11 @@ import React from "react";
 // eslint-disable-next-line no-unused-vars
 import { NavigationContext, NavigationConfigParams } from "../contexts";
 
-interface NavigationContainerParams extends NavigationConfigParams {
-  children: React.Component;
+interface NavigationProviderParams extends NavigationConfigParams {
+  children: React.ReactNode;
 }
 
-const NavigationContainer = (props: NavigationContainerParams) => {
+const NavigationProvider = (props: NavigationProviderParams) => {
   const { children, privatePaths, publicPaths, userRoles } = props;
   const {
     privatePaths: privateP,
@@ -28,5 +28,5 @@ const NavigationContainer = (props: NavigationContainerParams) => {
 };
 
 export const Navigation = {
-  Provider: NavigationContainer,
+  Provider: NavigationProvider,
 };
