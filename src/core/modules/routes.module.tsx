@@ -6,12 +6,12 @@ import { AuthContext, NavigationContext } from "../contexts";
 export const PrivateRoute = (props: {
   key: string | number;
   path: string;
-  component: React.Component;
+  component: React.ComponentType;
   exact: boolean;
 }) => {
   const { component: Component, ...rest } = props;
   const { publicPaths: PUBLIC_PATHS, userRoles: USER_ROLES } = useContext(
-    NavigationContext,
+    NavigationContext
   );
 
   const initialPublicPath = PUBLIC_PATHS.length > 0 ? PUBLIC_PATHS[0] : null;
@@ -29,7 +29,7 @@ export const PrivateRoute = (props: {
           userRole && canAccess ? (
             <Component {...props} />
           ) : (
-            <Redirect to={redirectToPath} />
+            <Redirect to={{ pathname: redirectToPath }} />
           )
         ) : (
           <Redirect to="/log-in" />
@@ -43,13 +43,13 @@ export const PrivateRoute = (props: {
 export const PublicRoute = (props: {
   key: string | number;
   path: string;
-  component: React.Component;
+  component: React.ComponentType;
   restricted: boolean;
   exact: boolean;
 }) => {
   const { component: Component, restricted, ...rest } = props;
   const { privatePaths: PRIVATE_PATHS, userRoles: USER_ROLES } = useContext(
-    NavigationContext,
+    NavigationContext
   );
 
   const initialPrivatePath = PRIVATE_PATHS.length > 0 ? PRIVATE_PATHS[0] : null;
@@ -65,7 +65,7 @@ export const PublicRoute = (props: {
       {...rest}
       render={(props: any) => {
         return isLoggedIn && restricted ? (
-          <Redirect to={redirectToPath} />
+          <Redirect to={{ pathname: redirectToPath }} />
         ) : userRole && canAccess ? (
           <Component {...props} />
         ) : (

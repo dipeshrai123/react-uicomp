@@ -10,7 +10,7 @@ export const useDropdown = (elementRef: React.RefObject<HTMLElement>) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const toggleOpen = useCallback(() => {
-    const measurement = elementRef?.current?.getBoundingClientRect();
+    let measurement: DOMRect = (elementRef as any).current.getBoundingClientRect();
     setPosition({ x: measurement.x, y: measurement.y + window.scrollY });
     setOpen((prev) => !prev);
   }, [elementRef]);
@@ -24,12 +24,12 @@ export const useDropdown = (elementRef: React.RefObject<HTMLElement>) => {
 
 interface DropdownPortalParams {
   open: boolean;
-  children: React.Component;
+  children: any;
 }
 
 const DropdownPortal = (props: DropdownPortalParams) => {
   const { open, children } = props;
-  const dropdownRoot = document.getElementById("dropdown-root");
+  const dropdownRoot = document.getElementById("dropdown-root") as Element;
 
   const dropdownMarkup = (
     <CSSTransition
@@ -59,8 +59,8 @@ interface DropdownParams {
   dropdownStyles: React.CSSProperties;
 }
 
-export const Dropdown = React.forwardRef(
-  (props: DropdownParams, dropdownRef: React.RefObject<HTMLSpanElement>) => {
+export const Dropdown = React.forwardRef<HTMLSpanElement, DropdownParams>(
+  (props, dropdownRef) => {
     const { open, setOpen, position, render, children, dropdownStyles } = props;
 
     const ref = useRef<HTMLSpanElement>(null);
@@ -95,5 +95,5 @@ export const Dropdown = React.forwardRef(
         </span>
       </>
     );
-  },
+  }
 );

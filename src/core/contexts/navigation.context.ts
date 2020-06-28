@@ -4,7 +4,7 @@ export interface PublicPathParams {
   key: string | number;
   name: string;
   path: string;
-  component: React.Component;
+  component: React.ComponentType;
   exact?: boolean;
   visible?: boolean;
   restricted?: boolean;
@@ -14,7 +14,7 @@ export interface PrivatePathParams {
   key: string | number;
   name: string;
   path: string;
-  component: React.Component;
+  component: React.ComponentType;
   exact?: boolean;
   visible?: boolean;
 }
@@ -22,7 +22,7 @@ export interface PrivatePathParams {
 export interface NavigationConfigParams {
   publicPaths: PublicPathParams[];
   privatePaths: PrivatePathParams[];
-  userRoles: object;
+  userRoles: any;
 }
 
 export const navigationConfig: NavigationConfigParams = {

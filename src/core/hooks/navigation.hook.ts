@@ -19,10 +19,10 @@ export const useNavigation = () => {
         userRole && USER_ROLES[userRole].access.indexOf(path) >= 0;
 
       return restricted && isLoggedIn ? false : visible && canAccess;
-    },
+    }
   );
 
-  const publicRoutes = {};
+  const publicRoutes: any = {};
   filteredPublicRoutes.forEach(({ key, name, path }) => {
     publicRoutes[key] = Object.assign({}, { name, path });
   });
@@ -33,10 +33,10 @@ export const useNavigation = () => {
         userRole && USER_ROLES[userRole].access.indexOf(path) >= 0;
 
       return isLoggedIn ? visible && canAccess : false;
-    },
+    }
   );
 
-  const privateRoutes = {};
+  const privateRoutes: any = {};
   filteredPrivateRoutes.forEach(({ key, name, path }) => {
     privateRoutes[key] = Object.assign({}, { name, path });
   });

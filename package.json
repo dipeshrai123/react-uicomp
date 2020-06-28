@@ -36,6 +36,7 @@
     "@types/node": "^12.12.38",
     "@types/react": "^16.9.27",
     "@types/react-dom": "^16.9.7",
+    "@types/react-router-dom": "^5.1.5",
     "@types/react-transition-group": "^4.4.0",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
@@ -64,6 +65,8 @@
     "dist"
   ],
   "dependencies": {
+    "@types/react-router": "^5.1.8",
+    "react-router-dom": "^5.2.0",
     "react-transition-group": "^4.4.1"
   }
 }

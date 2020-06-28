@@ -1,22 +1,21 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 // Handles outside click
 export const useOutsideClick = (
   elem: React.RefObject<HTMLElement>,
-  callback: () => void,
+  callback: (event: Event) => void,
 ) => {
-  const callbackRef = React.useRef<React.RefObject<HTMLElement>>(null);
-  callbackRef.current = callback;
+  const callbackMemo = useMemo(() => callback, [callback]);
 
   React.useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (!elem?.current?.contains(e.target) && callbackRef.current) {
-        callbackRef.current(e);
+    const handleOutsideClick = (e: any) => {
+      if (!elem?.current?.contains(e.target) && callbackMemo) {
+        callbackMemo(e);
       }
     };
 
     document.addEventListener("click", handleOutsideClick, true);
 
     return document.addEventListener("click", handleOutsideClick, true);
-  }, [callbackRef, elem]);
+  }, [callbackMemo, elem]);
 };
