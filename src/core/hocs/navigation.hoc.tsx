@@ -6,7 +6,7 @@ interface NavigationContainerParams extends NavigationConfigParams {
   children: React.Component;
 }
 
-export const NavigationContainer = (props: NavigationContainerParams) => {
+const NavigationContainer = (props: NavigationContainerParams) => {
   const { children, privatePaths, publicPaths, userRoles } = props;
   const {
     privatePaths: privateP,
@@ -25,4 +25,8 @@ export const NavigationContainer = (props: NavigationContainerParams) => {
       {children}
     </NavigationContext.Provider>
   );
+};
+
+export const Navigation = {
+  Provider: NavigationContainer,
 };
