@@ -1,10 +1,13 @@
 import { createContext } from "react";
 
-// @Required - USER CONFIG
-export const DefaultAuthConfig = {
+interface DefaultAuthConfigParams {
+  isLoggedIn: boolean;
+  userRole: null | string;
+}
+
+export const DefaultAuthConfig: DefaultAuthConfigParams = {
   isLoggedIn: false,
-  userRole: null
+  userRole: null,
 };
 
-// DEFINE AUTH CONTEXT
 export const AuthContext = createContext(DefaultAuthConfig);
