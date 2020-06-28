@@ -1,1 +1,1 @@
-export * from "./screens.component"
+export * from "./screens.component";

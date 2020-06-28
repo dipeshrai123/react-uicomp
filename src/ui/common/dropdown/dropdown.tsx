@@ -1,12 +1,11 @@
 import React, { useState, useCallback, useRef } from "react";
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 import { useOutsideClick } from "../../hooks";
 import { CSSTransition } from "react-transition-group";
 import "./dropdown.css";
 
 // Open and toggle menu
-export const useDropdown = (elementRef) => {
+export const useDropdown = (elementRef: React.RefObject<HTMLElement>) => {
   const [open, setOpen] = useState(() => false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
@@ -23,7 +22,12 @@ export const useDropdown = (elementRef) => {
   };
 };
 
-const DropdownPortal = (props) => {
+interface DropdownPortalParams {
+  open: boolean;
+  children: React.Component;
+}
+
+const DropdownPortal = (props: DropdownPortalParams) => {
   const { open, children } = props;
   const dropdownRoot = document.getElementById("dropdown-root");
 
@@ -32,7 +36,8 @@ const DropdownPortal = (props) => {
       in={open}
       unmountOnExit
       timeout={200}
-      classNames="dgenerate-dropdown">
+      classNames="dgenerate-dropdown"
+    >
       {children}
     </CSSTransition>
   );
@@ -40,43 +45,55 @@ const DropdownPortal = (props) => {
   return ReactDOM.createPortal(dropdownMarkup, dropdownRoot);
 };
 
-export const Dropdown = React.forwardRef((props, dropdownRef) => {
-  const { open, setOpen, position, render, children, dropdownStyles } = props;
-
-  const ref = useRef();
-  const onHandleOutside = () => {
-    setOpen(false);
-  };
-
-  useOutsideClick(ref, onHandleOutside);
-
-  const { x, y } = position;
-
-  return (
-    <>
-      <span style={{ position: "relative", display: "inline-block" }} ref={ref}>
-        <span ref={dropdownRef}>{render()}</span>
-        <DropdownPortal {...{ open }}>
-          <div
-            style={{
-              left: x,
-              top: y - 10,
-              ...dropdownStyles,
-              // Cannot modify position and zIndex
-              position: "absolute",
-              zIndex: 100,
-            }}>
-            {children}
-          </div>
-        </DropdownPortal>
-      </span>
-    </>
-  );
-});
-
-Dropdown.propTypes = {
-  open: PropTypes.bool.isRequired,
-  setOpen: PropTypes.func.isRequired,
-  render: PropTypes.func.isRequired,
-  dropdownStyles: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+type PositionType = {
+  x: number;
+  y: number;
 };
+
+interface DropdownParams {
+  open: boolean;
+  setOpen: (prev: boolean) => boolean;
+  position: PositionType;
+  render: () => React.Component;
+  children: React.Component;
+  dropdownStyles: React.CSSProperties;
+}
+
+export const Dropdown = React.forwardRef(
+  (props: DropdownParams, dropdownRef: React.RefObject<HTMLSpanElement>) => {
+    const { open, setOpen, position, render, children, dropdownStyles } = props;
+
+    const ref = useRef<HTMLSpanElement>(null);
+    const onHandleOutside = () => {
+      setOpen(false);
+    };
+
+    useOutsideClick(ref, onHandleOutside);
+
+    const { x, y } = position;
+
+    return (
+      <>
+        <span
+          style={{ position: "relative", display: "inline-block" }}
+          ref={ref}
+        >
+          <span ref={dropdownRef}>{render()}</span>
+          <DropdownPortal {...{ open }}>
+            <div
+              style={{
+                left: x,
+                top: y - 10,
+                ...dropdownStyles,
+                position: "absolute",
+                zIndex: 100,
+              }}
+            >
+              {children}
+            </div>
+          </DropdownPortal>
+        </span>
+      </>
+    );
+  },
+);

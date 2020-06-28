@@ -10,7 +10,7 @@ type colorsType = {
   cardColor: string;
 };
 
-interface DefaultThemeConfigParams {
+export interface DefaultThemeConfigParams {
   dark: boolean;
   colors: colorsType;
 }

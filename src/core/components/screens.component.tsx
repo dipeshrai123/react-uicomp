@@ -1,12 +1,12 @@
-import React, { useContext } from "react"
-import { Switch, Route } from "react-router-dom"
-import { PrivateRoute, PublicRoute } from "../modules"
-import { NavigationContext } from "../contexts"
+import React, { useContext } from "react";
+import { Switch, Route } from "react-router-dom";
+import { PrivateRoute, PublicRoute } from "../modules";
+import { NavigationContext } from "../contexts";
 
 export const ScreensContainer = () => {
   const { publicPaths: PUBLIC_PATHS, privatePaths: PRIVATE_PATHS } = useContext(
-    NavigationContext
-  )
+    NavigationContext,
+  );
 
   return (
     <Switch>
@@ -42,9 +42,9 @@ export const ScreensContainer = () => {
         PUBLIC_PATHS.length &&
           PUBLIC_PATHS.filter(({ path }) => path === null).map(
             ({ component: Component }, index) =>
-              index === 0 && <Route key={index} render={() => <Component />} />
+              index === 0 && <Route key={index} render={() => <Component />} />,
           )
       }
     </Switch>
-  )
-}
+  );
+};
