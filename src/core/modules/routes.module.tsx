@@ -32,7 +32,7 @@ export const PrivateRoute = (props: {
             <Redirect to={{ pathname: redirectToPath }} />
           )
         ) : (
-          <Redirect to={{ pathname: redirectToPath }} />
+          <Redirect to="/log-in" />
         );
       }}
     />
