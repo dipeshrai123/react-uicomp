@@ -7,13 +7,20 @@ const App = () => {
   const { dropdownHandlers, toggle } = useDropdown(ref);
 
   return (
-    <div>
+    <div style={{ paddingTop: 100 }}>
       <Dropdown
         {...dropdownHandlers}
         ref={ref}
         render={() => <div onClick={toggle}>Dipesh</div>}
       >
-        <div>Dropdown Division</div>
+        <div
+          style={{
+            padding: 20,
+            backgroundColor: "#e1e1e1",
+          }}
+        >
+          Dropdown Division
+        </div>
       </Dropdown>
     </div>
   );

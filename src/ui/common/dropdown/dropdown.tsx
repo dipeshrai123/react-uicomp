@@ -1,35 +1,24 @@
 import React, { useState, useCallback, useRef } from "react";
 import { useOutsideClick } from "../../hooks";
-import { CSSTransition } from "react-transition-group";
-import "./dropdown.css";
+import { animated, useTransition } from "react-spring";
 
 // Open and toggle menu
 export const useDropdown = (elementRef: React.RefObject<HTMLElement>) => {
   const [open, setOpen] = useState(() => false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const toggleOpen = useCallback(() => {
-    const measurement: DOMRect = (elementRef as any).current.getBoundingClientRect();
-    setPosition({ x: measurement.x, y: measurement.y + window.scrollY });
     setOpen((prev) => !prev);
   }, [elementRef]);
 
   return {
-    dropdownHandlers: { open, setOpen, position }, // Handler passed down to <Dropdown>...</Dropdown>
-    toggle: toggleOpen, // Toggle function
-    position, // Exact position of toggle element
+    dropdownHandlers: { open, setOpen },
+    toggle: toggleOpen,
   };
-};
-
-type PositionType = {
-  x: number;
-  y: number;
 };
 
 interface DropdownParams {
   open: boolean;
   setOpen: (prev: boolean) => void;
-  position: PositionType;
   render: () => React.ReactNode;
   children: React.ReactNode;
   dropdownStyles?: React.CSSProperties;
@@ -37,7 +26,12 @@ interface DropdownParams {
 
 export const Dropdown = React.forwardRef<HTMLSpanElement, DropdownParams>(
   (props, dropdownRef) => {
-    const { open, setOpen, position, render, children, dropdownStyles } = props;
+    const { open, setOpen, render, children, dropdownStyles } = props;
+    const animation = useTransition(open, null, {
+      from: { opacity: 0 },
+      enter: { opacity: 1 },
+      leave: { opacity: 0 },
+    });
 
     const ref = useRef<HTMLSpanElement>(null);
     const onHandleOutside = () => {
@@ -46,29 +40,42 @@ export const Dropdown = React.forwardRef<HTMLSpanElement, DropdownParams>(
 
     useOutsideClick(ref, onHandleOutside);
 
-    const { x, y } = position;
-
     return (
-      <span style={{ position: "relative", display: "inline-block" }} ref={ref}>
+      <span
+        className="wrapperSpan"
+        style={{
+          position: "relative",
+          display: "inline-block",
+        }}
+        ref={ref}
+      >
         <span ref={dropdownRef}>{render()}</span>
-        <CSSTransition
-          in={open}
-          unmountOnExit
-          timeout={200}
-          classNames="dgenerate-dropdown"
-        >
-          <div
-            style={{
-              left: x,
-              top: y - 10,
-              ...dropdownStyles,
-              position: "absolute",
-              zIndex: 100,
-            }}
-          >
-            {children}
-          </div>
-        </CSSTransition>
+
+        {animation.map(
+          ({ item, key, props }) =>
+            item && (
+              <animated.div
+                key={key}
+                style={{
+                  left: 0,
+                  top: 0,
+                  ...dropdownStyles,
+                  position: "absolute",
+                  zIndex: 100,
+                  transformOrigin: "20% 20%",
+                  opacity: props.opacity,
+                  transform: props.opacity
+                    .interpolate({
+                      range: [0, 1],
+                      output: [0.5, 1],
+                    })
+                    .interpolate((x) => `scale(${x})`),
+                }}
+              >
+                {children}
+              </animated.div>
+            ),
+        )}
       </span>
     );
   },
