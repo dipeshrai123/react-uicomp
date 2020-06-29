@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useRef } from "react";
-import ReactDOM from "react-dom";
 import { useOutsideClick } from "../../hooks";
 import { CSSTransition } from "react-transition-group";
 import "./dropdown.css";
@@ -22,29 +21,6 @@ export const useDropdown = (elementRef: React.RefObject<HTMLElement>) => {
   };
 };
 
-interface DropdownPortalParams {
-  open: boolean;
-  children: any;
-}
-
-const DropdownPortal = (props: DropdownPortalParams) => {
-  const { open, children } = props;
-  const dropdownRoot = document.getElementById("dropdown-root") as Element;
-
-  const dropdownMarkup = (
-    <CSSTransition
-      in={open}
-      unmountOnExit
-      timeout={200}
-      classNames="dgenerate-dropdown"
-    >
-      {children}
-    </CSSTransition>
-  );
-
-  return ReactDOM.createPortal(dropdownMarkup, dropdownRoot);
-};
-
 type PositionType = {
   x: number;
   y: number;
@@ -52,11 +28,11 @@ type PositionType = {
 
 interface DropdownParams {
   open: boolean;
-  setOpen: (prev: boolean) => boolean;
+  setOpen: (prev: boolean) => void;
   position: PositionType;
-  render: () => React.Component;
+  render: () => React.ReactNode;
   children: React.ReactNode;
-  dropdownStyles: React.CSSProperties;
+  dropdownStyles?: React.CSSProperties;
 }
 
 export const Dropdown = React.forwardRef<HTMLSpanElement, DropdownParams>(
@@ -75,7 +51,12 @@ export const Dropdown = React.forwardRef<HTMLSpanElement, DropdownParams>(
     return (
       <span style={{ position: "relative", display: "inline-block" }} ref={ref}>
         <span ref={dropdownRef}>{render()}</span>
-        <DropdownPortal {...{ open }}>
+        <CSSTransition
+          in={open}
+          unmountOnExit
+          timeout={200}
+          classNames="dgenerate-dropdown"
+        >
           <div
             style={{
               left: x,
@@ -87,7 +68,7 @@ export const Dropdown = React.forwardRef<HTMLSpanElement, DropdownParams>(
           >
             {children}
           </div>
-        </DropdownPortal>
+        </CSSTransition>
       </span>
     );
   },

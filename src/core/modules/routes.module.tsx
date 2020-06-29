@@ -11,7 +11,7 @@ export const PrivateRoute = (props: {
 }) => {
   const { component: Component, ...rest } = props;
   const { publicPaths: PUBLIC_PATHS, userRoles: USER_ROLES } = useContext(
-    NavigationContext
+    NavigationContext,
   );
 
   const initialPublicPath = PUBLIC_PATHS.length > 0 ? PUBLIC_PATHS[0] : null;
@@ -32,7 +32,7 @@ export const PrivateRoute = (props: {
             <Redirect to={{ pathname: redirectToPath }} />
           )
         ) : (
-          <Redirect to="/log-in" />
+          <Redirect to={{ pathname: redirectToPath }} />
         );
       }}
     />
@@ -49,7 +49,7 @@ export const PublicRoute = (props: {
 }) => {
   const { component: Component, restricted, ...rest } = props;
   const { privatePaths: PRIVATE_PATHS, userRoles: USER_ROLES } = useContext(
-    NavigationContext
+    NavigationContext,
   );
 
   const initialPrivatePath = PRIVATE_PATHS.length > 0 ? PRIVATE_PATHS[0] : null;
