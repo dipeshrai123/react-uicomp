@@ -1,82 +1,101 @@
-import React, { useState, useCallback, useRef } from "react";
+import React from "react";
 import { useOutsideClick } from "../../hooks";
 import { animated, useTransition } from "react-spring";
 
-// Open and toggle menu
-export const useDropdown = (elementRef: React.RefObject<HTMLElement>) => {
-  const [open, setOpen] = useState(() => false);
-
-  const toggleOpen = useCallback(() => {
-    setOpen((prev) => !prev);
-  }, [elementRef]);
-
-  return {
-    dropdownHandlers: { open, setOpen },
-    toggle: toggleOpen,
-  };
+type elementArgType = {
+  toggle: () => void;
 };
 
 interface DropdownParams {
-  open: boolean;
-  setOpen: (prev: boolean) => void;
-  render: () => React.ReactNode;
   children: React.ReactNode;
-  dropdownStyles?: React.CSSProperties;
+  element: (elementArg: elementArgType) => React.ReactNode;
+  active?: boolean;
+  isAnimated?: boolean;
+  menuStyles?: Omit<React.CSSProperties, "transform" | "position" | "opacity">;
 }
 
-export const Dropdown = React.forwardRef<HTMLSpanElement, DropdownParams>(
-  (props, dropdownRef) => {
-    const { open, setOpen, render, children, dropdownStyles } = props;
-    const animation = useTransition(open, null, {
-      from: { opacity: 0 },
-      enter: { opacity: 1 },
-      leave: { opacity: 0 },
-    });
+export const Dropdown = ({
+  children,
+  element,
+  active = false,
+  isAnimated = true,
+  menuStyles,
+}: DropdownParams) => {
+  const containerRef: React.RefObject<HTMLDivElement> = React.useRef<
+    HTMLDivElement
+  >(null);
+  const [dropdownActive, setDropdownActive] = React.useState<boolean>(active);
+  const dropdownAnimation = useTransition(dropdownActive, null, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+    config: {
+      duration: isAnimated ? 200 : 0,
+    },
+  });
 
-    const ref = useRef<HTMLSpanElement>(null);
-    const onHandleOutside = () => {
-      setOpen(false);
-    };
+  const toggleDropdown: () => void = React.useCallback(() => {
+    if (dropdownActive) {
+      closeDropdown();
+    }
+  }, [dropdownActive]);
 
-    useOutsideClick(ref, onHandleOutside);
+  const openDropdown: () => void = React.useCallback(() => {
+    if (!dropdownActive) {
+      setDropdownActive(true);
+    }
+  }, [dropdownActive]);
 
-    return (
-      <span
-        className="wrapperSpan"
-        style={{
-          position: "relative",
-          display: "inline-block",
-        }}
-        ref={ref}
-      >
-        <span ref={dropdownRef}>{render()}</span>
+  const closeDropdown: () => void = () => {
+    setDropdownActive(false);
+  };
 
-        {animation.map(
-          ({ item, key, props }) =>
-            item && (
-              <animated.div
-                key={key}
-                style={{
-                  left: 0,
-                  top: 0,
-                  ...dropdownStyles,
-                  position: "absolute",
-                  zIndex: 100,
-                  transformOrigin: "20% 20%",
-                  opacity: props.opacity,
-                  transform: props.opacity
-                    .interpolate({
-                      range: [0, 1],
-                      output: [0.5, 1],
-                    })
-                    .interpolate((x) => `scale(${x})`),
-                }}
-              >
-                {children}
-              </animated.div>
-            ),
-        )}
+  const handleOutsideClick: () => void = () => {
+    closeDropdown();
+  };
+
+  // Handle outside click on container
+  useOutsideClick(containerRef, handleOutsideClick);
+
+  const containerStyles: React.CSSProperties = {
+    position: "relative",
+  };
+  const dropdownElementStyles: React.CSSProperties = {};
+  const dropdownMenuStyles: React.CSSProperties = {
+    left: 0,
+    top: 0,
+    transformOrigin: "20% 20%",
+    ...menuStyles,
+  };
+
+  return (
+    <span ref={containerRef} style={containerStyles}>
+      <span onClick={openDropdown} style={dropdownElementStyles}>
+        {element({
+          toggle: toggleDropdown,
+        })}
       </span>
-    );
-  },
-);
+      {dropdownAnimation.map(
+        ({ item, key, props }) =>
+          item && (
+            <animated.div
+              key={key}
+              style={{
+                ...dropdownMenuStyles,
+                position: "absolute",
+                opacity: props.opacity,
+                transform: props.opacity
+                  .interpolate({
+                    range: [0, 1],
+                    output: [0.6, 1],
+                  })
+                  .interpolate((s) => `scale(${s})`),
+              }}
+            >
+              {children}
+            </animated.div>
+          ),
+      )}
+    </span>
+  );
+};

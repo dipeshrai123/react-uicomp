@@ -1,27 +1,31 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Dropdown, useDropdown } from "react-uicomp";
+import { Dropdown } from "react-uicomp";
 
 const App = () => {
-  const ref = React.useRef(null);
-  const { dropdownHandlers, toggle } = useDropdown(ref);
-
   return (
     <div style={{ paddingTop: 100 }}>
       <Dropdown
-        {...dropdownHandlers}
-        ref={ref}
-        render={() => <div onClick={toggle}>Dipesh</div>}
+        menuStyles={{
+          top: "100%",
+        }}
+        element={() => <span>Menu</span>}
       >
-        <div
-          style={{
-            padding: 20,
-            backgroundColor: "#e1e1e1",
+        <div>Dropdown Element</div>
+      </Dropdown>
+
+      <div style={{ paddingLeft: 200 }}>
+        <Dropdown
+          element={({ toggle }) => <span onClick={toggle}>Menu 2</span>}
+          isAnimated={false}
+          menuStyles={{
+            background: "red",
+            top: "100%",
           }}
         >
-          Dropdown Division
-        </div>
-      </Dropdown>
+          <div>Dropdown Element 2</div>
+        </Dropdown>
+      </div>
     </div>
   );
 };
