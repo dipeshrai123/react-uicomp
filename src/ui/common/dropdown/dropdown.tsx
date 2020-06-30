@@ -12,7 +12,10 @@ interface DropdownParams {
   active?: boolean;
   isAnimated?: boolean;
   animationType?: "fade" | "expand";
-  menuStyles?: Omit<React.CSSProperties, "transform" | "position" | "opacity">;
+  dropdownStyles?: Omit<
+    React.CSSProperties,
+    "transform" | "position" | "opacity"
+  >;
 }
 
 export const Dropdown = ({
@@ -21,7 +24,7 @@ export const Dropdown = ({
   active = false,
   isAnimated = true,
   animationType = "expand",
-  menuStyles,
+  dropdownStyles,
 }: DropdownParams) => {
   const containerRef: React.RefObject<HTMLDivElement> = React.useRef<
     HTMLDivElement
@@ -68,7 +71,7 @@ export const Dropdown = ({
     top: 0,
     transformOrigin: "20% 20%",
     zIndex: 100,
-    ...menuStyles,
+    ...dropdownStyles,
   };
 
   return (
