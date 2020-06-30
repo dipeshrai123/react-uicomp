@@ -1,7 +1,13 @@
 import { useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { AuthContext, NavigationContext } from "../contexts";
+import { AuthContext, NavigationContext, ThemeContext } from "./Context";
 
+// Auth
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
+// Navigation
 export const useNavigation = () => {
   const history = useHistory();
   const location = useLocation();
@@ -19,7 +25,7 @@ export const useNavigation = () => {
         userRole && USER_ROLES[userRole].access.indexOf(path) >= 0;
 
       return restricted && isLoggedIn ? false : visible && canAccess;
-    }
+    },
   );
 
   const publicRoutes: any = {};
@@ -33,7 +39,7 @@ export const useNavigation = () => {
         userRole && USER_ROLES[userRole].access.indexOf(path) >= 0;
 
       return isLoggedIn ? visible && canAccess : false;
-    }
+    },
   );
 
   const privateRoutes: any = {};
@@ -50,3 +56,8 @@ export const useNavigation = () => {
     location,
   };
 };
+
+// Theme
+export function useTheme() {
+  return useContext(ThemeContext);
+}

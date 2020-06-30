@@ -1,4 +1,3 @@
-export { DefaultAuthConfig, DefaultThemeConfig } from "./contexts";
-
-export * from "./hocs";
-export * from "./hooks";
+export { DefaultThemeConfig as ThemeConfig } from "./Context";
+export * from "./Hocs";
+export * from "./Hooks";

@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
-import { AuthContext, NavigationContext } from "../contexts";
+import { AuthContext, NavigationContext } from "./Context";
 
-// PRIVATE ROUTES
+// Private Routes
 export const PrivateRoute = (props: {
   key: string | number;
   path: string;
@@ -39,7 +39,7 @@ export const PrivateRoute = (props: {
   );
 };
 
-// PUBLIC OR RESTRICTED ROUTES
+// Public and Restricted Routes
 export const PublicRoute = (props: {
   key: string | number;
   path: string;

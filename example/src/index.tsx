@@ -1,32 +1,31 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Dropdown } from "react-uicomp";
+import { Navigation, Auth } from "react-uicomp";
+
+const Page = () => <div>Page 1</div>;
 
 const App = () => {
   return (
-    <div style={{ paddingTop: 100 }}>
-      <Dropdown
-        menuStyles={{
-          top: "100%",
-        }}
-        element={() => <span>Menu</span>}
-      >
-        <div>Dropdown Element</div>
-      </Dropdown>
-
-      <div style={{ paddingLeft: 200 }}>
-        <Dropdown
-          element={({ toggle }) => <span onClick={toggle}>Menu 2</span>}
-          isAnimated={false}
-          menuStyles={{
-            background: "red",
-            top: "100%",
-          }}
-        >
-          <div>Dropdown Element 2</div>
-        </Dropdown>
-      </div>
-    </div>
+    <Navigation.Provider
+      privatePaths={[
+        {
+          key: "Home",
+          name: "Home",
+          path: "/",
+          component: Page,
+        },
+      ]}
+      publicPaths={[]}
+      userRoles={{
+        admin: {
+          access: ["/"],
+        },
+      }}
+    >
+      <Auth.Provider authConfig={{ isLoggedIn: true, userRole: "admin" }}>
+        <Auth.Screens />
+      </Auth.Provider>
+    </Navigation.Provider>
   );
 };
 
