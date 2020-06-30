@@ -17,6 +17,7 @@ export const navigationConfig: NavigationConfigParams = {
   publicPaths: [],
   privatePaths: [],
   userRoles: {},
+  routerType: "browser",
 };
 
 export const NavigationContext = React.createContext(navigationConfig);
@@ -34,4 +35,4 @@ export const DefaultThemeConfig: DefaultThemeConfigParams = {
   },
 };
 
-export const ThemeContext = React.createContext({});
+export const ThemeContext = React.createContext(DefaultThemeConfig);

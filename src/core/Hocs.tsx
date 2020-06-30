@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useMemo } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, HashRouter, Switch, Route } from "react-router-dom";
 import { PrivateRoute, PublicRoute } from "./Modules";
 import {
   AuthProviderParams,
@@ -13,9 +13,14 @@ import { AuthContext, NavigationContext, ThemeContext } from "./Context";
 export const Auth = {
   Provider: (props: AuthProviderParams) => {
     const { children, config, state } = props;
+    const { routerType } = useContext(NavigationContext);
     return (
       <AuthContext.Provider value={{ ...config, ...state }}>
-        <BrowserRouter>{children}</BrowserRouter>
+        {routerType === "hash" ? (
+          <HashRouter>{children}</HashRouter>
+        ) : (
+          <BrowserRouter>{children}</BrowserRouter>
+        )}
       </AuthContext.Provider>
     );
   },
@@ -72,7 +77,14 @@ export const Auth = {
 // Navigation
 export const Navigation = {
   Provider: (props: NavigationProviderParams) => {
-    const { children, privatePaths, publicPaths, userRoles } = props;
+    const {
+      children,
+      privatePaths,
+      publicPaths,
+      userRoles,
+      routerType,
+    } = props;
+
     const {
       privatePaths: privateP,
       publicPaths: publicP,
@@ -89,6 +101,7 @@ export const Navigation = {
           privatePaths: privateP,
           publicPaths: publicP,
           userRoles: roles,
+          routerType,
         }}
       >
         {children}

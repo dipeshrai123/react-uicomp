@@ -1,10 +1,12 @@
+/* eslint-disable no-unused-vars */
 import { useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import { stateType, DefaultAuthConfigParams, publicReturnType } from "./Types";
 import { AuthContext, NavigationContext, ThemeContext } from "./Context";
 
 // Auth
 export const useAuth = () => {
-  return useContext(AuthContext);
+  return useContext(AuthContext) as DefaultAuthConfigParams & stateType;
 };
 
 // Navigation
@@ -28,7 +30,7 @@ export const useNavigation = () => {
     },
   );
 
-  const publicRoutes: any = {};
+  const publicRoutes: publicReturnType = {};
   filteredPublicRoutes.forEach(({ key, name, path }) => {
     publicRoutes[key] = Object.assign({}, { name, path });
   });
@@ -42,14 +44,16 @@ export const useNavigation = () => {
     },
   );
 
-  const privateRoutes: any = {};
+  const privateRoutes: publicReturnType = {};
   filteredPrivateRoutes.forEach(({ key, name, path }) => {
     privateRoutes[key] = Object.assign({}, { name, path });
   });
 
+  const combinedRoutes = { ...publicRoutes, ...privateRoutes };
+
   return {
     navigation: {
-      routes: { ...publicRoutes, ...privateRoutes },
+      routes: combinedRoutes,
       navigate: (path: string) => history.push(path),
     },
     history,

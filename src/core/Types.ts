@@ -4,10 +4,12 @@ export interface DefaultAuthConfigParams {
   userRole: null | string;
 }
 
+export type stateType = { [key: string]: () => void } | { [key: string]: any };
+
 export interface AuthProviderParams {
   children: React.ReactNode;
   config: DefaultAuthConfigParams;
-  state?: object;
+  state?: stateType;
 }
 
 // Navigation
@@ -34,11 +36,16 @@ export interface NavigationConfigParams {
   publicPaths: PublicPathParams[];
   privatePaths: PrivatePathParams[];
   userRoles: { [role: string]: { access: string[] } };
+  routerType?: "browser" | "hash";
 }
 
 export interface NavigationProviderParams extends NavigationConfigParams {
   children: React.ReactNode;
 }
+
+export type publicReturnType = {
+  [key: string]: { name: string; path: string };
+};
 
 // Theme
 type colorsType = {
