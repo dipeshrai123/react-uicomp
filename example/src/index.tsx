@@ -5,9 +5,7 @@ import { Navigation, Auth, useAuth, Dropdown } from "react-uicomp";
 const Page1 = () => {
   return (
     <div>
-      <Dropdown
-        element={() => <button onClick={() => false}>Goto Page2</button>}
-      >
+      <Dropdown element={() => <button>Toggle Menu</button>}>
         <div>Dropdown Element</div>
       </Dropdown>
     </div>
