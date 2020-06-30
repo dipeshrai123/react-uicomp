@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { Navigation, Auth, useAuth, useNavigation } from "react-uicomp";
+import { Navigation, Auth, useAuth, Dropdown } from "react-uicomp";
 
 const Page1 = () => {
-  const { navigation } = useNavigation();
-
-  console.log(navigation.routes.Public);
-
   return (
     <div>
-      <button onClick={() => navigation.navigate("/private")}>
-        Goto Page2
-      </button>
+      <Dropdown
+        animationType="fade"
+        element={() => <button onClick={() => false}>Goto Page2</button>}
+        menuStyles={{
+          background: "red",
+        }}
+      >
+        <div>Dropdown Element</div>
+      </Dropdown>
     </div>
   );
 };

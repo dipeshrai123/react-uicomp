@@ -11,6 +11,7 @@ interface DropdownParams {
   element: (elementArg: elementArgType) => React.ReactNode;
   active?: boolean;
   isAnimated?: boolean;
+  animationType?: "fade" | "expand";
   menuStyles?: Omit<React.CSSProperties, "transform" | "position" | "opacity">;
 }
 
@@ -19,6 +20,7 @@ export const Dropdown = ({
   element,
   active = false,
   isAnimated = true,
+  animationType = "expand",
   menuStyles,
 }: DropdownParams) => {
   const containerRef: React.RefObject<HTMLDivElement> = React.useRef<
@@ -65,6 +67,7 @@ export const Dropdown = ({
     left: 0,
     top: 0,
     transformOrigin: "20% 20%",
+    zIndex: 100,
     ...menuStyles,
   };
 
@@ -84,12 +87,15 @@ export const Dropdown = ({
                 ...dropdownMenuStyles,
                 position: "absolute",
                 opacity: props.opacity,
-                transform: props.opacity
-                  .interpolate({
-                    range: [0, 1],
-                    output: [0.6, 1],
-                  })
-                  .interpolate((s) => `scale(${s})`),
+                transform:
+                  animationType === "expand"
+                    ? props.opacity
+                        .interpolate({
+                          range: [0, 1],
+                          output: [0.6, 1],
+                        })
+                        .interpolate((s) => `scale(${s})`)
+                    : "scale(1)",
               }}
             >
               {children}
