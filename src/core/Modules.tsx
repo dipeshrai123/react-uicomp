@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 import { AuthContext, NavigationContext } from "./Context";
+import { PrivatePathParams, PublicPathParams } from "./Types";
 
 // Private Routes
 export const PrivateRoute = (props: {
@@ -13,13 +15,15 @@ export const PrivateRoute = (props: {
   const { publicPaths: PUBLIC_PATHS, userRoles: USER_ROLES } = useContext(
     NavigationContext,
   );
-
-  const initialPublicPath = PUBLIC_PATHS.length > 0 ? PUBLIC_PATHS[0] : null;
-  const redirectToPath = initialPublicPath?.path;
-
   const { isLoggedIn, userRole } = useContext(AuthContext);
+  const accessPublicPath = PUBLIC_PATHS.filter((path: PublicPathParams) => {
+    return userRole && USER_ROLES[userRole]?.access.indexOf(path.path) >= 0;
+  });
+  const initialPublicPath =
+    accessPublicPath.length > 0 ? accessPublicPath[0] : null;
+  const redirectToPath = initialPublicPath?.path;
   const canAccess =
-    userRole && USER_ROLES[userRole].access.indexOf(rest.path) >= 0;
+    userRole && USER_ROLES[userRole]?.access.indexOf(rest.path) >= 0;
 
   return (
     <Route
@@ -32,7 +36,7 @@ export const PrivateRoute = (props: {
             <Redirect to={{ pathname: redirectToPath }} />
           )
         ) : (
-          <Redirect to="/log-in" />
+          <Redirect to={{ pathname: redirectToPath }} />
         );
       }}
     />
@@ -51,14 +55,15 @@ export const PublicRoute = (props: {
   const { privatePaths: PRIVATE_PATHS, userRoles: USER_ROLES } = useContext(
     NavigationContext,
   );
-
-  const initialPrivatePath = PRIVATE_PATHS.length > 0 ? PRIVATE_PATHS[0] : null;
-  const redirectToPath = initialPrivatePath?.path;
-
-  // GET USER ACCESS
   const { isLoggedIn, userRole } = useContext(AuthContext);
+  const accessPrivatePaths = PRIVATE_PATHS.filter((path: PrivatePathParams) => {
+    return userRole && USER_ROLES[userRole]?.access.indexOf(path.path) >= 0;
+  });
+  const initialPrivatePath =
+    accessPrivatePaths.length > 0 ? accessPrivatePaths[0] : null;
+  const redirectToPath = initialPrivatePath?.path;
   const canAccess =
-    userRole && USER_ROLES[userRole].access.indexOf(rest.path) >= 0;
+    userRole && USER_ROLES[userRole]?.access.indexOf(rest.path) >= 0;
 
   return (
     <Route

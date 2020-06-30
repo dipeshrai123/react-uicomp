@@ -12,9 +12,9 @@ import { AuthContext, NavigationContext, ThemeContext } from "./Context";
 // Auth
 export const Auth = {
   Provider: (props: AuthProviderParams) => {
-    const { children, authConfig, authHandlers } = props;
+    const { children, config, state } = props;
     return (
-      <AuthContext.Provider value={{ ...authConfig, ...authHandlers }}>
+      <AuthContext.Provider value={{ ...config, ...state }}>
         <BrowserRouter>{children}</BrowserRouter>
       </AuthContext.Provider>
     );

@@ -6,8 +6,8 @@ export interface DefaultAuthConfigParams {
 
 export interface AuthProviderParams {
   children: React.ReactNode;
-  authConfig: DefaultAuthConfigParams;
-  authHandlers?: object;
+  config: DefaultAuthConfigParams;
+  state?: object;
 }
 
 // Navigation
@@ -18,7 +18,7 @@ export interface PublicPathParams {
   component: React.ComponentType;
   exact?: boolean;
   visible?: boolean;
-  restricted?: boolean;
+  restricted: boolean;
 }
 
 export interface PrivatePathParams {
@@ -33,7 +33,7 @@ export interface PrivatePathParams {
 export interface NavigationConfigParams {
   publicPaths: PublicPathParams[];
   privatePaths: PrivatePathParams[];
-  userRoles: any;
+  userRoles: { [role: string]: { access: string[] } };
 }
 
 export interface NavigationProviderParams extends NavigationConfigParams {
@@ -59,5 +59,5 @@ export interface DefaultThemeConfigParams {
 export interface ThemeProviderParams {
   children: React.ReactNode;
   theme: DefaultThemeConfigParams;
-  toggleTheme: () => void;
+  toggleTheme?: () => void;
 }
