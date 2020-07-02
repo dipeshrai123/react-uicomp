@@ -1,31 +1,41 @@
 import React from "react";
-import { useOutsideClick } from "../../hooks";
+import { useOutsideClick } from "../core/Hooks";
 import { animated, useTransition } from "react-spring";
 
-type elementArgType = {
-  toggle: () => void;
+type triggerElementArgType = {
+  active: boolean;
 };
 
-interface DropdownParams {
+interface DropdownProps {
   children: React.ReactNode;
-  element: (elementArg: elementArgType) => React.ReactNode;
+  triggerElement: (elementArg: triggerElementArgType) => React.ReactNode;
   active?: boolean;
   isAnimated?: boolean;
   animationType?: "fade" | "expand";
-  menuStyles?: Omit<React.CSSProperties, "transform" | "position" | "opacity">;
+  dropdownStyles?: Omit<
+    React.CSSProperties,
+    "transform" | "position" | "opacity"
+  >;
+  dropdownDirection?: "left" | "right";
+  dismissOnOutsideClick?: boolean;
+  toggleOnTriggerElementClick?: boolean;
 }
 
 export const Dropdown = ({
   children,
-  element,
+  triggerElement,
   active = false,
-  isAnimated = true,
+  isAnimated = false,
   animationType = "expand",
-  menuStyles,
-}: DropdownParams) => {
+  dropdownStyles,
+  dropdownDirection = "right",
+  dismissOnOutsideClick = true,
+  toggleOnTriggerElementClick = false,
+}: DropdownProps) => {
   const containerRef: React.RefObject<HTMLDivElement> = React.useRef<
     HTMLDivElement
   >(null);
+
   const [dropdownActive, setDropdownActive] = React.useState<boolean>(active);
   const dropdownAnimation = useTransition(dropdownActive, null, {
     from: { opacity: 0 },
@@ -39,6 +49,8 @@ export const Dropdown = ({
   const toggleDropdown: () => void = React.useCallback(() => {
     if (dropdownActive) {
       closeDropdown();
+    } else {
+      openDropdown();
     }
   }, [dropdownActive]);
 
@@ -57,25 +69,42 @@ export const Dropdown = ({
   };
 
   // Handle outside click on container
-  useOutsideClick(containerRef, handleOutsideClick);
+  if (dismissOnOutsideClick) {
+    useOutsideClick(containerRef, handleOutsideClick);
+  }
 
   const containerStyles: React.CSSProperties = {
     position: "relative",
+    display: "inline-block",
   };
+
+  // Direction of dropdown menu
+  const directionStyles: React.CSSProperties =
+    dropdownDirection === "right"
+      ? {
+          left: 0,
+        }
+      : {
+          right: 0,
+        };
+
   const dropdownElementStyles: React.CSSProperties = {};
   const dropdownMenuStyles: React.CSSProperties = {
-    left: 0,
-    top: 0,
+    ...directionStyles,
+    top: "100%",
     transformOrigin: "20% 20%",
     zIndex: 100,
-    ...menuStyles,
+    ...dropdownStyles,
   };
+
+  // DismissOnElementClick
+  const onClick = toggleOnTriggerElementClick ? toggleDropdown : openDropdown;
 
   return (
     <span ref={containerRef} style={containerStyles}>
-      <span onClick={openDropdown} style={dropdownElementStyles}>
-        {element({
-          toggle: toggleDropdown,
+      <span {...{ onClick }} style={dropdownElementStyles}>
+        {triggerElement({
+          active: dropdownActive,
         })}
       </span>
       {dropdownAnimation.map(

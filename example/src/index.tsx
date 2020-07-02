@@ -5,14 +5,8 @@ import { Navigation, Auth, useAuth, Dropdown } from "react-uicomp";
 const Page1 = () => {
   return (
     <div>
-      <Dropdown
-        animationType="fade"
-        element={() => <button onClick={() => false}>Goto Page2</button>}
-        menuStyles={{
-          background: "red",
-        }}
-      >
-        <div>Dropdown Element</div>
+      <Dropdown triggerElement={() => <button>Toggle Menu</button>}>
+        <div style={{ background: "red", width: 150 }}>Dropdown Element</div>
       </Dropdown>
     </div>
   );
