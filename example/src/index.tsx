@@ -5,7 +5,11 @@ import { Navigation, Auth, useAuth, Dropdown } from "react-uicomp";
 const Page1 = () => {
   return (
     <div>
-      <Dropdown element={() => <button>Toggle Menu</button>}>
+      <Dropdown
+        toggleOnTriggerElementClick
+        dismissOnOutsideClick={false}
+        triggerElement={() => <button>Toggle Menu</button>}
+      >
         <div>Dropdown Element</div>
       </Dropdown>
     </div>
