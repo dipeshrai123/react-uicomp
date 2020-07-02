@@ -1,5 +1,5 @@
 import React from "react";
-import { useOutsideClick } from "../../hooks";
+import { useOutsideClick } from "../core/Hooks";
 import { animated, useTransition } from "react-spring";
 
 type triggerElementArgType = {
@@ -16,6 +16,7 @@ interface DropdownProps {
     React.CSSProperties,
     "transform" | "position" | "opacity"
   >;
+  dropdownDirection?: "left" | "right";
   dismissOnOutsideClick?: boolean;
   toggleOnTriggerElementClick?: boolean;
 }
@@ -27,6 +28,7 @@ export const Dropdown = ({
   isAnimated = false,
   animationType = "expand",
   dropdownStyles,
+  dropdownDirection = "right",
   dismissOnOutsideClick = true,
   toggleOnTriggerElementClick = false,
 }: DropdownProps) => {
@@ -75,9 +77,20 @@ export const Dropdown = ({
     position: "relative",
     display: "inline-block",
   };
+
+  // Direction of dropdown menu
+  const directionStyles: React.CSSProperties =
+    dropdownDirection === "right"
+      ? {
+          left: 0,
+        }
+      : {
+          right: 0,
+        };
+
   const dropdownElementStyles: React.CSSProperties = {};
   const dropdownMenuStyles: React.CSSProperties = {
-    left: 0,
+    ...directionStyles,
     top: "100%",
     transformOrigin: "20% 20%",
     zIndex: 100,

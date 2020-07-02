@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { stateType, DefaultAuthConfigParams, publicReturnType } from "./Types";
 import { AuthContext, NavigationContext, ThemeContext } from "./Context";
@@ -65,3 +65,23 @@ export const useNavigation = () => {
 export function useTheme() {
   return useContext(ThemeContext);
 }
+
+// useOutSideClick Hook - handles outside click
+export const useOutsideClick = (
+  elem: React.RefObject<HTMLElement>,
+  callback: (event: MouseEvent) => void,
+) => {
+  const callbackMemo = React.useMemo(() => callback, [callback]);
+
+  React.useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (!elem?.current?.contains(e.target as Element) && callbackMemo) {
+        callbackMemo(e);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick, true);
+
+    return document.addEventListener("click", handleOutsideClick, true);
+  }, [callbackMemo, elem]);
+};
