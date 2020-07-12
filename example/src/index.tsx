@@ -4,9 +4,35 @@ import { Navigation, Auth, useAuth, Dropdown } from "react-uicomp";
 
 const Page1 = () => {
   return (
-    <div>
-      <Dropdown triggerElement={() => <button>Toggle Menu</button>}>
-        <div style={{ background: "red", width: 150 }}>Dropdown Element</div>
+    <div style={{ paddingLeft: 100 }}>
+      <Dropdown isAnimated triggerElement={() => <button>Toggle Menu</button>}>
+        <div
+          style={{
+            backgroundColor: "#FFF",
+            width: 300,
+            borderRadius: 4,
+            boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
+            height: 400,
+            border: "1px solid #E1E1E1",
+          }}
+        >
+          Dropdown Element
+        </div>
+      </Dropdown>
+
+      <Dropdown isAnimated triggerElement={() => <button>Toggle Menu</button>}>
+        <div
+          style={{
+            backgroundColor: "#FFF",
+            width: 300,
+            borderRadius: 4,
+            boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
+            height: 400,
+            border: "1px solid #E1E1E1",
+          }}
+        >
+          Dropdown Element
+        </div>
       </Dropdown>
     </div>
   );

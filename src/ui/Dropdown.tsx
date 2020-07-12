@@ -92,7 +92,7 @@ export const Dropdown = ({
   const dropdownMenuStyles: React.CSSProperties = {
     ...directionStyles,
     top: "100%",
-    transformOrigin: "20% 20%",
+    transformOrigin: "50% 0%",
     zIndex: 100,
     ...dropdownStyles,
   };
@@ -123,8 +123,8 @@ export const Dropdown = ({
                           range: [0, 1],
                           output: [0.6, 1],
                         })
-                        .interpolate((s) => `scale(${s})`)
-                    : "scale(1)",
+                        .interpolate((s) => `scaleY(${s})`)
+                    : "scaleY(1)",
               }}
             >
               {children}
