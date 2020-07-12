@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { stateType, DefaultAuthConfigParams, publicReturnType } from "./Types";
 import { AuthContext, NavigationContext, ThemeContext } from "./Context";
 
@@ -13,6 +13,7 @@ export const useAuth = () => {
 export const useNavigation = () => {
   const history = useHistory();
   const location = useLocation();
+  const params = useParams();
 
   const { isLoggedIn, userRole } = useContext(AuthContext);
   const {
@@ -54,10 +55,11 @@ export const useNavigation = () => {
   return {
     navigation: {
       routes: combinedRoutes,
-      navigate: (path: string) => history.push(path),
+      navigate: (path: string | object) => history.push(path),
     },
     history,
     location,
+    params,
   };
 };
 

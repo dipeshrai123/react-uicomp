@@ -1,10 +1,16 @@
 {
   "name": "react-uicomp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React UI component for creating complex routes and beautiful UI",
   "author": "dipeshrai123",
   "license": "MIT",
-  "repository": "dipeshrai123/react-uicomp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dipeshrai123/react-uicomp"
+  },
+  "bugs": {
+    "url": "https://github.com/dipeshrai123/react-uicomp/issues"
+  },
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.tsx",

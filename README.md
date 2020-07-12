@@ -54,7 +54,7 @@ const privatePaths = [
 // Define user role and provide access routes.
 const userRoles = { 
     user: { access: ["/public"] }, 
-    admin:  
+    admin:  { access: ["/public", "/private"] },
 };
 
 const App = () => {
@@ -237,17 +237,17 @@ export default function() {
 
 **props**
 
-| Props                           | Type               | Description                                                  | Default  |
-| ------------------------------- | ------------------ | ------------------------------------------------------------ | -------- |
-| children                        | element node       | React Node which will be the dropdown content                | -        |
-| triggerElement                  | function           | Function which should return the element which will trigger the dropdown | -        |
-| active(optional)                | boolean            | Sets default state of dropdown, either it is active or not by default | false    |
-| isAnimated(optional)            | boolean            | Should animate or not while toggling between dropdown        | false    |
-| animationType(optional)         | "fade" \| "expand" | Type of animation for dropdown                               | "expand" |
-| dropdownStyles(optional)        | style              | Style object to style the dropdown                           | -        |
-| dropdownDirection(optional)     | "left" \| "right"  | Defines the direction of dropdown                            | "right"  |
-| dismissOnOutsideClick(optional) | boolean            | Should dismiss dropdown if we click outside dropdown         | true     |
-| toggleOnTriggerElementClick     | boolean            | Should toggle the dropdown if we click trigger element       | false    |
+| Props                                 | Type               | Description                                                  | Default  |
+| ------------------------------------- | ------------------ | ------------------------------------------------------------ | -------- |
+| children                              | element node       | React Node which will be the dropdown content                | -        |
+| triggerElement                        | function           | Function which should return the element which will trigger the dropdown | -        |
+| active(optional)                      | boolean            | Sets default state of dropdown, either it is active or not by default | false    |
+| isAnimated(optional)                  | boolean            | Should animate or not while toggling between dropdown        | false    |
+| animationType(optional)               | "fade" \| "expand" | Type of animation for dropdown                               | "expand" |
+| dropdownStyles(optional)              | style              | Style object to style the dropdown                           | -        |
+| dropdownDirection(optional)           | "left" \| "right"  | Defines the direction of dropdown                            | "right"  |
+| dismissOnOutsideClick(optional)       | boolean            | Should dismiss dropdown if we click outside dropdown         | true     |
+| toggleOnTriggerElementClick(optional) | boolean            | Should toggle the dropdown if we click trigger element       | false    |
 
 ## License
 
