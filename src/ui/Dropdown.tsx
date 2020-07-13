@@ -6,6 +6,8 @@ type triggerElementArgType = {
   active: boolean;
 };
 
+type dropdownDirectionType = "bottomleft" | "bottomright" | "bottommiddle";
+
 interface DropdownProps {
   children: React.ReactNode;
   triggerElement: (elementArg: triggerElementArgType) => React.ReactNode;
@@ -16,7 +18,7 @@ interface DropdownProps {
     React.CSSProperties,
     "transform" | "position" | "opacity"
   >;
-  dropdownDirection?: "left" | "right";
+  dropdownDirection?: dropdownDirectionType;
   dismissOnOutsideClick?: boolean;
   toggleOnTriggerElementClick?: boolean;
 }
@@ -28,7 +30,7 @@ export const Dropdown = ({
   isAnimated = false,
   animationType = "expand",
   dropdownStyles,
-  dropdownDirection = "right",
+  dropdownDirection = "bottomright",
   dismissOnOutsideClick = true,
   toggleOnTriggerElementClick = false,
 }: DropdownProps) => {
@@ -79,21 +81,27 @@ export const Dropdown = ({
   };
 
   // Direction of dropdown menu
-  const directionStyles: React.CSSProperties =
-    dropdownDirection === "right"
-      ? {
-          left: 0,
-        }
-      : {
-          right: 0,
-        };
+  const getDirectionStyles: (
+    direction: dropdownDirectionType,
+  ) => React.CSSProperties = (direction: dropdownDirectionType) => {
+    switch (direction) {
+      case "bottomleft":
+        return { right: 0 };
+      case "bottommiddle":
+        return { left: "50%" };
+      case "bottomright":
+      default:
+        return { left: 0 };
+    }
+  };
 
   const dropdownElementStyles: React.CSSProperties = {};
   const dropdownMenuStyles: React.CSSProperties = {
-    ...directionStyles,
+    ...getDirectionStyles(dropdownDirection),
     top: "100%",
     transformOrigin: "50% 0%",
     zIndex: 100,
+    whiteSpace: "nowrap",
     ...dropdownStyles,
   };
 
@@ -123,7 +131,14 @@ export const Dropdown = ({
                           range: [0, 1],
                           output: [0.6, 1],
                         })
-                        .interpolate((s) => `scaleY(${s})`)
+                        .interpolate((s) => {
+                          // Calculation for position
+                          if (dropdownDirection === "bottommiddle") {
+                            return `scaleY(${s}) translateX(-50%)`;
+                          } else {
+                            return `scaleY(${s}) translateX(0)`;
+                          }
+                        })
                     : "scaleY(1)",
               }}
             >

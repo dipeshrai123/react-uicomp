@@ -5,14 +5,16 @@ import { Navigation, Auth, useAuth, Dropdown } from "react-uicomp";
 const Page1 = () => {
   return (
     <div style={{ paddingLeft: 100 }}>
-      <Dropdown isAnimated triggerElement={() => <button>Toggle Menu</button>}>
+      <Dropdown
+        dropdownDirection="bottomright"
+        isAnimated
+        triggerElement={() => <button>Toggle Menu</button>}
+      >
         <div
           style={{
             backgroundColor: "#FFF",
-            width: 300,
             borderRadius: 4,
             boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
-            height: 400,
             border: "1px solid #E1E1E1",
           }}
         >
@@ -20,14 +22,33 @@ const Page1 = () => {
         </div>
       </Dropdown>
 
-      <Dropdown isAnimated triggerElement={() => <button>Toggle Menu</button>}>
+      <Dropdown
+        dropdownDirection="bottommiddle"
+        isAnimated
+        triggerElement={() => <button>Toggle Menu</button>}
+      >
         <div
           style={{
             backgroundColor: "#FFF",
-            width: 300,
             borderRadius: 4,
             boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
-            height: 400,
+            border: "1px solid #E1E1E1",
+          }}
+        >
+          Dropdown Element
+        </div>
+      </Dropdown>
+
+      <Dropdown
+        dropdownDirection="bottomleft"
+        isAnimated
+        triggerElement={() => <button>Toggle Menu</button>}
+      >
+        <div
+          style={{
+            backgroundColor: "#FFF",
+            borderRadius: 4,
+            boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
             border: "1px solid #E1E1E1",
           }}
         >
