@@ -6,7 +6,7 @@ type triggerElementArgType = {
   active: boolean;
 };
 
-type dropdownDirectionType = "bottomleft" | "bottomright" | "bottommiddle";
+type placementType = "bottomleft" | "bottomright" | "bottommiddle";
 
 interface DropdownProps {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ interface DropdownProps {
     React.CSSProperties,
     "transform" | "position" | "opacity"
   >;
-  dropdownDirection?: dropdownDirectionType;
+  placement?: placementType;
   dismissOnOutsideClick?: boolean;
   toggleOnTriggerElementClick?: boolean;
 }
@@ -30,7 +30,7 @@ export const Dropdown = ({
   isAnimated = false,
   animationType = "expand",
   dropdownStyles,
-  dropdownDirection = "bottomright",
+  placement = "bottomleft",
   dismissOnOutsideClick = true,
   toggleOnTriggerElementClick = false,
 }: DropdownProps) => {
@@ -81,23 +81,23 @@ export const Dropdown = ({
   };
 
   // Direction of dropdown menu
-  const getDirectionStyles: (
-    direction: dropdownDirectionType,
-  ) => React.CSSProperties = (direction: dropdownDirectionType) => {
-    switch (direction) {
+  const getDirectionStyles: (pm: placementType) => React.CSSProperties = (
+    pm: placementType,
+  ) => {
+    switch (pm) {
       case "bottomleft":
-        return { right: 0 };
+        return { left: 0 };
       case "bottommiddle":
         return { left: "50%" };
       case "bottomright":
       default:
-        return { left: 0 };
+        return { right: 0 };
     }
   };
 
   const dropdownElementStyles: React.CSSProperties = {};
   const dropdownMenuStyles: React.CSSProperties = {
-    ...getDirectionStyles(dropdownDirection),
+    ...getDirectionStyles(placement),
     top: "100%",
     transformOrigin: "50% 0%",
     zIndex: 100,
@@ -133,7 +133,7 @@ export const Dropdown = ({
                         })
                         .interpolate((s) => {
                           // Calculation for position
-                          if (dropdownDirection === "bottommiddle") {
+                          if (placement === "bottommiddle") {
                             return `scaleY(${s}) translateX(-50%)`;
                           } else {
                             return `scaleY(${s}) translateX(0)`;
