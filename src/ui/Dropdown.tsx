@@ -20,6 +20,7 @@ interface DropdownProps {
   >;
   placement?: placementType;
   dismissOnOutsideClick?: boolean;
+  dismissOnInsideClick?: boolean;
   toggleOnTriggerElementClick?: boolean;
 }
 
@@ -33,6 +34,7 @@ export const Dropdown = ({
   placement = "bottomleft",
   dismissOnOutsideClick = true,
   toggleOnTriggerElementClick = false,
+  dismissOnInsideClick = false,
 }: DropdownProps) => {
   const containerRef: React.RefObject<HTMLDivElement> = React.useRef<
     HTMLDivElement
@@ -120,6 +122,7 @@ export const Dropdown = ({
           item && (
             <animated.div
               key={key}
+              onClick={() => (dismissOnInsideClick ? closeDropdown() : false)}
               style={{
                 ...dropdownMenuStyles,
                 position: "absolute",

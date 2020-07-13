@@ -247,9 +247,61 @@ export default function() {
 | isAnimated(optional)                  | boolean                                          | Should animate or not while toggling between dropdown        | false         |
 | animationType(optional)               | "fade" \| "expand"                               | Type of animation for dropdown                               | "expand"      |
 | dropdownStyles(optional)              | style                                            | Style object to style the dropdown                           | -             |
-| dropdownDirection(optional)           | "bottomleft" \| "bottommiddle" \|  "bottomright" | Defines the direction of dropdown                            | "bottomright" |
+| placement(optional)                   | "bottomleft" \| "bottommiddle" \|  "bottomright" | Defines the direction of dropdown                            | "bottomright" |
 | dismissOnOutsideClick(optional)       | boolean                                          | Should dismiss dropdown if we click outside dropdown         | true          |
+| dismissOnInsideClick(optional)        | boolean                                          | Should dismiss dropdown if we click on content inside dropdown | false         |
 | toggleOnTriggerElementClick(optional) | boolean                                          | Should toggle the dropdown if we click trigger element       | false         |
+
+#### DropdownMenu
+
+UI component for Dropdown Element with default styling provided by **react-uicomp**.
+
+**props**
+
+| Props    | Type          | Description                            | Default |
+| -------- | ------------- | -------------------------------------- | ------- |
+| children | element nodes | Should contain list of dropdown items  | -       |
+| style    | element style | It is used to override default styling | -       |
+
+#### DropdownMenuItem
+
+It defines the menu items for DropdownMenu.
+
+**props**
+
+| Props            | Type          | Description                            | Default |
+| ---------------- | ------------- | -------------------------------------- | ------- |
+| children         | element nodes | Can contain any element node or text   | -       |
+| danger(optional) | boolean       | Highlights the item with default color | false   |
+| onClick          | function      | Handles onClick event for an item      | -       |
+| style            | element style | It is used to override default styling | -       |
+
+#### DropdownMenuSeparator
+
+It provides some default margin and padding to top and bottom with default border styling.
+
+**Example**
+
+```tsx
+import { Dropdown } from "react-uicomp";
+
+export default function() {
+    return() {
+        <Dropdown triggerElement={() => <button>Toggle Menu</button>}>
+            <DropdownMenu>
+              <DropdownMenuItem onClick={() => false}>Item 1</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => false}>Item 2</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => false} danger={true}>
+                Item 3
+              </DropdownMenuItem>
+            </DropdownMenu>
+        </Dropdown>
+    }
+}
+```
+
+
 
 ## License
 
