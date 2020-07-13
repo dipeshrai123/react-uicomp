@@ -239,18 +239,18 @@ export default function() {
 
 **props**
 
-| Props                                 | Type                                             | Description                                                  | Default       |
-| ------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------ | ------------- |
-| children                              | element node                                     | React Node which will be the dropdown content                | -             |
-| triggerElement                        | function                                         | Function which should return the element which will trigger the dropdown | -             |
-| active(optional)                      | boolean                                          | Sets default state of dropdown, either it is active or not by default | false         |
-| isAnimated(optional)                  | boolean                                          | Should animate or not while toggling between dropdown        | false         |
-| animationType(optional)               | "fade" \| "expand"                               | Type of animation for dropdown                               | "expand"      |
-| dropdownStyles(optional)              | style                                            | Style object to style the dropdown                           | -             |
-| placement(optional)                   | "bottomleft" \| "bottommiddle" \|  "bottomright" | Defines the direction of dropdown                            | "bottomright" |
-| dismissOnOutsideClick(optional)       | boolean                                          | Should dismiss dropdown if we click outside dropdown         | true          |
-| dismissOnInsideClick(optional)        | boolean                                          | Should dismiss dropdown if we click on content inside dropdown | false         |
-| toggleOnTriggerElementClick(optional) | boolean                                          | Should toggle the dropdown if we click trigger element       | false         |
+| Props                                 | Type                                                         | Description                                                  | Default       |
+| ------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------- |
+| children                              | element node                                                 | React Node which will be the dropdown content                | -             |
+| triggerElement                        | function                                                     | Function which should return the element which will trigger the dropdown | -             |
+| active(optional)                      | boolean                                                      | Sets default state of dropdown, either it is active or not by default | false         |
+| isAnimated(optional)                  | boolean                                                      | Should animate or not while toggling between dropdown        | false         |
+| animationType(optional)               | "fade" \| "expand"                                           | Type of animation for dropdown                               | "expand"      |
+| dropdownStyles(optional)              | style                                                        | Style object to style the dropdown                           | -             |
+| placement(optional)                   | "bottomleft" \| "bottommiddle" \|  "bottomright" \| "topleft" \| "topmiddle" \| "topright" | Defines the placement of dropdown                            | "bottomright" |
+| dismissOnOutsideClick(optional)       | boolean                                                      | Should dismiss dropdown if we click outside dropdown         | true          |
+| dismissOnInsideClick(optional)        | boolean                                                      | Should dismiss dropdown if we click on content inside dropdown | false         |
+| toggleOnTriggerElementClick(optional) | boolean                                                      | Should toggle the dropdown if we click trigger element       | false         |
 
 #### DropdownMenu
 
