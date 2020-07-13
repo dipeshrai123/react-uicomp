@@ -72,6 +72,8 @@ const App = () => {
 export default App;
 ```
 
+It has **useNavigation()** hook which returns an object with **navigation**, **history**, **location**, **params** as its properties. **navigation** is an object of two keys **routes** object and **navigate** method. **navigate** method is similar to **_history.push()_** which will take take string path and navigates to given path. 
+
 #### Auth
 
 Auth lets you authenticate if a user is logged in or not. It has **<Auth.Provider>** where you define the _config_ prop object with _isLoggedIn_ and _userRole_. It also has state prop where you can pass any object which will be available in entire application. And to render all the pages you have set up, use **<Auth.Screens />** inside <Auth.Provider>. 
@@ -237,17 +239,69 @@ export default function() {
 
 **props**
 
-| Props                                 | Type               | Description                                                  | Default  |
-| ------------------------------------- | ------------------ | ------------------------------------------------------------ | -------- |
-| children                              | element node       | React Node which will be the dropdown content                | -        |
-| triggerElement                        | function           | Function which should return the element which will trigger the dropdown | -        |
-| active(optional)                      | boolean            | Sets default state of dropdown, either it is active or not by default | false    |
-| isAnimated(optional)                  | boolean            | Should animate or not while toggling between dropdown        | false    |
-| animationType(optional)               | "fade" \| "expand" | Type of animation for dropdown                               | "expand" |
-| dropdownStyles(optional)              | style              | Style object to style the dropdown                           | -        |
-| dropdownDirection(optional)           | "left" \| "right"  | Defines the direction of dropdown                            | "right"  |
-| dismissOnOutsideClick(optional)       | boolean            | Should dismiss dropdown if we click outside dropdown         | true     |
-| toggleOnTriggerElementClick(optional) | boolean            | Should toggle the dropdown if we click trigger element       | false    |
+| Props                                 | Type                                             | Description                                                  | Default       |
+| ------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------ | ------------- |
+| children                              | element node                                     | React Node which will be the dropdown content                | -             |
+| triggerElement                        | function                                         | Function which should return the element which will trigger the dropdown | -             |
+| active(optional)                      | boolean                                          | Sets default state of dropdown, either it is active or not by default | false         |
+| isAnimated(optional)                  | boolean                                          | Should animate or not while toggling between dropdown        | false         |
+| animationType(optional)               | "fade" \| "expand"                               | Type of animation for dropdown                               | "expand"      |
+| dropdownStyles(optional)              | style                                            | Style object to style the dropdown                           | -             |
+| placement(optional)                   | "bottomleft" \| "bottommiddle" \|  "bottomright" | Defines the direction of dropdown                            | "bottomright" |
+| dismissOnOutsideClick(optional)       | boolean                                          | Should dismiss dropdown if we click outside dropdown         | true          |
+| dismissOnInsideClick(optional)        | boolean                                          | Should dismiss dropdown if we click on content inside dropdown | false         |
+| toggleOnTriggerElementClick(optional) | boolean                                          | Should toggle the dropdown if we click trigger element       | false         |
+
+#### DropdownMenu
+
+UI component for Dropdown Element with default styling provided by **react-uicomp**.
+
+**props**
+
+| Props    | Type          | Description                            | Default |
+| -------- | ------------- | -------------------------------------- | ------- |
+| children | element nodes | Should contain list of dropdown items  | -       |
+| style    | element style | It is used to override default styling | -       |
+
+#### DropdownMenuItem
+
+It defines the menu items for DropdownMenu.
+
+**props**
+
+| Props            | Type          | Description                            | Default |
+| ---------------- | ------------- | -------------------------------------- | ------- |
+| children         | element nodes | Can contain any element node or text   | -       |
+| danger(optional) | boolean       | Highlights the item with default color | false   |
+| onClick          | function      | Handles onClick event for an item      | -       |
+| style            | element style | It is used to override default styling | -       |
+
+#### DropdownMenuSeparator
+
+It provides some default margin and padding to top and bottom with default border styling.
+
+**Example**
+
+```tsx
+import { Dropdown } from "react-uicomp";
+
+export default function() {
+    return() {
+        <Dropdown triggerElement={() => <button>Toggle Menu</button>}>
+            <DropdownMenu>
+              <DropdownMenuItem onClick={() => false}>Item 1</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => false}>Item 2</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => false} danger={true}>
+                Item 3
+              </DropdownMenuItem>
+            </DropdownMenu>
+        </Dropdown>
+    }
+}
+```
+
+
 
 ## License
 

@@ -6,6 +6,8 @@ type triggerElementArgType = {
   active: boolean;
 };
 
+type placementType = "bottomleft" | "bottomright" | "bottommiddle";
+
 interface DropdownProps {
   children: React.ReactNode;
   triggerElement: (elementArg: triggerElementArgType) => React.ReactNode;
@@ -16,8 +18,9 @@ interface DropdownProps {
     React.CSSProperties,
     "transform" | "position" | "opacity"
   >;
-  dropdownDirection?: "left" | "right";
+  placement?: placementType;
   dismissOnOutsideClick?: boolean;
+  dismissOnInsideClick?: boolean;
   toggleOnTriggerElementClick?: boolean;
 }
 
@@ -28,9 +31,10 @@ export const Dropdown = ({
   isAnimated = false,
   animationType = "expand",
   dropdownStyles,
-  dropdownDirection = "right",
+  placement = "bottomleft",
   dismissOnOutsideClick = true,
   toggleOnTriggerElementClick = false,
+  dismissOnInsideClick = false,
 }: DropdownProps) => {
   const containerRef: React.RefObject<HTMLDivElement> = React.useRef<
     HTMLDivElement
@@ -79,21 +83,27 @@ export const Dropdown = ({
   };
 
   // Direction of dropdown menu
-  const directionStyles: React.CSSProperties =
-    dropdownDirection === "right"
-      ? {
-          left: 0,
-        }
-      : {
-          right: 0,
-        };
+  const getDirectionStyles: (pm: placementType) => React.CSSProperties = (
+    pm: placementType,
+  ) => {
+    switch (pm) {
+      case "bottomleft":
+        return { left: 0 };
+      case "bottommiddle":
+        return { left: "50%" };
+      case "bottomright":
+      default:
+        return { right: 0 };
+    }
+  };
 
   const dropdownElementStyles: React.CSSProperties = {};
   const dropdownMenuStyles: React.CSSProperties = {
-    ...directionStyles,
+    ...getDirectionStyles(placement),
     top: "100%",
-    transformOrigin: "20% 20%",
+    transformOrigin: "50% 0%",
     zIndex: 100,
+    whiteSpace: "nowrap",
     ...dropdownStyles,
   };
 
@@ -112,6 +122,7 @@ export const Dropdown = ({
           item && (
             <animated.div
               key={key}
+              onClick={() => (dismissOnInsideClick ? closeDropdown() : false)}
               style={{
                 ...dropdownMenuStyles,
                 position: "absolute",
@@ -123,8 +134,15 @@ export const Dropdown = ({
                           range: [0, 1],
                           output: [0.6, 1],
                         })
-                        .interpolate((s) => `scale(${s})`)
-                    : "scale(1)",
+                        .interpolate((s) => {
+                          // Calculation for position
+                          if (placement === "bottommiddle") {
+                            return `scaleY(${s}) translateX(-50%)`;
+                          } else {
+                            return `scaleY(${s}) translateX(0)`;
+                          }
+                        })
+                    : "scaleY(1)",
               }}
             >
               {children}

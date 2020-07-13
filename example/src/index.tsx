@@ -1,12 +1,53 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { Navigation, Auth, useAuth, Dropdown } from "react-uicomp";
+import {
+  Navigation,
+  Auth,
+  useAuth,
+  Dropdown,
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "react-uicomp";
 
 const Page1 = () => {
   return (
-    <div>
+    <div style={{ paddingLeft: 100 }}>
       <Dropdown triggerElement={() => <button>Toggle Menu</button>}>
-        <div style={{ background: "red", width: 150 }}>Dropdown Element</div>
+        <DropdownMenu>
+          <DropdownMenuItem onClick={() => false}>Item 1</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => false}>Item 2</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => false} danger={true}>
+            Item 3
+          </DropdownMenuItem>
+        </DropdownMenu>
+      </Dropdown>
+
+      <Dropdown triggerElement={() => <button>Toggle Menu</button>}>
+        <div
+          style={{
+            backgroundColor: "#FFF",
+            borderRadius: 4,
+            boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
+            border: "1px solid #E1E1E1",
+          }}
+        >
+          Dropdown Element
+        </div>
+      </Dropdown>
+
+      <Dropdown triggerElement={() => <button>Toggle Menu</button>}>
+        <div
+          style={{
+            backgroundColor: "#FFF",
+            borderRadius: 4,
+            boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
+            border: "1px solid #E1E1E1",
+          }}
+        >
+          Dropdown Element
+        </div>
       </Dropdown>
     </div>
   );
