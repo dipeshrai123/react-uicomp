@@ -5,10 +5,11 @@ import { colors, fonts } from "./Constants";
 // Menu
 interface DropdownMenuProps {
   children: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
 const MenuContainer = styled.ul`
-  background-color: $white;
+  background-color: #ffffff;
   padding: 6px 0px;
   list-style-type: none;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.12);
@@ -18,14 +19,16 @@ const MenuContainer = styled.ul`
 `;
 
 export const DropdownMenu = (props: DropdownMenuProps) => {
-  const { children } = props;
-  return <MenuContainer>{children}</MenuContainer>;
+  const { children, style } = props;
+  return <MenuContainer {...{ style }}>{children}</MenuContainer>;
 };
 
 // Menu Item
 interface DropdownMenuItemProps {
   children: React.ReactNode;
   danger?: boolean;
+  style?: React.CSSProperties;
+  onClick: () => void;
 }
 
 const Item = styled.li<Pick<DropdownMenuItemProps, "danger">>`
@@ -46,8 +49,8 @@ const Item = styled.li<Pick<DropdownMenuItemProps, "danger">>`
 `;
 
 export const DropdownMenuItem = (props: DropdownMenuItemProps) => {
-  const { children, danger = false } = props;
-  return <Item {...{ danger }}>{children}</Item>;
+  const { children, danger = false, onClick, style } = props;
+  return <Item {...{ danger, onClick, style }}>{children}</Item>;
 };
 
 // Menu Item Separator

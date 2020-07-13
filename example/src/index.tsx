@@ -13,12 +13,14 @@ import {
 const Page1 = () => {
   return (
     <div style={{ paddingLeft: 100 }}>
-      <Dropdown isAnimated triggerElement={() => <button>Toggle Menu</button>}>
+      <Dropdown triggerElement={() => <button>Toggle Menu</button>}>
         <DropdownMenu>
-          <DropdownMenuItem>Dipesh Rai Long Name</DropdownMenuItem>
-          <DropdownMenuItem>Dipesh Rai</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => false}>Item 1</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => false}>Item 2</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem danger={true}>Dipesh Rai</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => false} danger={true}>
+            Item 3
+          </DropdownMenuItem>
         </DropdownMenu>
       </Dropdown>
 
