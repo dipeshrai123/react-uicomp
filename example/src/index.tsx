@@ -12,8 +12,12 @@ import {
 
 const Page1 = () => {
   return (
-    <div style={{ paddingLeft: 100 }}>
-      <Dropdown triggerElement={() => <button>Toggle Menu</button>}>
+    <div style={{ paddingLeft: 100, paddingTop: 300 }}>
+      <Dropdown
+        isAnimated
+        placement="topleft"
+        triggerElement={() => <button>Toggle Menu</button>}
+      >
         <DropdownMenu>
           <DropdownMenuItem onClick={() => false}>Item 1</DropdownMenuItem>
           <DropdownMenuItem onClick={() => false}>Item 2</DropdownMenuItem>
@@ -23,31 +27,75 @@ const Page1 = () => {
           </DropdownMenuItem>
         </DropdownMenu>
       </Dropdown>
-
-      <Dropdown triggerElement={() => <button>Toggle Menu</button>}>
-        <div
-          style={{
-            backgroundColor: "#FFF",
-            borderRadius: 4,
-            boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
-            border: "1px solid #E1E1E1",
-          }}
-        >
-          Dropdown Element
-        </div>
+      <Dropdown
+        isAnimated
+        placement="topmiddle"
+        triggerElement={() => <button>Toggle Menu</button>}
+      >
+        <DropdownMenu>
+          <DropdownMenuItem onClick={() => false}>Item 1</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => false}>Item 2</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => false} danger={true}>
+            Item 3
+          </DropdownMenuItem>
+        </DropdownMenu>
       </Dropdown>
-
-      <Dropdown triggerElement={() => <button>Toggle Menu</button>}>
-        <div
-          style={{
-            backgroundColor: "#FFF",
-            borderRadius: 4,
-            boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
-            border: "1px solid #E1E1E1",
-          }}
-        >
-          Dropdown Element
-        </div>
+      <Dropdown
+        isAnimated
+        placement="topright"
+        triggerElement={() => <button>Toggle Menu</button>}
+      >
+        <DropdownMenu>
+          <DropdownMenuItem onClick={() => false}>Item 1</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => false}>Item 2</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => false} danger={true}>
+            Item 3
+          </DropdownMenuItem>
+        </DropdownMenu>
+      </Dropdown>
+      <Dropdown
+        isAnimated
+        placement="bottomleft"
+        triggerElement={() => <button>Toggle Menu</button>}
+      >
+        <DropdownMenu>
+          <DropdownMenuItem onClick={() => false}>Item 1</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => false}>Item 2</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => false} danger={true}>
+            Item 3
+          </DropdownMenuItem>
+        </DropdownMenu>
+      </Dropdown>
+      <Dropdown
+        isAnimated
+        placement="bottommiddle"
+        triggerElement={() => <button>Toggle Menu</button>}
+      >
+        <DropdownMenu>
+          <DropdownMenuItem onClick={() => false}>Item 1</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => false}>Item 2</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => false} danger={true}>
+            Item 3
+          </DropdownMenuItem>
+        </DropdownMenu>
+      </Dropdown>
+      <Dropdown
+        isAnimated
+        placement="bottomright"
+        triggerElement={() => <button>Toggle Menu</button>}
+      >
+        <DropdownMenu>
+          <DropdownMenuItem onClick={() => false}>Item 1</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => false}>Item 2</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => false} danger={true}>
+            Item 3
+          </DropdownMenuItem>
+        </DropdownMenu>
       </Dropdown>
     </div>
   );
