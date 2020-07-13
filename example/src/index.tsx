@@ -12,9 +12,9 @@ import {
 
 const Page1 = () => {
   return (
-    <div style={{ paddingLeft: 100, paddingTop: 300 }}>
+    <div style={{ display: "flex", justifyContent: "center", paddingTop: 300 }}>
       <Dropdown
-        isAnimated
+        animationType="fade"
         placement="topleft"
         triggerElement={() => <button>Toggle Menu</button>}
       >
@@ -28,7 +28,6 @@ const Page1 = () => {
         </DropdownMenu>
       </Dropdown>
       <Dropdown
-        isAnimated
         placement="topmiddle"
         triggerElement={() => <button>Toggle Menu</button>}
       >
@@ -42,7 +41,6 @@ const Page1 = () => {
         </DropdownMenu>
       </Dropdown>
       <Dropdown
-        isAnimated
         placement="topright"
         triggerElement={() => <button>Toggle Menu</button>}
       >
@@ -56,7 +54,6 @@ const Page1 = () => {
         </DropdownMenu>
       </Dropdown>
       <Dropdown
-        isAnimated
         placement="bottomleft"
         triggerElement={() => <button>Toggle Menu</button>}
       >
@@ -70,7 +67,6 @@ const Page1 = () => {
         </DropdownMenu>
       </Dropdown>
       <Dropdown
-        isAnimated
         placement="bottommiddle"
         triggerElement={() => <button>Toggle Menu</button>}
       >
@@ -84,7 +80,6 @@ const Page1 = () => {
         </DropdownMenu>
       </Dropdown>
       <Dropdown
-        isAnimated
         placement="bottomright"
         triggerElement={() => <button>Toggle Menu</button>}
       >
