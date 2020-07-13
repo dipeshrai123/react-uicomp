@@ -8,7 +8,6 @@ import {
   DropdownMenu,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  ActiveLink,
 } from "react-uicomp";
 
 const Page1 = () => {
@@ -146,9 +145,6 @@ const App = () => {
         }}
       >
         <Auth.Screens />
-        <ActiveLink to="/public" activeClassName="activeLink">
-          Dipesh Rai
-        </ActiveLink>
       </Auth.Provider>
     </Navigation.Provider>
   );
