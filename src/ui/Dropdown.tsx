@@ -6,7 +6,13 @@ type triggerElementArgType = {
   active: boolean;
 };
 
-type placementType = "bottomleft" | "bottomright" | "bottommiddle";
+type placementType =
+  | "bottomleft"
+  | "bottomright"
+  | "bottommiddle"
+  | "topleft"
+  | "topright"
+  | "topmiddle";
 
 interface DropdownProps {
   children: React.ReactNode;
@@ -88,22 +94,46 @@ export const Dropdown = ({
   ) => {
     switch (pm) {
       case "bottomleft":
-        return { left: 0 };
+        return { left: 0, top: "100%" };
       case "bottommiddle":
-        return { left: "50%" };
+        return { left: "50%", top: "100%" };
       case "bottomright":
-      default:
-        return { right: 0 };
+        return { right: 0, top: "100%" };
+      case "topleft":
+        return { left: 0, bottom: "100%" };
+      case "topmiddle":
+        return { left: "50%", bottom: "100%" };
+      case "topright":
+        return { right: 0, bottom: "100%" };
+    }
+  };
+
+  // Transform origin of dropdown animation
+  const getTransformOrigin: (pm: placementType) => React.CSSProperties = (
+    pm: placementType,
+  ) => {
+    switch (pm) {
+      case "bottomleft":
+        return { transformOrigin: "0% 0%" };
+      case "bottommiddle":
+        return { transformOrigin: "0% 0%" };
+      case "bottomright":
+        return { transformOrigin: "100% 0%" };
+      case "topleft":
+        return { transformOrigin: "0% 100%" };
+      case "topmiddle":
+        return { transformOrigin: "0% 100%" };
+      case "topright":
+        return { transformOrigin: "100% 100%" };
     }
   };
 
   const dropdownElementStyles: React.CSSProperties = {};
   const dropdownMenuStyles: React.CSSProperties = {
-    ...getDirectionStyles(placement),
-    top: "100%",
-    transformOrigin: "50% 0%",
     zIndex: 100,
     whiteSpace: "nowrap",
+    ...getDirectionStyles(placement),
+    ...getTransformOrigin(placement),
     ...dropdownStyles,
   };
 
@@ -137,9 +167,11 @@ export const Dropdown = ({
                         .interpolate((s) => {
                           // Calculation for position
                           if (placement === "bottommiddle") {
-                            return `scaleY(${s}) translateX(-50%)`;
+                            return `scale(${s}) translateX(-50%)`;
+                          } else if (placement === "topmiddle") {
+                            return `scale(${s}) translateX(-50%)`;
                           } else {
-                            return `scaleY(${s}) translateX(0)`;
+                            return `scale(${s}) translateX(0)`;
                           }
                         })
                     : "scaleY(1)",
