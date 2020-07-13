@@ -1,6 +1,13 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useMemo } from "react";
-import { BrowserRouter, HashRouter, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  HashRouter,
+  Switch,
+  Route,
+  NavLink as InternalNavLink,
+  NavLinkProps as InternalNavLinkProps,
+} from "react-router-dom";
 import { PrivateRoute, PublicRoute } from "./Modules";
 import {
   AuthProviderParams,
@@ -125,4 +132,12 @@ export const Theme = {
       <ThemeContext.Provider {...{ value }}>{children}</ThemeContext.Provider>
     );
   },
+};
+
+// NavLink Component as ActiveLink
+export const ActiveLink = (
+  props: React.PropsWithoutRef<InternalNavLinkProps> &
+    React.RefAttributes<HTMLAnchorElement>,
+) => {
+  return <InternalNavLink {...props} />;
 };
