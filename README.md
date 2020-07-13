@@ -72,6 +72,8 @@ const App = () => {
 export default App;
 ```
 
+It has **useNavigation()** hook which returns an object with **navigation**, **history**, **location**, **params** as its properties. **navigation** is an object of two keys **routes** object and **navigate** method. **navigate** method is similar to **_history.push()_** which will take take string path and navigates to given path. 
+
 #### Auth
 
 Auth lets you authenticate if a user is logged in or not. It has **<Auth.Provider>** where you define the _config_ prop object with _isLoggedIn_ and _userRole_. It also has state prop where you can pass any object which will be available in entire application. And to render all the pages you have set up, use **<Auth.Screens />** inside <Auth.Provider>. 
@@ -237,17 +239,17 @@ export default function() {
 
 **props**
 
-| Props                                 | Type               | Description                                                  | Default  |
-| ------------------------------------- | ------------------ | ------------------------------------------------------------ | -------- |
-| children                              | element node       | React Node which will be the dropdown content                | -        |
-| triggerElement                        | function           | Function which should return the element which will trigger the dropdown | -        |
-| active(optional)                      | boolean            | Sets default state of dropdown, either it is active or not by default | false    |
-| isAnimated(optional)                  | boolean            | Should animate or not while toggling between dropdown        | false    |
-| animationType(optional)               | "fade" \| "expand" | Type of animation for dropdown                               | "expand" |
-| dropdownStyles(optional)              | style              | Style object to style the dropdown                           | -        |
-| dropdownDirection(optional)           | "left" \| "right"  | Defines the direction of dropdown                            | "right"  |
-| dismissOnOutsideClick(optional)       | boolean            | Should dismiss dropdown if we click outside dropdown         | true     |
-| toggleOnTriggerElementClick(optional) | boolean            | Should toggle the dropdown if we click trigger element       | false    |
+| Props                                 | Type                                             | Description                                                  | Default       |
+| ------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------ | ------------- |
+| children                              | element node                                     | React Node which will be the dropdown content                | -             |
+| triggerElement                        | function                                         | Function which should return the element which will trigger the dropdown | -             |
+| active(optional)                      | boolean                                          | Sets default state of dropdown, either it is active or not by default | false         |
+| isAnimated(optional)                  | boolean                                          | Should animate or not while toggling between dropdown        | false         |
+| animationType(optional)               | "fade" \| "expand"                               | Type of animation for dropdown                               | "expand"      |
+| dropdownStyles(optional)              | style                                            | Style object to style the dropdown                           | -             |
+| dropdownDirection(optional)           | "bottomleft" \| "bottommiddle" \|  "bottomright" | Defines the direction of dropdown                            | "bottomright" |
+| dismissOnOutsideClick(optional)       | boolean                                          | Should dismiss dropdown if we click outside dropdown         | true          |
+| toggleOnTriggerElementClick(optional) | boolean                                          | Should toggle the dropdown if we click trigger element       | false         |
 
 ## License
 
