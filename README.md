@@ -244,7 +244,7 @@ export default function() {
 | children                              | element node                                                 | React Node which will be the dropdown content                | -             |
 | triggerElement                        | function                                                     | Function which should return the element which will trigger the dropdown | -             |
 | active(optional)                      | boolean                                                      | Sets default state of dropdown, either it is active or not by default | false         |
-| isAnimated(optional)                  | boolean                                                      | Should animate or not while toggling between dropdown        | false         |
+| isAnimated(optional)                  | boolean                                                      | Should animate or not while toggling between dropdown        | true          |
 | animationType(optional)               | "fade" \| "expand"                                           | Type of animation for dropdown                               | "expand"      |
 | dropdownStyles(optional)              | style                                                        | Style object to style the dropdown                           | -             |
 | placement(optional)                   | "bottomleft" \| "bottommiddle" \|  "bottomright" \| "topleft" \| "topmiddle" \| "topright" | Defines the placement of dropdown                            | "bottomright" |

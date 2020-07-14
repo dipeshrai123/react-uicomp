@@ -34,7 +34,7 @@ export const Dropdown = ({
   children,
   triggerElement,
   active = false,
-  isAnimated = false,
+  isAnimated = true,
   animationType = "expand",
   dropdownStyles,
   placement = "bottomleft",
@@ -51,9 +51,15 @@ export const Dropdown = ({
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
-    config: {
-      duration: isAnimated ? 200 : 0,
-    },
+    config: isAnimated
+      ? animationType === "expand"
+        ? {
+            mass: 1,
+            friction: 18,
+            tension: 250,
+          }
+        : { duration: 200 }
+      : { duration: 0 },
   });
 
   const toggleDropdown: () => void = React.useCallback(() => {
