@@ -301,7 +301,38 @@ export default function() {
 }
 ```
 
+#### Modal
 
+UI component for Modal which provides easy use for creating extremely fluid animated modal.
+
+**props**
+
+| Props                            | Type          | Description                                                  | Default |
+| -------------------------------- | ------------- | ------------------------------------------------------------ | ------- |
+| children                         | element nodes | Can contain any element which is placed inside modal component | -       |
+| visible                          | boolean       | Determines whether the modal is visible or not.              | -       |
+| onClose                          | function      | Function that is called when clicked outside or to close modal | -       |
+| dissmissOnOutsideClick(optional) | boolean       | Calls onClose function if clicked outside modal.             | true    |
+| style(optional)                  | style         | Allows you to change default styling to modal itself.        | -       |
+
+**Example**
+
+```tsx
+import { Modal } from "react-uicomp";
+
+export default function() {
+  const [visible, setVisible] = useState(false);
+
+  return (
+      <Modal
+        visible={visible}
+        onClose={() => setVisible(false)}
+      >
+        Modal Content Goes Here...
+      </Modal>
+  );
+}
+```
 
 ## License
 
