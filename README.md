@@ -334,6 +334,43 @@ export default function() {
 }
 ```
 
+#### useAnimatedValue()
+
+**useAnimatedValue()** is very flexible and powerful hook that lets you define animated values which is abstract implementation of useSpring() method. Its value is reserved until the component unmounts so, it will be very useful for creating smooth animations without any re-rendering issues. It takes any number as first argument and returns an object with just **value** property which will be more than enough to create any animation.
+
+#### AnimatedBlock
+
+AnimatedBlock is special type of element which inherits all properties of **<div>** element and can accept animated values provided by **useAnimatedValue()**.
+
+**Example**
+
+```tsx
+import { AnimatedBlock, useAnimatedValue } from "react-uicomp";
+
+export default function() {
+  const opacity = useAnimatedValue(0); // It initializes opacity object with value 0.
+
+  return (
+      <div>
+          {/* AnimatedBlock component should be used with useAnimatedValue() */}
+          <AnimatedBlock 
+            style={{
+              opacity: opacity.value, // value property should be passed
+              width: 100,
+              padding: 20,
+              background: "#39F",
+            }}
+          >
+            ANIMATED
+          </AnimatedBlock>
+          
+          {/* Animating from 0 to 1 is very simple just assign opacity.value = 1 */}
+          <button onClick={() => opacity.value = 1}>Animate Me</button>
+      </div>
+  );
+}
+```
+
 ## License
 
 MIT © [dipeshrai123](https://github.com/dipeshrai123)
