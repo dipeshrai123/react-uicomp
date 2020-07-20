@@ -17,7 +17,7 @@ interface UseAnimatedValueConfig extends SpringConfig {
 
 export const useAnimatedValue = (
   initialValue: number,
-  config: UseAnimatedValueConfig,
+  config?: UseAnimatedValueConfig,
 ) => {
   const _initialValue = useValue(initialValue);
   const { onAnimationEnd, ...restConfig } = config !== undefined && config;
@@ -35,7 +35,7 @@ export const useAnimatedValue = (
     set({ value: updatedValue });
   };
 
-  const _targetObject = {};
+  const _targetObject: { value: number } = { value: _initialValue };
   return new Proxy(_targetObject, {
     set: function (target: { value: number }, key, value) {
       if (key === "value") {
@@ -53,5 +53,23 @@ export const useAnimatedValue = (
 
       return false;
     },
+  });
+};
+
+interface ConfigParams {
+  inputRange: Array<any>;
+  outputRange: Array<any>;
+  extrapolate?: "identity" | "clamp" | "extend";
+  extrapolateRight?: "identity" | "clamp" | "extend";
+  extrapolateLeft?: "identity" | "clamp" | "extend";
+}
+
+// Basic Interpolation
+export const interpolate = (animatedValue: any, config: ConfigParams) => {
+  const { inputRange, outputRange, ...rest } = config;
+  return animatedValue.interpolate({
+    range: inputRange,
+    output: outputRange,
+    ...rest,
   });
 };
