@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { AnimatedBlock, useAnimatedValue, interpolate } from "react-uicomp";
 
 const Animated = () => {
   const [visible, setVisible] = useState(true);
-  const opacity = useAnimatedValue(1);
-
-  useEffect(() => {
-    opacity.value = visible ? 1 : 0;
-  }, [visible, opacity]);
+  const opacity = useAnimatedValue(visible ? 1 : 0);
 
   return (
     <>
