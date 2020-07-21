@@ -1,19 +1,31 @@
 /* eslint-disable no-unused-vars */
 import { useRef, useState, useEffect } from "react";
-import { useSpring, config as springConfig, SpringConfig } from "react-spring";
+import { useSpring, config as springConfig } from "react-spring";
 
-interface UseAnimatedValueConfig extends SpringConfig {
+interface UseAnimatedValueConfig {
   onAnimationEnd?: (value: number) => void;
+  animationType?: "ease" | "elastic";
+  [prop: string]: any;
 }
 
 export const useAnimatedValue = (
-  initialValue: number,
+  initialValue: any,
   config?: UseAnimatedValueConfig,
 ) => {
-  const { onAnimationEnd, ...restConfig } = config !== undefined && config;
+  const _initialValue = initialValue; // Todo: Support for animated value
+  const _prevValue = useRef(_initialValue);
+
+  // Different internal config configs
+  const { onAnimationEnd, animationType = "ease", ...restConfig } =
+    config !== undefined && config;
+  const _config =
+    animationType === "ease"
+      ? springConfig.default
+      : { mass: 1, friction: 18, tension: 250 };
+
   const [props, set] = useSpring(() => ({
-    value: initialValue,
-    config: { ...springConfig.default, ...restConfig },
+    value: _initialValue,
+    config: { ..._config, ...restConfig },
   }));
 
   const _update = (updatedValue: number) => {
@@ -25,6 +37,13 @@ export const useAnimatedValue = (
       },
     });
   };
+
+  useEffect(() => {
+    if (initialValue !== _prevValue.current) {
+      _update(initialValue);
+      _prevValue.current = initialValue;
+    }
+  }, [initialValue]);
 
   const _targetObject: { value: number } = { value: props.value };
   return new Proxy(_targetObject, {
