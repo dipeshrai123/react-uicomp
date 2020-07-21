@@ -7,6 +7,13 @@ interface AnimatedBlockProps {
 }
 
 // Animated Block - can receive all props from useAnimatedValue() hook
-export const AnimatedBlock = ({ children, ...rest }: AnimatedBlockProps) => {
-  return <animated.div {...rest}>{children}</animated.div>;
-};
+export const AnimatedBlock = React.forwardRef(
+  (
+    { children, ...rest }: AnimatedBlockProps,
+    ref: React.RefObject<HTMLDivElement>,
+  ) => (
+    <animated.div ref={ref} {...rest}>
+      {children}
+    </animated.div>
+  ),
+);

@@ -1,41 +1,32 @@
 /* eslint-disable no-unused-vars */
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useSpring, config as springConfig, SpringConfig } from "react-spring";
 
-// Memoized Inititializer
-export const useValue = <T>(initialValue: T) => {
-  const ref = useRef<T>();
-  if (ref.current === undefined) {
-    ref.current = initialValue;
-  }
-  return ref.current;
-};
-
 interface UseAnimatedValueConfig extends SpringConfig {
-  onAnimationEnd?: () => void;
+  onAnimationEnd?: (value: number) => void;
 }
 
 export const useAnimatedValue = (
   initialValue: number,
   config?: UseAnimatedValueConfig,
 ) => {
-  const _initialValue = useValue(initialValue);
   const { onAnimationEnd, ...restConfig } = config !== undefined && config;
   const [props, set] = useSpring(() => ({
-    value: _initialValue,
-    onRest: ({ value }: { value: number }) => {
-      if (value !== initialValue) {
-        onAnimationEnd && onAnimationEnd();
-      }
-    },
+    value: initialValue,
     config: { ...springConfig.default, ...restConfig },
   }));
 
   const _update = (updatedValue: number) => {
-    set({ value: updatedValue });
+    set({
+      value: updatedValue,
+      // Config for value update
+      onRest: ({ value }: { value: number }) => {
+        onAnimationEnd && onAnimationEnd(value);
+      },
+    });
   };
 
-  const _targetObject: { value: number } = { value: _initialValue };
+  const _targetObject: { value: number } = { value: props.value };
   return new Proxy(_targetObject, {
     set: function (target: { value: number }, key, value) {
       if (key === "value") {
@@ -56,20 +47,66 @@ export const useAnimatedValue = (
   });
 };
 
-interface ConfigParams {
-  inputRange: Array<any>;
-  outputRange: Array<any>;
-  extrapolate?: "identity" | "clamp" | "extend";
-  extrapolateRight?: "identity" | "clamp" | "extend";
-  extrapolateLeft?: "identity" | "clamp" | "extend";
-}
+// useScroll() Hook for body
+// TODO : Handler for HTMLElement, Scroll Direction
+export const useScroll = (): {
+  x: number;
+  y: number;
+} => {
+  const [scrollX, setScrollX] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
 
-// Basic Interpolation
-export const interpolate = (animatedValue: any, config: ConfigParams) => {
-  const { inputRange, outputRange, ...rest } = config;
-  return animatedValue.interpolate({
-    range: inputRange,
-    output: outputRange,
-    ...rest,
+  const scrollListener = () => {
+    const { pageYOffset, pageXOffset } = window;
+    setScrollX(pageXOffset);
+    setScrollY(pageYOffset);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", scrollListener);
+
+    return () => window.removeEventListener("scroll", scrollListener);
+  }, []);
+
+  return { x: scrollX, y: scrollY };
+};
+
+// useMeasure() hook
+export const useMeasure = (): [
+  { ref: React.RefObject<any> },
+  {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+    vLeft: number;
+    vTop: number;
+  },
+] => {
+  const ref = useRef<any>(null);
+  const [measurement, setMeasurement] = useState({
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
+    vLeft: 0,
+    vTop: 0,
   });
+
+  useEffect(() => {
+    const _refElement = ref.current ? ref.current : document.documentElement;
+    const { left, top, width, height } = _refElement.getBoundingClientRect();
+    // Only gives relative to viewport
+    const { pageXOffset, pageYOffset } = window;
+    setMeasurement({
+      left: left + pageXOffset,
+      top: top + pageYOffset,
+      width,
+      height,
+      vLeft: left,
+      vTop: top,
+    });
+  }, []);
+
+  return [{ ref }, measurement];
 };
