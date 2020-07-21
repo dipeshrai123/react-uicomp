@@ -1,5 +1,5 @@
 import React from "react";
-import { useScroll, AnimatedBlock, interpolateNumbers } from "react-uicomp";
+import { useScroll, AnimatedBlock, interpolate } from "react-uicomp";
 
 const Scroll = () => {
   const { y } = useScroll();
@@ -7,7 +7,7 @@ const Scroll = () => {
   return (
     <AnimatedBlock
       style={{
-        opacity: interpolateNumbers(y, {
+        opacity: interpolate(y, {
           inputRange: [0, 200],
           outputRange: [1, 0],
           extrapolate: "clamp",

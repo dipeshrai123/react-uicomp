@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  AnimatedBlock,
-  useAnimatedValue,
-  interpolateValues,
-} from "react-uicomp";
+import { AnimatedBlock, useAnimatedValue, interpolate } from "react-uicomp";
 
 const Animated = () => {
   const [visible, setVisible] = useState(true);
@@ -18,7 +14,7 @@ const Animated = () => {
       <AnimatedBlock
         style={{
           opacity: opacity.value,
-          transform: interpolateValues(opacity.value, {
+          transform: interpolate(opacity.value, {
             inputRange: [0, 1],
             outputRange: [
               `scale(1) translateY(-200px)`,

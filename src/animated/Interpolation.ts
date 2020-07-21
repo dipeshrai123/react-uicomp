@@ -1,32 +1,5 @@
-// AnimatedValue Interpolation
-interface InterpolateValuesConfigParams {
-  inputRange: Array<number>;
-  outputRange: Array<any>;
-  extrapolate?: "identity" | "clamp" | "extend";
-  extrapolateRight?: "identity" | "clamp" | "extend";
-  extrapolateLeft?: "identity" | "clamp" | "extend";
-}
-
-export const interpolateValues = (
-  animatedValue: any,
-  config: InterpolateValuesConfigParams,
-) => {
-  const { inputRange, outputRange, ...rest } = config;
-  return animatedValue.interpolate({
-    range: inputRange,
-    output: outputRange,
-    ...rest,
-  });
-};
-
-interface InterpolateNumbersConfigParams {
-  inputRange: Array<number>;
-  outputRange: Array<any>;
-  extrapolate?: "identity" | "extend" | "clamp";
-}
-
 // Generic 0 - 1 Interpolation
-const mix = (perc: number, val1: number, val2: number) => {
+const binaryInterpolate = (perc: number, val1: number, val2: number) => {
   return val1 * (1 - perc) + val2 * perc;
 };
 
@@ -37,7 +10,7 @@ const _internalInterpolate = (
 ) => {
   const [val1, val2, val3, val4] = arr;
   const perc = (val1 - val) / (val1 - val2);
-  const output = mix(perc, val3, val4);
+  const output = binaryInterpolate(perc, val3, val4);
   const isPositive = val4 >= val3 ? 1 : -1;
 
   switch (type) {
@@ -88,11 +61,32 @@ const _getNarrowedInputArray = function (
   return narrowedInput;
 };
 
-export const interpolateNumbers = (
-  value: number,
-  config: InterpolateNumbersConfigParams,
-): number => {
-  const { inputRange, outputRange, extrapolate = "extend" } = config;
-  const narrowedInput = _getNarrowedInputArray(value, inputRange, outputRange);
-  return _internalInterpolate(value, narrowedInput, extrapolate);
+// Handles both animated and numbers interpolation
+interface InterpolateConfig {
+  inputRange: Array<number>;
+  outputRange: Array<any>;
+  extrapolate?: "identity" | "clamp" | "extend";
+  extrapolateRight?: "identity" | "clamp" | "extend";
+  extrapolateLeft?: "identity" | "clamp" | "extend";
+}
+
+export const interpolate = (value: any, config: InterpolateConfig) => {
+  if (typeof value === "object") {
+    // Animated Value
+    const { inputRange, outputRange, ...rest } = config;
+    return value.interpolate({
+      range: inputRange,
+      output: outputRange,
+      ...rest,
+    });
+  } else {
+    // Numbers - It only supports extrapolate for now
+    const { inputRange, outputRange, extrapolate = "extend" } = config;
+    const narrowedInput = _getNarrowedInputArray(
+      value,
+      inputRange,
+      outputRange,
+    );
+    return _internalInterpolate(value, narrowedInput, extrapolate);
+  }
 };
