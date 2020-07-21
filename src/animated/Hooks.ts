@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import { useRef, useState, useEffect } from "react";
-import ResizeObserver from "resize-observer-polyfill";
 import { useSpring, config as springConfig, SpringConfig } from "react-spring";
 
 interface UseAnimatedValueConfig extends SpringConfig {
@@ -74,41 +73,39 @@ export const useScroll = (): {
 
 // useMeasure() hook
 export const useMeasure = (): [
-  object,
+  { ref: React.RefObject<any> },
   {
     left: number;
     top: number;
     width: number;
     height: number;
+    vLeft: number;
+    vTop: number;
   },
 ] => {
-  const ref = useRef();
+  const ref = useRef<any>(null);
   const [measurement, setMeasurement] = useState({
     left: 0,
     top: 0,
     width: 0,
     height: 0,
+    vLeft: 0,
+    vTop: 0,
   });
-  const [ro] = useState(
-    () =>
-      new ResizeObserver(([entry]) =>
-        setMeasurement({
-          left: entry.contentRect.left,
-          top: entry.contentRect.top,
-          width: entry.contentRect.width,
-          height: entry.contentRect.height,
-        }),
-      ),
-  );
 
   useEffect(() => {
-    if (ref.current) {
-      ro.observe(ref.current);
-    } else {
-      ro.observe(document.documentElement);
-    }
-
-    return ro.disconnect;
+    const _refElement = ref.current ? ref.current : document.documentElement;
+    const { left, top, width, height } = _refElement.getBoundingClientRect();
+    // Only gives relative to viewport
+    const { pageXOffset, pageYOffset } = window;
+    setMeasurement({
+      left: left + pageXOffset,
+      top: top + pageYOffset,
+      width,
+      height,
+      vLeft: left,
+      vTop: top,
+    });
   }, []);
 
   return [{ ref }, measurement];
