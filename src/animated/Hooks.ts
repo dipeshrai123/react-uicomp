@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import { useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSpring, config as springConfig, SpringConfig } from "react-spring";
 
 // Memoized Inititializer
-export const useValue = <T>(initialValue: T) => {
+const useValue = <T>(initialValue: T) => {
   const ref = useRef<T>();
   if (ref.current === undefined) {
     ref.current = initialValue;
@@ -56,20 +56,26 @@ export const useAnimatedValue = (
   });
 };
 
-interface ConfigParams {
-  inputRange: Array<any>;
-  outputRange: Array<any>;
-  extrapolate?: "identity" | "clamp" | "extend";
-  extrapolateRight?: "identity" | "clamp" | "extend";
-  extrapolateLeft?: "identity" | "clamp" | "extend";
-}
+// useScroll() Hook for body
+// TODO : Handler for HTMLElement, Scroll Direction
+export const useScroll = (): {
+  x: number;
+  y: number;
+} => {
+  const [scrollX, setScrollX] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
 
-// Basic Interpolation
-export const interpolate = (animatedValue: any, config: ConfigParams) => {
-  const { inputRange, outputRange, ...rest } = config;
-  return animatedValue.interpolate({
-    range: inputRange,
-    output: outputRange,
-    ...rest,
-  });
+  const scrollListener = () => {
+    const { pageYOffset, pageXOffset } = window;
+    setScrollX(pageXOffset);
+    setScrollY(pageYOffset);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", scrollListener);
+
+    return () => window.removeEventListener("scroll", scrollListener);
+  }, []);
+
+  return { x: scrollX, y: scrollY };
 };
