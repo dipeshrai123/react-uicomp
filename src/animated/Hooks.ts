@@ -1,41 +1,41 @@
 /* eslint-disable no-unused-vars */
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSpring, config as springConfig, SpringConfig } from "react-spring";
 
 // Memoized Inititializer
-const useValue = <T>(initialValue: T) => {
-  const ref = useRef<T>();
-  if (ref.current === undefined) {
-    ref.current = initialValue;
-  }
-  return ref.current;
-};
+// export const useValue = <T>(initialValue: T) => {
+//   const ref = useRef<T>();
+//   if (ref.current === undefined) {
+//     ref.current = initialValue;
+//   }
+//   return ref.current;
+// };
 
 interface UseAnimatedValueConfig extends SpringConfig {
-  onAnimationEnd?: () => void;
+  onAnimationEnd?: (value: number) => void;
 }
 
 export const useAnimatedValue = (
   initialValue: number,
   config?: UseAnimatedValueConfig,
 ) => {
-  const _initialValue = useValue(initialValue);
   const { onAnimationEnd, ...restConfig } = config !== undefined && config;
   const [props, set] = useSpring(() => ({
-    value: _initialValue,
-    onRest: ({ value }: { value: number }) => {
-      if (value !== initialValue) {
-        onAnimationEnd && onAnimationEnd();
-      }
-    },
+    value: initialValue,
     config: { ...springConfig.default, ...restConfig },
   }));
 
   const _update = (updatedValue: number) => {
-    set({ value: updatedValue });
+    set({
+      value: updatedValue,
+      // Config for value update
+      onRest: ({ value }: { value: number }) => {
+        onAnimationEnd && onAnimationEnd(value);
+      },
+    });
   };
 
-  const _targetObject: { value: number } = { value: _initialValue };
+  const _targetObject: { value: number } = { value: props.value };
   return new Proxy(_targetObject, {
     set: function (target: { value: number }, key, value) {
       if (key === "value") {

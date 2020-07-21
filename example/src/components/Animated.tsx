@@ -7,7 +7,11 @@ import {
 
 const Animated = () => {
   const [visible, setVisible] = useState(true);
-  const opacity = useAnimatedValue(visible ? 1 : 0);
+  const opacity = useAnimatedValue(visible ? 1 : 0, {
+    onAnimationEnd: function (val) {
+      console.log("ANIMATION ENDED", val);
+    },
+  });
 
   useEffect(() => {
     opacity.value = visible ? 1 : 0;

@@ -1,23 +1,18 @@
-import React, { useEffect } from "react";
-import { useScroll, useAnimatedValue, AnimatedBlock } from "react-uicomp";
+import React from "react";
+import { useScroll, AnimatedBlock, interpolateNumbers } from "react-uicomp";
 
 const Scroll = () => {
   const { y } = useScroll();
-  const opacity = useAnimatedValue(1);
-
-  useEffect(() => {
-    if (y >= 200) {
-      opacity.value = 0;
-    } else {
-      opacity.value = 1;
-    }
-  }, [y, opacity]);
 
   return (
     <AnimatedBlock
       style={{
-        opacity: opacity.value,
-        backgroundColor: "red",
+        opacity: interpolateNumbers(y, {
+          inputRange: [0, 200],
+          outputRange: [1, 0],
+          extrapolate: "clamp",
+        }),
+        background: "#39F",
         position: "relative",
         border: "1px solid red",
         overflow: "auto",
