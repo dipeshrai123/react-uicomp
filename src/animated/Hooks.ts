@@ -1,15 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
+import ResizeObserver from "resize-observer-polyfill";
 import { useSpring, config as springConfig, SpringConfig } from "react-spring";
-
-// Memoized Inititializer
-// export const useValue = <T>(initialValue: T) => {
-//   const ref = useRef<T>();
-//   if (ref.current === undefined) {
-//     ref.current = initialValue;
-//   }
-//   return ref.current;
-// };
 
 interface UseAnimatedValueConfig extends SpringConfig {
   onAnimationEnd?: (value: number) => void;
@@ -78,4 +70,46 @@ export const useScroll = (): {
   }, []);
 
   return { x: scrollX, y: scrollY };
+};
+
+// useMeasure() hook
+export const useMeasure = (): [
+  object,
+  {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  },
+] => {
+  const ref = useRef();
+  const [measurement, setMeasurement] = useState({
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
+  });
+  const [ro] = useState(
+    () =>
+      new ResizeObserver(([entry]) =>
+        setMeasurement({
+          left: entry.contentRect.left,
+          top: entry.contentRect.top,
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        }),
+      ),
+  );
+
+  useEffect(() => {
+    if (ref.current) {
+      ro.observe(ref.current);
+    } else {
+      ro.observe(document.documentElement);
+    }
+
+    return ro.disconnect;
+  }, []);
+
+  return [{ ref }, measurement];
 };

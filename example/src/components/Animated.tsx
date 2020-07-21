@@ -26,7 +26,8 @@ const Animated = () => {
             ],
           }),
           width: 100,
-          padding: 20,
+          paddingTop: 20,
+          height: 50,
           background: "#39F",
           fontFamily: "Arial",
           textAlign: "center",
@@ -37,6 +38,16 @@ const Animated = () => {
       >
         ANIMATED
       </AnimatedBlock>
+      <div
+        style={{
+          width: 100,
+          height: 100,
+          position: "relative",
+          top: 200,
+          left: 80,
+          background: "#39F",
+        }}
+      ></div>
       <button onClick={() => setVisible((prev) => !prev)}>TOGGLE</button>
     </>
   );
