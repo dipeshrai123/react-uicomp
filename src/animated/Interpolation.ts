@@ -1,5 +1,5 @@
 // Generic 0 - 1 Interpolation
-const binaryInterpolate = (perc: number, val1: number, val2: number) => {
+export const binaryInterpolate = (perc: number, val1: number, val2: number) => {
   return val1 * (1 - perc) + val2 * perc;
 };
 

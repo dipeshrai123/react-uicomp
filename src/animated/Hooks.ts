@@ -1,19 +1,41 @@
 /* eslint-disable no-unused-vars */
 import { useRef, useState, useEffect } from "react";
-import { useSpring, config as springConfig, SpringConfig } from "react-spring";
+import { useSpring, config as springConfig } from "react-spring";
+import ResizeObserver from "resize-observer-polyfill";
 
-interface UseAnimatedValueConfig extends SpringConfig {
+interface UseAnimatedValueConfig {
   onAnimationEnd?: (value: number) => void;
+  onAnimationListener?: (value: number) => void;
+  animationType?: "ease" | "elastic";
+  duration?: number;
+  [prop: string]: any;
 }
 
 export const useAnimatedValue = (
-  initialValue: number,
+  initialValue: any,
   config?: UseAnimatedValueConfig,
 ) => {
-  const { onAnimationEnd, ...restConfig } = config !== undefined && config;
+  const _initialValue = initialValue;
+  const _prevValue = useRef(_initialValue);
+
+  // Different internal config configs
+  const {
+    onAnimationEnd,
+    animationType = "ease",
+    onAnimationListener,
+    ...restConfig
+  } = config !== undefined && config;
+  const _config =
+    animationType === "ease"
+      ? springConfig.default
+      : { mass: 1, friction: 18, tension: 250 };
+
   const [props, set] = useSpring(() => ({
-    value: initialValue,
-    config: { ...springConfig.default, ...restConfig },
+    value: _initialValue,
+    config: { ..._config, ...restConfig },
+    onFrame: ({ value }: { value: number }) => {
+      onAnimationListener && onAnimationListener(value);
+    },
   }));
 
   const _update = (updatedValue: number) => {
@@ -25,6 +47,13 @@ export const useAnimatedValue = (
       },
     });
   };
+
+  useEffect(() => {
+    if (initialValue !== _prevValue.current) {
+      _update(initialValue);
+      _prevValue.current = initialValue;
+    }
+  }, [initialValue]);
 
   const _targetObject: { value: number } = { value: props.value };
   return new Proxy(_targetObject, {
@@ -72,17 +101,15 @@ export const useScroll = (): {
 };
 
 // useMeasure() hook
-export const useMeasure = (): [
-  { ref: React.RefObject<any> },
-  {
-    left: number;
-    top: number;
-    width: number;
-    height: number;
-    vLeft: number;
-    vTop: number;
-  },
-] => {
+export const useMeasure = (): {
+  handler: { ref: React.RefObject<any> };
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  vLeft: number;
+  vTop: number;
+} => {
   const ref = useRef<any>(null);
   const [measurement, setMeasurement] = useState({
     left: 0,
@@ -108,5 +135,27 @@ export const useMeasure = (): [
     });
   }, []);
 
-  return [{ ref }, measurement];
+  return { handler: { ref }, ...measurement };
+};
+
+// useWindowDimension() hook
+export const useWindowDimension = () => {
+  const [measurement, setMeasurement] = useState({ width: 0, height: 0 });
+  const [ro] = useState(
+    () =>
+      new ResizeObserver(([entry]) =>
+        setMeasurement({
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        }),
+      ),
+  );
+
+  useEffect(() => {
+    ro.observe(document.documentElement);
+
+    return () => ro.disconnect;
+  }, []);
+
+  return measurement;
 };
