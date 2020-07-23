@@ -2,34 +2,23 @@ import React, { useState } from "react";
 import { AnimatedBlock, useAnimatedValue, interpolate } from "react-uicomp";
 
 const Animated = () => {
-  const [visible, setVisible] = useState(true);
-  const opacity = useAnimatedValue(visible ? 1 : 0);
-
+  const [toggle, setToggle] = useState(false);
+  const opacity = useAnimatedValue(toggle ? 1 : 0);
   return (
     <>
       <AnimatedBlock
         style={{
+          opacity: opacity.value,
           transform: interpolate(opacity.value, {
             inputRange: [0, 1],
-            outputRange: [
-              `scale(1) translateY(-100px)`,
-              `scale(2) translateY(0px)`,
-            ],
+            outputRange: [`translateX(0px)`, `translateX(100px)`],
           }),
           width: 100,
-          paddingTop: 0,
-          height: 50,
-          background: "red",
-          fontFamily: "Arial",
-          textAlign: "center",
-          color: "white",
-          borderRadius: 4,
-          margin: "100px auto 0px auto",
+          height: 100,
+          backgroundColor: "#39F",
         }}
-      >
-        ANIMATED
-      </AnimatedBlock>
-      <button onClick={() => setVisible((prev) => !prev)}>TOGGLE</button>
+      ></AnimatedBlock>
+      <button onClick={() => setToggle((prev) => !prev)}>OPen</button>
     </>
   );
 };

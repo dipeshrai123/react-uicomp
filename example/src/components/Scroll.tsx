@@ -1,25 +1,35 @@
-import React from "react";
-import { useScroll, AnimatedBlock, interpolate } from "react-uicomp";
+import React, { useEffect } from "react";
+import {
+  useScroll,
+  AnimatedBlock,
+  interpolate,
+  useAnimatedValue,
+} from "react-uicomp";
 
 const Scroll = () => {
   const { y } = useScroll();
+  const yAnimated = useAnimatedValue(0);
+
+  useEffect(() => {
+    yAnimated.value = y;
+  }, [y, yAnimated]);
 
   return (
     <div>
       <AnimatedBlock
         style={{
           bottom: 50,
-          width: interpolate(y, {
+          width: interpolate(yAnimated.value, {
             inputRange: [0, 500],
             outputRange: [100, 200],
             extrapolate: "clamp",
           }),
-          height: interpolate(y, {
+          height: interpolate(yAnimated.value, {
             inputRange: [0, 500],
             outputRange: [20, 200],
             extrapolate: "clamp",
           }),
-          left: interpolate(y, {
+          left: interpolate(yAnimated.value, {
             inputRange: [0, 500],
             outputRange: [document.documentElement.clientWidth - 150, 50],
             extrapolate: "clamp",
