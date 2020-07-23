@@ -76,11 +76,10 @@ export const useAnimatedValue = (
   });
 };
 
-// useScroll() Hook for body
 // TODO : Handler for HTMLElement, Scroll Direction
 export const useScroll = (): {
-  x: number;
-  y: number;
+  scrollX: number;
+  scrollY: number;
 } => {
   const [scrollX, setScrollX] = useState(0);
   const [scrollY, setScrollY] = useState(0);
@@ -97,10 +96,10 @@ export const useScroll = (): {
     return () => window.removeEventListener("scroll", scrollListener);
   }, []);
 
-  return { x: scrollX, y: scrollY };
+  return { scrollX, scrollY };
 };
 
-// useMeasure() hook
+// Todo: Implementation of ResizeObserver
 export const useMeasure = (): {
   handler: { ref: React.RefObject<any> };
   left: number;
@@ -122,23 +121,29 @@ export const useMeasure = (): {
 
   useEffect(() => {
     const _refElement = ref.current ? ref.current : document.documentElement;
-    const { left, top, width, height } = _refElement.getBoundingClientRect();
-    // Only gives relative to viewport
-    const { pageXOffset, pageYOffset } = window;
-    setMeasurement({
-      left: left + pageXOffset,
-      top: top + pageYOffset,
-      width,
-      height,
-      vLeft: left,
-      vTop: top,
-    });
+
+    const _resizeObserver = function () {
+      // Only gives relative to viewport
+      const { left, top, width, height } = _refElement.getBoundingClientRect();
+      const { pageXOffset, pageYOffset } = window;
+      setMeasurement({
+        left: left + pageXOffset,
+        top: top + pageYOffset,
+        width,
+        height,
+        vLeft: left,
+        vTop: top,
+      });
+    };
+    _resizeObserver(); // Init
+    window.addEventListener("resize", _resizeObserver);
+
+    return () => window.removeEventListener("resize", _resizeObserver);
   }, []);
 
   return { handler: { ref }, ...measurement };
 };
 
-// useWindowDimension() hook
 export const useWindowDimension = () => {
   const [measurement, setMeasurement] = useState({ width: 0, height: 0 });
   const [ro] = useState(
@@ -157,5 +162,5 @@ export const useWindowDimension = () => {
     return () => ro.disconnect;
   }, []);
 
-  return measurement;
+  return measurement; // { width, height }
 };

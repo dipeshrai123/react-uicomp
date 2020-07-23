@@ -7,12 +7,12 @@ import {
 } from "react-uicomp";
 
 const Scroll = () => {
-  const { y } = useScroll();
+  const { scrollY } = useScroll();
   const yAnimated = useAnimatedValue(0);
 
   useEffect(() => {
-    yAnimated.value = y;
-  }, [y, yAnimated]);
+    yAnimated.value = scrollY;
+  }, [scrollY, yAnimated]);
 
   return (
     <div>
