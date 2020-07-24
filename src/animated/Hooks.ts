@@ -155,12 +155,13 @@ export const useWindowDimension = () => {
   const [measurement, setMeasurement] = useState({ width: 0, height: 0 });
   const [ro] = useState(
     () =>
-      new ResizeObserver(([entry]) =>
+      new ResizeObserver(([entry]) => {
+        const { clientWidth, clientHeight } = entry.target;
         setMeasurement({
-          width: entry.contentRect.width,
-          height: entry.contentRect.height,
-        }),
-      ),
+          width: clientWidth,
+          height: clientHeight,
+        });
+      }),
   );
 
   useEffect(() => {

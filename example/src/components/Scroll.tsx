@@ -1,18 +1,16 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   useScroll,
   AnimatedBlock,
   interpolate,
   useAnimatedValue,
+  useWindowDimension,
 } from "react-uicomp";
 
 const Scroll = () => {
   const { scrollY } = useScroll();
-  const yAnimated = useAnimatedValue(0);
-
-  useEffect(() => {
-    yAnimated.value = scrollY;
-  }, [scrollY, yAnimated]);
+  const { width, height } = useWindowDimension();
+  const yAnimated = useAnimatedValue(scrollY);
 
   return (
     <div>
@@ -21,17 +19,17 @@ const Scroll = () => {
           bottom: 50,
           width: interpolate(yAnimated.value, {
             inputRange: [0, 500],
-            outputRange: [100, 200],
+            outputRange: [100, 400],
             extrapolate: "clamp",
           }),
           height: interpolate(yAnimated.value, {
             inputRange: [0, 500],
-            outputRange: [20, 200],
+            outputRange: [20, height - 100],
             extrapolate: "clamp",
           }),
           left: interpolate(yAnimated.value, {
             inputRange: [0, 500],
-            outputRange: [document.documentElement.clientWidth - 150, 50],
+            outputRange: [width - 150, 50],
             extrapolate: "clamp",
           }),
           borderRadius: 4,
