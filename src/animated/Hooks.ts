@@ -88,18 +88,22 @@ export enum ScrollState {
   UNDETERMINED = 0,
 }
 
-// TODO : Handler for HTMLElement, Scroll Direction
+// TODO : Handler for HTMLElement, isScrolling
+type ScrollUseStateProp = { scrollX: number; scrollY: number };
 export const useScroll = (): {
   scrollX: number;
   scrollY: number;
   scrollDirection: number;
 } => {
-  const [scroll, setScroll] = useState({ scrollX: 0, scrollY: 0 });
-  const isScrolling = useRef(-1);
-  const scrollDirection = useRef(ScrollState.UNDETERMINED);
-  const prevScrollY = useRef(0);
+  const [scroll, setScroll] = useState<ScrollUseStateProp>({
+    scrollX: 0,
+    scrollY: 0,
+  });
+  const isScrolling = useRef<number>(-1);
+  const scrollDirection = useRef<number>(ScrollState.UNDETERMINED);
+  const prevScrollY = useRef<number>(0);
 
-  const scrollListener = () => {
+  const scrollListener: () => void = () => {
     const { pageYOffset, pageXOffset } = window;
     setScroll({ scrollX: pageXOffset, scrollY: pageYOffset });
 
@@ -131,6 +135,15 @@ export const useScroll = (): {
 };
 
 // Todo: Implementation of ResizeObserver
+type UseMeasureMeasurement = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  viewportLeft: number;
+  viewportTop: number;
+};
+
 export const useMeasure = (): {
   handler: { ref: React.RefObject<any> };
   left: number;
@@ -141,7 +154,7 @@ export const useMeasure = (): {
   viewportTop: number;
 } => {
   const ref = useRef<any>(null);
-  const [measurement, setMeasurement] = useState({
+  const [measurement, setMeasurement] = useState<UseMeasureMeasurement>({
     left: 0,
     top: 0,
     width: 0,
@@ -153,7 +166,7 @@ export const useMeasure = (): {
   useEffect(() => {
     const _refElement = ref.current ? ref.current : document.documentElement;
 
-    const _resizeObserver = function () {
+    const _resizeObserver: () => void = function () {
       // Only gives relative to viewport
       const { left, top, width, height } = _refElement.getBoundingClientRect();
       const { pageXOffset, pageYOffset } = window;
@@ -175,8 +188,11 @@ export const useMeasure = (): {
   return { handler: { ref }, ...measurement };
 };
 
-export const useWindowDimension = () => {
-  const [measurement, setMeasurement] = useState({ width: 0, height: 0 });
+type useWindowDimensionMeasurement = { width: number; height: number };
+export const useWindowDimension = (): useWindowDimensionMeasurement => {
+  const [measurement, setMeasurement] = useState<useWindowDimensionMeasurement>(
+    { width: 0, height: 0 },
+  );
   const [ro] = useState(
     () =>
       new ResizeObserver(([entry]) => {
