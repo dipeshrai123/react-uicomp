@@ -3,6 +3,11 @@ import { useRef, useState, useEffect } from "react";
 import { useSpring, config as springConfig } from "react-spring";
 import ResizeObserver from "resize-observer-polyfill";
 
+// boolean to binary
+const bin = (booleanValue: boolean) => {
+  return booleanValue ? 1 : 0;
+};
+
 interface UseAnimatedValueConfig {
   onAnimationEnd?: (value: number) => void;
   onAnimationListener?: (value: number) => void;
@@ -12,10 +17,11 @@ interface UseAnimatedValueConfig {
 }
 
 export const useAnimatedValue = (
-  initialValue: any,
+  initialValue: number | boolean,
   config?: UseAnimatedValueConfig,
 ) => {
-  const _initialValue = initialValue;
+  const _initialValue: number =
+    typeof initialValue === "boolean" ? bin(initialValue) : initialValue;
   const _prevValue = useRef(_initialValue);
 
   // Different internal config configs
@@ -50,8 +56,8 @@ export const useAnimatedValue = (
 
   useEffect(() => {
     if (initialValue !== _prevValue.current) {
-      _update(initialValue);
-      _prevValue.current = initialValue;
+      _update(_initialValue);
+      _prevValue.current = _initialValue;
     }
   }, [initialValue]);
 
