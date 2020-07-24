@@ -81,13 +81,14 @@ export const useScroll = (): {
   scrollX: number;
   scrollY: number;
 } => {
-  const [scrollX, setScrollX] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
+  const [scroll, setScroll] = useState({ scrollX: 0, scrollY: 0 });
 
   const scrollListener = () => {
     const { pageYOffset, pageXOffset } = window;
-    setScrollX(pageXOffset);
-    setScrollY(pageYOffset);
+    setScroll({
+      scrollX: pageXOffset,
+      scrollY: pageYOffset,
+    });
   };
 
   useEffect(() => {
@@ -96,7 +97,7 @@ export const useScroll = (): {
     return () => window.removeEventListener("scroll", scrollListener);
   }, []);
 
-  return { scrollX, scrollY };
+  return scroll;
 };
 
 // Todo: Implementation of ResizeObserver
@@ -106,8 +107,8 @@ export const useMeasure = (): {
   top: number;
   width: number;
   height: number;
-  vLeft: number;
-  vTop: number;
+  viewportLeft: number;
+  viewportTop: number;
 } => {
   const ref = useRef<any>(null);
   const [measurement, setMeasurement] = useState({
@@ -115,8 +116,8 @@ export const useMeasure = (): {
     top: 0,
     width: 0,
     height: 0,
-    vLeft: 0,
-    vTop: 0,
+    viewportLeft: 0,
+    viewportTop: 0,
   });
 
   useEffect(() => {
@@ -131,8 +132,8 @@ export const useMeasure = (): {
         top: top + pageYOffset,
         width,
         height,
-        vLeft: left,
-        vTop: top,
+        viewportLeft: left,
+        viewportTop: top,
       });
     };
     _resizeObserver(); // Init

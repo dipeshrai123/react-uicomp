@@ -61,7 +61,6 @@ const _getNarrowedInputArray = function (
   return narrowedInput;
 };
 
-// Handles both animated and numbers interpolation
 interface InterpolateConfig {
   inputRange: Array<number>;
   outputRange: Array<any>;
@@ -81,6 +80,7 @@ export const interpolate = (value: any, config: InterpolateConfig) => {
     });
   } else {
     // Numbers - It only supports extrapolate for now
+    // Todo: SUPPORT extrapolateLeft, extrapolateRight
     const { inputRange, outputRange, extrapolate = "extend" } = config;
     const narrowedInput = _getNarrowedInputArray(
       value,
