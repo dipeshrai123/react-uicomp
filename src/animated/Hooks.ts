@@ -94,35 +94,39 @@ export const useScroll = (): {
   scrollX: number;
   scrollY: number;
   scrollDirection: number;
+  isScrolling: boolean;
 } => {
   const [scroll, setScroll] = useState<ScrollUseStateProp>({
     scrollX: 0,
     scrollY: 0,
   });
-  const isScrolling = useRef<number>(-1);
-  const scrollDirection = useRef<number>(ScrollState.UNDETERMINED);
-  const prevScrollY = useRef<number>(0);
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
+  const _isScrolling = useRef<number>(-1);
+  const _scrollDirection = useRef<number>(ScrollState.UNDETERMINED);
+  const _prevScrollY = useRef<number>(0);
 
   const scrollListener: () => void = () => {
     const { pageYOffset, pageXOffset } = window;
     setScroll({ scrollX: pageXOffset, scrollY: pageYOffset });
 
     // Clear if scrolling
-    if (isScrolling.current !== -1) {
-      clearTimeout(isScrolling.current);
+    if (_isScrolling.current !== -1) {
+      setIsScrolling(true);
+      clearTimeout(_isScrolling.current);
     }
 
-    isScrolling.current = setTimeout(() => {
-      scrollDirection.current = ScrollState.UNDETERMINED; // reset
+    _isScrolling.current = setTimeout(() => {
+      setIsScrolling(false);
+      _scrollDirection.current = ScrollState.UNDETERMINED; // reset
     }, 500);
 
-    const diff = pageYOffset - prevScrollY.current;
+    const diff = pageYOffset - _prevScrollY.current;
     if (diff > 0) {
-      scrollDirection.current = ScrollState.DOWN;
+      _scrollDirection.current = ScrollState.DOWN;
     } else {
-      scrollDirection.current = ScrollState.UP;
+      _scrollDirection.current = ScrollState.UP;
     }
-    prevScrollY.current = pageYOffset;
+    _prevScrollY.current = pageYOffset;
   };
 
   useEffect(() => {
@@ -131,7 +135,11 @@ export const useScroll = (): {
     return () => window.removeEventListener("scroll", scrollListener);
   }, []);
 
-  return { ...scroll, scrollDirection: scrollDirection.current };
+  return {
+    ...scroll,
+    scrollDirection: _scrollDirection.current,
+    isScrolling,
+  };
 };
 
 // Todo: Implementation of ResizeObserver
