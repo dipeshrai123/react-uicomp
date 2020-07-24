@@ -220,3 +220,33 @@ export const useWindowDimension = (): useWindowDimensionMeasurement => {
 
   return measurement; // { width, height }
 };
+
+export const useMouseMove = () => {
+  const ref = useRef<any>();
+  const [pointerPosition, setPointerPosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const moveHandler = function (event: MouseEvent) {
+      setPointerPosition({
+        x: event.offsetX,
+        y: event.offsetY,
+      });
+    };
+
+    if (ref.current) {
+      ref.current.addEventListener("mousemove", moveHandler);
+    } else {
+      document.addEventListener("mousemove", moveHandler);
+    }
+
+    return () => {
+      if (ref.current) {
+        ref.current.removeEventListener("mousemove", moveHandler);
+      } else {
+        document.removeEventListener("mousemove", moveHandler);
+      }
+    };
+  }, []);
+
+  return { handler: { ref }, ...pointerPosition };
+};

@@ -3,6 +3,7 @@ import ModalPage from "./components/ModalPage";
 import AnimatedPage from "./components/Animated";
 import ScrollPage from "./components/Scroll";
 import TabsPage from "./components/Tabs";
+import MouseMovePage from "./components/MouseMove";
 
 export const publicPaths = [
   {
@@ -40,8 +41,15 @@ export const publicPaths = [
     component: TabsPage,
     restricted: true,
   },
+  {
+    key: "mousemove",
+    name: "MouseMove",
+    path: "/mousemove",
+    component: MouseMovePage,
+    restricted: true,
+  },
 ];
 
 export const privatePaths = [];
 
-export const userRoles = { user: { access: ["/dropdown", "/modal", "/animated", "/scroll", "/tabs"] } };
+export const userRoles = { user: { access: ["/dropdown", "/modal", "/animated", "/scroll", "/tabs", "/mousemove"] } };
