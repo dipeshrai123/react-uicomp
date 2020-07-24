@@ -12,7 +12,6 @@ const MouseMove = () => {
         padding: "20px 50px",
       }}
     >
-      DIpesh rai
       <div
         {...handler}
         style={{ width: 200, height: 200, background: "red" }}
