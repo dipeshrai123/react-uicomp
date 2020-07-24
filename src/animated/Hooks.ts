@@ -82,19 +82,43 @@ export const useAnimatedValue = (
   });
 };
 
+export enum ScrollState {
+  UP = -1,
+  DOWN = 1,
+  UNDETERMINED = 0,
+}
+
 // TODO : Handler for HTMLElement, Scroll Direction
 export const useScroll = (): {
   scrollX: number;
   scrollY: number;
+  scrollDirection: number;
 } => {
   const [scroll, setScroll] = useState({ scrollX: 0, scrollY: 0 });
+  const isScrolling = useRef(-1);
+  const scrollDirection = useRef(ScrollState.UNDETERMINED);
+  const prevScrollY = useRef(0);
 
   const scrollListener = () => {
     const { pageYOffset, pageXOffset } = window;
-    setScroll({
-      scrollX: pageXOffset,
-      scrollY: pageYOffset,
-    });
+    setScroll({ scrollX: pageXOffset, scrollY: pageYOffset });
+
+    // Clear if scrolling
+    if (isScrolling.current !== -1) {
+      clearTimeout(isScrolling.current);
+    }
+
+    isScrolling.current = setTimeout(() => {
+      scrollDirection.current = ScrollState.UNDETERMINED; // reset
+    }, 500);
+
+    const diff = pageYOffset - prevScrollY.current;
+    if (diff > 0) {
+      scrollDirection.current = ScrollState.DOWN;
+    } else {
+      scrollDirection.current = ScrollState.UP;
+    }
+    prevScrollY.current = pageYOffset;
   };
 
   useEffect(() => {
@@ -103,7 +127,7 @@ export const useScroll = (): {
     return () => window.removeEventListener("scroll", scrollListener);
   }, []);
 
-  return scroll;
+  return { ...scroll, scrollDirection: scrollDirection.current };
 };
 
 // Todo: Implementation of ResizeObserver
