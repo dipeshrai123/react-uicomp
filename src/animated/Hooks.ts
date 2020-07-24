@@ -3,6 +3,11 @@ import { useRef, useState, useEffect } from "react";
 import { useSpring, config as springConfig } from "react-spring";
 import ResizeObserver from "resize-observer-polyfill";
 
+// boolean to binary
+const bin = (booleanValue: boolean) => {
+  return booleanValue ? 1 : 0;
+};
+
 interface UseAnimatedValueConfig {
   onAnimationEnd?: (value: number) => void;
   onAnimationListener?: (value: number) => void;
@@ -12,10 +17,11 @@ interface UseAnimatedValueConfig {
 }
 
 export const useAnimatedValue = (
-  initialValue: any,
+  initialValue: number | boolean,
   config?: UseAnimatedValueConfig,
 ) => {
-  const _initialValue = initialValue;
+  const _initialValue: number =
+    typeof initialValue === "boolean" ? bin(initialValue) : initialValue;
   const _prevValue = useRef(_initialValue);
 
   // Different internal config configs
@@ -50,8 +56,8 @@ export const useAnimatedValue = (
 
   useEffect(() => {
     if (initialValue !== _prevValue.current) {
-      _update(initialValue);
-      _prevValue.current = initialValue;
+      _update(_initialValue);
+      _prevValue.current = _initialValue;
     }
   }, [initialValue]);
 
@@ -76,19 +82,43 @@ export const useAnimatedValue = (
   });
 };
 
-// useScroll() Hook for body
+export enum ScrollState {
+  UP = -1,
+  DOWN = 1,
+  UNDETERMINED = 0,
+}
+
 // TODO : Handler for HTMLElement, Scroll Direction
 export const useScroll = (): {
-  x: number;
-  y: number;
+  scrollX: number;
+  scrollY: number;
+  scrollDirection: number;
 } => {
-  const [scrollX, setScrollX] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
+  const [scroll, setScroll] = useState({ scrollX: 0, scrollY: 0 });
+  const isScrolling = useRef(-1);
+  const scrollDirection = useRef(ScrollState.UNDETERMINED);
+  const prevScrollY = useRef(0);
 
   const scrollListener = () => {
     const { pageYOffset, pageXOffset } = window;
-    setScrollX(pageXOffset);
-    setScrollY(pageYOffset);
+    setScroll({ scrollX: pageXOffset, scrollY: pageYOffset });
+
+    // Clear if scrolling
+    if (isScrolling.current !== -1) {
+      clearTimeout(isScrolling.current);
+    }
+
+    isScrolling.current = setTimeout(() => {
+      scrollDirection.current = ScrollState.UNDETERMINED; // reset
+    }, 500);
+
+    const diff = pageYOffset - prevScrollY.current;
+    if (diff > 0) {
+      scrollDirection.current = ScrollState.DOWN;
+    } else {
+      scrollDirection.current = ScrollState.UP;
+    }
+    prevScrollY.current = pageYOffset;
   };
 
   useEffect(() => {
@@ -97,18 +127,18 @@ export const useScroll = (): {
     return () => window.removeEventListener("scroll", scrollListener);
   }, []);
 
-  return { x: scrollX, y: scrollY };
+  return { ...scroll, scrollDirection: scrollDirection.current };
 };
 
-// useMeasure() hook
+// Todo: Implementation of ResizeObserver
 export const useMeasure = (): {
   handler: { ref: React.RefObject<any> };
   left: number;
   top: number;
   width: number;
   height: number;
-  vLeft: number;
-  vTop: number;
+  viewportLeft: number;
+  viewportTop: number;
 } => {
   const ref = useRef<any>(null);
   const [measurement, setMeasurement] = useState({
@@ -116,39 +146,46 @@ export const useMeasure = (): {
     top: 0,
     width: 0,
     height: 0,
-    vLeft: 0,
-    vTop: 0,
+    viewportLeft: 0,
+    viewportTop: 0,
   });
 
   useEffect(() => {
     const _refElement = ref.current ? ref.current : document.documentElement;
-    const { left, top, width, height } = _refElement.getBoundingClientRect();
-    // Only gives relative to viewport
-    const { pageXOffset, pageYOffset } = window;
-    setMeasurement({
-      left: left + pageXOffset,
-      top: top + pageYOffset,
-      width,
-      height,
-      vLeft: left,
-      vTop: top,
-    });
+
+    const _resizeObserver = function () {
+      // Only gives relative to viewport
+      const { left, top, width, height } = _refElement.getBoundingClientRect();
+      const { pageXOffset, pageYOffset } = window;
+      setMeasurement({
+        left: left + pageXOffset,
+        top: top + pageYOffset,
+        width,
+        height,
+        viewportLeft: left,
+        viewportTop: top,
+      });
+    };
+    _resizeObserver(); // Init
+    window.addEventListener("resize", _resizeObserver);
+
+    return () => window.removeEventListener("resize", _resizeObserver);
   }, []);
 
   return { handler: { ref }, ...measurement };
 };
 
-// useWindowDimension() hook
 export const useWindowDimension = () => {
   const [measurement, setMeasurement] = useState({ width: 0, height: 0 });
   const [ro] = useState(
     () =>
-      new ResizeObserver(([entry]) =>
+      new ResizeObserver(([entry]) => {
+        const { clientWidth, clientHeight } = entry.target;
         setMeasurement({
-          width: entry.contentRect.width,
-          height: entry.contentRect.height,
-        }),
-      ),
+          width: clientWidth,
+          height: clientHeight,
+        });
+      }),
   );
 
   useEffect(() => {
@@ -157,5 +194,5 @@ export const useWindowDimension = () => {
     return () => ro.disconnect;
   }, []);
 
-  return measurement;
+  return measurement; // { width, height }
 };

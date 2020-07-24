@@ -70,14 +70,14 @@ export function useTheme() {
 
 // useOutSideClick Hook - handles outside click
 export const useOutsideClick = (
-  elem: React.RefObject<HTMLElement>,
+  elementRef: React.RefObject<HTMLElement>,
   callback: (event: MouseEvent) => void,
 ) => {
   const callbackMemo = React.useMemo(() => callback, [callback]);
 
   React.useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
-      if (!elem?.current?.contains(e.target as Element) && callbackMemo) {
+      if (!elementRef?.current?.contains(e.target as Element) && callbackMemo) {
         callbackMemo(e);
       }
     };
@@ -85,5 +85,5 @@ export const useOutsideClick = (
     document.addEventListener("click", handleOutsideClick, true);
 
     return document.addEventListener("click", handleOutsideClick, true);
-  }, [callbackMemo, elem]);
+  }, [callbackMemo, elementRef]);
 };
