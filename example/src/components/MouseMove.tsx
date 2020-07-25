@@ -1,10 +1,16 @@
 import React from "react";
-import { useMouseMove } from "react-uicomp";
+import {
+  useMouseMove,
+  AnimatedBlock,
+  useAnimatedValue,
+  interpolate,
+} from "react-uicomp";
 
 const MouseMove = () => {
-  const { handler, x, y } = useMouseMove();
-
-  console.log(x, y);
+  const { mouseX, mouseY, isMoving } = useMouseMove();
+  const transX = useAnimatedValue(mouseX - 15);
+  const transY = useAnimatedValue(mouseY - 15);
+  const scale = useAnimatedValue(isMoving);
 
   return (
     <div
@@ -12,10 +18,21 @@ const MouseMove = () => {
         padding: "20px 50px",
       }}
     >
-      <div
-        {...handler}
-        style={{ width: 200, height: 200, background: "red" }}
-      ></div>
+      <AnimatedBlock
+        style={{
+          width: 30,
+          height: 30,
+          background: "#39F",
+          borderRadius: 15,
+          position: "absolute",
+          left: transX.value,
+          top: transY.value,
+          transform: interpolate(scale.value, {
+            inputRange: [0, 1],
+            outputRange: [`scale(1)`, `scale(0.5)`],
+          }),
+        }}
+      ></AnimatedBlock>
     </div>
   );
 };
