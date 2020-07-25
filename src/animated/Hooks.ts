@@ -118,7 +118,7 @@ export const useScroll = (): {
     _isScrolling.current = setTimeout(() => {
       setIsScrolling(false);
       _scrollDirection.current = ScrollState.UNDETERMINED; // reset
-    }, 500);
+    }, 250);
 
     const diff = pageYOffset - _prevScrollY.current;
     if (diff > 0) {
@@ -221,32 +221,40 @@ export const useWindowDimension = (): useWindowDimensionMeasurement => {
   return measurement; // { width, height }
 };
 
-export const useMouseMove = () => {
-  const ref = useRef<any>();
-  const [pointerPosition, setPointerPosition] = useState({ x: 0, y: 0 });
+type UseMouseMoveState = { mouseX: number; mouseY: number };
+export const useMouseMove = (): {
+  mouseX: number;
+  mouseY: number;
+  isMoving: boolean;
+} => {
+  const [isMoving, setIsMoving] = useState<boolean>(false);
+  const _isMoving = useRef<number>(-1);
+  const [pointerPosition, setPointerPosition] = useState<UseMouseMoveState>({
+    mouseX: 0,
+    mouseY: 0,
+  });
 
   useEffect(() => {
     const moveHandler = function (event: MouseEvent) {
+      if (_isMoving.current !== -1) {
+        setIsMoving(true);
+        clearTimeout(_isMoving.current);
+      }
+
+      _isMoving.current = setTimeout(() => {
+        setIsMoving(false);
+      }, 250);
+
       setPointerPosition({
-        x: event.offsetX,
-        y: event.offsetY,
+        mouseX: event.clientX,
+        mouseY: event.clientY,
       });
     };
 
-    if (ref.current) {
-      ref.current.addEventListener("mousemove", moveHandler);
-    } else {
-      document.addEventListener("mousemove", moveHandler);
-    }
+    document.addEventListener("mousemove", moveHandler);
 
-    return () => {
-      if (ref.current) {
-        ref.current.removeEventListener("mousemove", moveHandler);
-      } else {
-        document.removeEventListener("mousemove", moveHandler);
-      }
-    };
+    return () => document.removeEventListener("mousemove", moveHandler);
   }, []);
 
-  return { handler: { ref }, ...pointerPosition };
+  return { ...pointerPosition, isMoving };
 };
