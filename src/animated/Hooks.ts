@@ -88,37 +88,45 @@ export enum ScrollState {
   UNDETERMINED = 0,
 }
 
-// TODO : Handler for HTMLElement, Scroll Direction
+// TODO : Handler for HTMLElement, isScrolling
+type ScrollUseStateProp = { scrollX: number; scrollY: number };
 export const useScroll = (): {
   scrollX: number;
   scrollY: number;
   scrollDirection: number;
+  isScrolling: boolean;
 } => {
-  const [scroll, setScroll] = useState({ scrollX: 0, scrollY: 0 });
-  const isScrolling = useRef(-1);
-  const scrollDirection = useRef(ScrollState.UNDETERMINED);
-  const prevScrollY = useRef(0);
+  const [scroll, setScroll] = useState<ScrollUseStateProp>({
+    scrollX: 0,
+    scrollY: 0,
+  });
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
+  const _isScrolling = useRef<number>(-1);
+  const _scrollDirection = useRef<number>(ScrollState.UNDETERMINED);
+  const _prevScrollY = useRef<number>(0);
 
-  const scrollListener = () => {
+  const scrollListener: () => void = () => {
     const { pageYOffset, pageXOffset } = window;
     setScroll({ scrollX: pageXOffset, scrollY: pageYOffset });
 
     // Clear if scrolling
-    if (isScrolling.current !== -1) {
-      clearTimeout(isScrolling.current);
+    if (_isScrolling.current !== -1) {
+      setIsScrolling(true);
+      clearTimeout(_isScrolling.current);
     }
 
-    isScrolling.current = setTimeout(() => {
-      scrollDirection.current = ScrollState.UNDETERMINED; // reset
+    _isScrolling.current = setTimeout(() => {
+      setIsScrolling(false);
+      _scrollDirection.current = ScrollState.UNDETERMINED; // reset
     }, 500);
 
-    const diff = pageYOffset - prevScrollY.current;
+    const diff = pageYOffset - _prevScrollY.current;
     if (diff > 0) {
-      scrollDirection.current = ScrollState.DOWN;
+      _scrollDirection.current = ScrollState.DOWN;
     } else {
-      scrollDirection.current = ScrollState.UP;
+      _scrollDirection.current = ScrollState.UP;
     }
-    prevScrollY.current = pageYOffset;
+    _prevScrollY.current = pageYOffset;
   };
 
   useEffect(() => {
@@ -127,10 +135,23 @@ export const useScroll = (): {
     return () => window.removeEventListener("scroll", scrollListener);
   }, []);
 
-  return { ...scroll, scrollDirection: scrollDirection.current };
+  return {
+    ...scroll,
+    scrollDirection: _scrollDirection.current,
+    isScrolling,
+  };
 };
 
 // Todo: Implementation of ResizeObserver
+type UseMeasureMeasurement = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  viewportLeft: number;
+  viewportTop: number;
+};
+
 export const useMeasure = (): {
   handler: { ref: React.RefObject<any> };
   left: number;
@@ -141,7 +162,7 @@ export const useMeasure = (): {
   viewportTop: number;
 } => {
   const ref = useRef<any>(null);
-  const [measurement, setMeasurement] = useState({
+  const [measurement, setMeasurement] = useState<UseMeasureMeasurement>({
     left: 0,
     top: 0,
     width: 0,
@@ -153,7 +174,7 @@ export const useMeasure = (): {
   useEffect(() => {
     const _refElement = ref.current ? ref.current : document.documentElement;
 
-    const _resizeObserver = function () {
+    const _resizeObserver: () => void = function () {
       // Only gives relative to viewport
       const { left, top, width, height } = _refElement.getBoundingClientRect();
       const { pageXOffset, pageYOffset } = window;
@@ -175,8 +196,11 @@ export const useMeasure = (): {
   return { handler: { ref }, ...measurement };
 };
 
-export const useWindowDimension = () => {
-  const [measurement, setMeasurement] = useState({ width: 0, height: 0 });
+type useWindowDimensionMeasurement = { width: number; height: number };
+export const useWindowDimension = (): useWindowDimensionMeasurement => {
+  const [measurement, setMeasurement] = useState<useWindowDimensionMeasurement>(
+    { width: 0, height: 0 },
+  );
   const [ro] = useState(
     () =>
       new ResizeObserver(([entry]) => {
@@ -195,4 +219,34 @@ export const useWindowDimension = () => {
   }, []);
 
   return measurement; // { width, height }
+};
+
+export const useMouseMove = () => {
+  const ref = useRef<any>();
+  const [pointerPosition, setPointerPosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const moveHandler = function (event: MouseEvent) {
+      setPointerPosition({
+        x: event.offsetX,
+        y: event.offsetY,
+      });
+    };
+
+    if (ref.current) {
+      ref.current.addEventListener("mousemove", moveHandler);
+    } else {
+      document.addEventListener("mousemove", moveHandler);
+    }
+
+    return () => {
+      if (ref.current) {
+        ref.current.removeEventListener("mousemove", moveHandler);
+      } else {
+        document.removeEventListener("mousemove", moveHandler);
+      }
+    };
+  }, []);
+
+  return { handler: { ref }, ...pointerPosition };
 };
