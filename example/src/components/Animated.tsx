@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AnimatedBlock, useAnimatedValue, useMeasure } from "react-uicomp";
 
 const Animated = () => {
   const [toggle, setToggle] = useState(false);
   const { handler, width } = useMeasure();
-  const animatedWidth = useAnimatedValue(toggle ? width : 100);
+  const animatedWidth = useAnimatedValue(100);
+
+  useEffect(() => {
+    animatedWidth.value = toggle ? width : 100;
+  }, [toggle, animatedWidth, width]);
 
   return (
     <>

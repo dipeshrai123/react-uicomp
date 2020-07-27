@@ -22,7 +22,6 @@ export const useAnimatedValue = (
 ) => {
   const _initialValue: number =
     typeof initialValue === "boolean" ? bin(initialValue) : initialValue;
-  const _prevValue = useRef(_initialValue);
 
   // Different internal config configs
   const {
@@ -53,13 +52,6 @@ export const useAnimatedValue = (
       },
     });
   };
-
-  useEffect(() => {
-    if (initialValue !== _prevValue.current) {
-      _update(_initialValue);
-      _prevValue.current = _initialValue;
-    }
-  }, [initialValue]);
 
   const _targetObject: { value: number } = { value: props.value };
   return new Proxy(_targetObject, {

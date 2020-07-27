@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   useScroll,
   AnimatedBlock,
@@ -10,7 +10,12 @@ import {
 const Scroll = () => {
   const { scrollY } = useScroll();
   const { width, height } = useWindowDimension();
-  const yAnimated = useAnimatedValue(scrollY);
+  const yAnimated = useAnimatedValue(0);
+
+  // WHENEVER SCROLLY CHANGES UPDATE ANIMATED VALUE
+  useEffect(() => {
+    yAnimated.value = scrollY;
+  }, [scrollY, yAnimated]);
 
   return (
     <div>
