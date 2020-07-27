@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   useMouseMove,
   AnimatedBlock,
@@ -8,9 +8,18 @@ import {
 
 const MouseMove = () => {
   const { mouseX, mouseY, isMoving } = useMouseMove();
-  const transX = useAnimatedValue(mouseX - 15);
-  const transY = useAnimatedValue(mouseY - 15);
-  const scale = useAnimatedValue(isMoving);
+  const transX = useAnimatedValue(0);
+  const transY = useAnimatedValue(0);
+  const scale = useAnimatedValue(0);
+
+  useEffect(() => {
+    transX.value = mouseX - 15;
+    transY.value = mouseY - 15;
+  }, [mouseX, mouseY, transX, transY]);
+
+  useEffect(() => {
+    scale.value = isMoving ? 1 : 0;
+  }, [isMoving, scale]);
 
   return (
     <div
