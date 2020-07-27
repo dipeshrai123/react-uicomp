@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useRef, useState, useEffect, RefObject } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useSpring, config as springConfig } from "react-spring";
 import ResizeObserver from "resize-observer-polyfill";
 
