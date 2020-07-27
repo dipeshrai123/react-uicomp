@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AnimatedBlock, useDrag, useAnimatedValue } from "react-uicomp";
 
 const Drag = () => {
@@ -7,11 +7,7 @@ const Drag = () => {
   const translateY = useAnimatedValue(mouseY);
 
   return (
-    <div
-      style={{
-        padding: "20px 50px",
-      }}
-    >
+    <div>
       <AnimatedBlock
         {...handler}
         style={{
@@ -20,6 +16,7 @@ const Drag = () => {
           left: translateX.value,
           top: translateY.value,
           background: "#39F",
+          borderRadius: 4,
           position: "absolute",
         }}
       ></AnimatedBlock>
