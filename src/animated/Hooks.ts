@@ -10,7 +10,7 @@ const bin = (booleanValue: boolean) => {
 
 interface UseAnimatedValueConfig {
   onAnimationEnd?: (value: number) => void;
-  onAnimationListener?: (value: number) => void;
+  listener?: (value: number) => void;
   animationType?: "ease" | "elastic";
   duration?: number;
   [prop: string]: any;
@@ -24,12 +24,8 @@ export const useAnimatedValue = (
     typeof initialValue === "boolean" ? bin(initialValue) : initialValue;
 
   // Different internal config configs
-  const {
-    onAnimationEnd,
-    animationType = "ease",
-    onAnimationListener,
-    ...restConfig
-  } = config !== undefined && config;
+  const { onAnimationEnd, animationType = "ease", listener, ...restConfig } =
+    config !== undefined && config;
   const _config =
     animationType === "ease"
       ? springConfig.default
@@ -39,7 +35,7 @@ export const useAnimatedValue = (
     value: _initialValue,
     config: { ..._config, ...restConfig },
     onFrame: ({ value }: { value: number }) => {
-      onAnimationListener && onAnimationListener(value);
+      listener && listener(value);
     },
   }));
 
