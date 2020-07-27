@@ -4,6 +4,7 @@ import AnimatedPage from "./components/Animated";
 import ScrollPage from "./components/Scroll";
 import TabsPage from "./components/Tabs";
 import MouseMovePage from "./components/MouseMove";
+import DragPage from "./components/Drag";
 
 export const publicPaths = [
   {
@@ -48,8 +49,27 @@ export const publicPaths = [
     component: MouseMovePage,
     restricted: true,
   },
+  {
+    key: "drag",
+    name: "drag",
+    path: "/drag",
+    component: DragPage,
+    restricted: true,
+  },
 ];
 
 export const privatePaths = [];
 
-export const userRoles = { user: { access: ["/dropdown", "/modal", "/animated", "/scroll", "/tabs", "/mousemove"] } };
+export const userRoles = { 
+  user: { 
+    access: [
+      "/dropdown", 
+      "/modal", 
+      "/animated", 
+      "/scroll", 
+      "/tabs", 
+      "/mousemove", 
+      "/drag"
+    ] 
+  } 
+};
