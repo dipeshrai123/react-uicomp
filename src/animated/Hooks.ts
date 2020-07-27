@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, RefObject } from "react";
 import { useSpring, config as springConfig } from "react-spring";
 import ResizeObserver from "resize-observer-polyfill";
 
@@ -245,4 +245,69 @@ export const useMouseMove = (): {
   }, []);
 
   return { ...pointerPosition, isMoving };
+};
+
+type UseDragState = { x: number; y: number };
+export const useDrag = (): {
+  handler: { ref: React.RefObject<any> };
+  mouseX: number;
+  mouseY: number;
+} => {
+  const ref = useRef<any>();
+  const _isDragging = useRef(false);
+  const prevPosition = useRef<UseDragState>({ x: 0, y: 0 });
+  const newPosition = useRef<UseDragState>({ x: 0, y: 0 });
+  const [position, setPosition] = useState<UseDragState>({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const _element = ref.current;
+
+    const _mouseUpHandler: () => void = function () {
+      _isDragging.current = false;
+    };
+
+    const _mouseDownHandler = function (event: MouseEvent) {
+      prevPosition.current.x = event.clientX;
+      prevPosition.current.y = event.clientY;
+    };
+
+    const _mouseMoveHandler = function (event: MouseEvent) {
+      if (_isDragging.current) {
+        newPosition.current.x = prevPosition.current.x - event.clientX;
+        newPosition.current.y = prevPosition.current.y - event.clientY;
+
+        prevPosition.current.x = event.clientX;
+        prevPosition.current.y = event.clientY;
+
+        setPosition({
+          x: _element.offsetLeft - newPosition.current.x,
+          y: _element.offsetTop - newPosition.current.y,
+        });
+      }
+    };
+
+    const _mouseDownHandlerElement: () => void = function () {
+      _isDragging.current = true;
+    };
+
+    document.addEventListener("mousedown", _mouseDownHandler);
+    document.addEventListener("mouseup", _mouseUpHandler);
+    document.addEventListener("mousemove", _mouseMoveHandler);
+
+    if (_element) {
+      _element.addEventListener("mousedown", _mouseDownHandlerElement);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", _mouseDownHandler);
+      document.removeEventListener("mouseup", _mouseUpHandler);
+      document.removeEventListener("mousemove", _mouseMoveHandler);
+    };
+  }, []);
+
+  return {
+    handler: { ref },
+    mouseX: position.x,
+    mouseY: position.y,
+  };
 };
