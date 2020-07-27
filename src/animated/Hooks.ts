@@ -22,6 +22,7 @@ export const useAnimatedValue = (
 ) => {
   const _initialValue: number =
     typeof initialValue === "boolean" ? bin(initialValue) : initialValue;
+  const _prevValue = useRef(_initialValue);
 
   // Different internal config configs
   const { onAnimationEnd, animationType = "ease", listener, ...restConfig } =
@@ -48,6 +49,13 @@ export const useAnimatedValue = (
       },
     });
   };
+
+  useEffect(() => {
+    if (initialValue !== _prevValue.current) {
+      _update(_initialValue);
+      _prevValue.current = _initialValue;
+    }
+  }, [initialValue]);
 
   const _targetObject: { value: number } = { value: props.value };
   return new Proxy(_targetObject, {
@@ -252,45 +260,58 @@ export const useDrag = (): {
   handler: { ref: React.RefObject<any> };
   mouseX: number;
   mouseY: number;
+  isDragging: boolean;
 } => {
   const ref = useRef<any>();
-  const _isDragging = useRef(false);
+  const [position, setPosition] = useState<UseDragState>({ x: 0, y: 0 });
+  const _isDragging = useRef<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
   const prevPosition = useRef<UseDragState>({ x: 0, y: 0 });
   const newPosition = useRef<UseDragState>({ x: 0, y: 0 });
-  const [position, setPosition] = useState<UseDragState>({ x: 0, y: 0 });
+  const _elementOffset = useRef<UseDragState>({ x: 0, y: 0 });
 
   useEffect(() => {
     const _element = ref.current;
 
     const _mouseUpHandler: () => void = function () {
       _isDragging.current = false;
+      prevPosition.current.x = 0;
+      prevPosition.current.y = 0;
+      newPosition.current.x = 0;
+      newPosition.current.y = 0;
+      setIsDragging(false);
     };
 
-    const _mouseDownHandler = function (event: MouseEvent) {
-      prevPosition.current.x = event.clientX;
-      prevPosition.current.y = event.clientY;
-    };
-
-    const _mouseMoveHandler = function (event: MouseEvent) {
+    const _mouseMoveHandler: (event: MouseEvent) => void = function (
+      event: MouseEvent,
+    ) {
       if (_isDragging.current) {
-        newPosition.current.x = prevPosition.current.x - event.clientX;
-        newPosition.current.y = prevPosition.current.y - event.clientY;
+        newPosition.current.x =
+          newPosition.current.x + (event.clientX - prevPosition.current.x);
+        newPosition.current.y =
+          prevPosition.current.y + (event.clientY - prevPosition.current.y);
 
-        prevPosition.current.x = event.clientX;
-        prevPosition.current.y = event.clientY;
+        prevPosition.current.x = newPosition.current.x;
+        prevPosition.current.y = newPosition.current.y;
 
         setPosition({
-          x: _element.offsetLeft - newPosition.current.x,
-          y: _element.offsetTop - newPosition.current.y,
+          x: newPosition.current.x - _elementOffset.current.x,
+          y: newPosition.current.y - _elementOffset.current.y,
         });
       }
     };
 
-    const _mouseDownHandlerElement: () => void = function () {
+    const _mouseDownHandlerElement: (event: MouseEvent) => void = function (
+      event: MouseEvent,
+    ) {
       _isDragging.current = true;
+      const _newOffsetX = event.pageX - _element.offsetLeft;
+      const _newOffsetY = event.pageY - _element.offsetTop;
+      _elementOffset.current.x = _newOffsetX;
+      _elementOffset.current.y = _newOffsetY;
+      setIsDragging(true);
     };
 
-    document.addEventListener("mousedown", _mouseDownHandler);
     document.addEventListener("mouseup", _mouseUpHandler);
     document.addEventListener("mousemove", _mouseMoveHandler);
 
@@ -299,7 +320,6 @@ export const useDrag = (): {
     }
 
     return () => {
-      document.removeEventListener("mousedown", _mouseDownHandler);
       document.removeEventListener("mouseup", _mouseUpHandler);
       document.removeEventListener("mousemove", _mouseMoveHandler);
     };
@@ -309,5 +329,6 @@ export const useDrag = (): {
     handler: { ref },
     mouseX: position.x,
     mouseY: position.y,
+    isDragging,
   };
 };
