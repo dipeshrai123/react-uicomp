@@ -1,5 +1,5 @@
 import React from "react";
-import { useOutsideClick } from "../core/Hooks";
+import { useOutsideClick } from "../animated";
 import { animated, useTransition } from "react-spring";
 
 type triggerElementArgType = {

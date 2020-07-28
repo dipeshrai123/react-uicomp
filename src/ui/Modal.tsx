@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { useOutsideClick } from "../core";
+import { useOutsideClick } from "../animated";
 import styled from "styled-components";
 import { animated, useTransition, interpolate } from "react-spring";
 

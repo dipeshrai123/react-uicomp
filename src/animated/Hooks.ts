@@ -1,7 +1,27 @@
 /* eslint-disable no-unused-vars */
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { useSpring, config as springConfig } from "react-spring";
 import ResizeObserver from "resize-observer-polyfill";
+
+// useOutSideClick Hook - handles outside click
+export const useOutsideClick = (
+  elementRef: React.RefObject<HTMLElement>,
+  callback: (event: MouseEvent) => void,
+) => {
+  const callbackMemo = useMemo(() => callback, [callback]);
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (!elementRef?.current?.contains(e.target as Element) && callbackMemo) {
+        callbackMemo(e);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick, true);
+
+    return document.addEventListener("click", handleOutsideClick, true);
+  }, [callbackMemo, elementRef]);
+};
 
 // boolean to binary
 const bin = (booleanValue: boolean) => {
