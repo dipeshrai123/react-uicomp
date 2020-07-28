@@ -3,6 +3,11 @@ import { useRef, useState, useEffect, useMemo } from "react";
 import { useSpring, config as springConfig } from "react-spring";
 import ResizeObserver from "resize-observer-polyfill";
 
+// boolean to binary
+const bin = (booleanValue: boolean) => {
+  return booleanValue ? 1 : 0;
+};
+
 // useOutSideClick Hook - handles outside click
 export const useOutsideClick = (
   elementRef: React.RefObject<HTMLElement>,
@@ -21,11 +26,6 @@ export const useOutsideClick = (
 
     return document.addEventListener("click", handleOutsideClick, true);
   }, [callbackMemo, elementRef]);
-};
-
-// boolean to binary
-const bin = (booleanValue: boolean) => {
-  return booleanValue ? 1 : 0;
 };
 
 interface UseAnimatedValueConfig {
