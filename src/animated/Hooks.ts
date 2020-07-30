@@ -64,7 +64,7 @@ export const useAnimatedValue = (
     set({
       value: updatedValue,
       // Config for value update
-      onRest: ({ value }: { value: number }) => {
+      onRest: ({ value }: { value: any }) => {
         onAnimationEnd && onAnimationEnd(value);
       },
     });
@@ -77,9 +77,9 @@ export const useAnimatedValue = (
     }
   }, [initialValue]);
 
-  const _targetObject: { value: number } = { value: props.value };
+  const _targetObject: { value: any } = { value: props.value };
   return new Proxy(_targetObject, {
-    set: function (target: { value: number }, key, value) {
+    set: function (target: { value: any }, key, value) {
       if (key === "value") {
         target.value = value;
         _update(value);
