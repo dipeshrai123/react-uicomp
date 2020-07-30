@@ -3,31 +3,68 @@ export const binaryInterpolate = (perc: number, val1: number, val2: number) => {
   return val1 * (1 - perc) + val2 * perc;
 };
 
+type ExtrapolateType = "identity" | "extend" | "clamp";
+
 const _internalInterpolate = (
   val: number,
   arr: number[],
-  type: "identity" | "extend" | "clamp",
+  extrapolateLeft: ExtrapolateType,
+  extrapolateRight: ExtrapolateType,
 ) => {
-  const [val1, val2, val3, val4] = arr;
-  const perc = (val1 - val) / (val1 - val2);
-  const output = binaryInterpolate(perc, val3, val4);
-  const isPositive = val4 >= val3 ? 1 : -1;
+  const [inputMin, inputMax, outputMin, outputMax] = arr;
+  let result: number = val;
 
-  switch (type) {
-    case "clamp":
-      if (isPositive * output < isPositive * val3) {
-        return val3;
-      } else if (isPositive * output > isPositive * val4) {
-        return val4;
-      } else {
-        return output;
-      }
-    case "identity":
-      return val;
-    case "extend":
-    default:
-      return output;
+  // EXTRAPOLATE
+  if (result < inputMin) {
+    if (extrapolateLeft === "identity") {
+      return result;
+    } else if (extrapolateLeft === "clamp") {
+      result = inputMin;
+    } else if (extrapolateLeft === "extend") {
+      // noop
+    }
   }
+
+  if (result > inputMax) {
+    if (extrapolateRight === "identity") {
+      return result;
+    } else if (extrapolateRight === "clamp") {
+      result = inputMax;
+    } else if (extrapolateRight === "extend") {
+      // noop
+    }
+  }
+
+  if (outputMin === outputMax) {
+    return outputMin;
+  }
+
+  if (inputMin === inputMax) {
+    if (val <= inputMin) {
+      return outputMin;
+    }
+    return outputMax;
+  }
+
+  // Input Range
+  if (inputMin === -Infinity) {
+    result = -result;
+  } else if (inputMax === Infinity) {
+    result = result - inputMin;
+  } else {
+    result = (result - inputMin) / (inputMax - inputMin);
+  }
+
+  // Output Range
+  if (outputMin === -Infinity) {
+    result = -result;
+  } else if (outputMax === Infinity) {
+    result = result + outputMin;
+  } else {
+    result = result * (outputMax - outputMin) + outputMin;
+  }
+
+  return result;
 };
 
 const _getNarrowedInputArray = function (
@@ -64,9 +101,9 @@ const _getNarrowedInputArray = function (
 interface InterpolateConfig {
   inputRange: Array<number>;
   outputRange: Array<any>;
-  extrapolate?: "identity" | "clamp" | "extend";
-  extrapolateRight?: "identity" | "clamp" | "extend";
-  extrapolateLeft?: "identity" | "clamp" | "extend";
+  extrapolate?: ExtrapolateType;
+  extrapolateRight?: ExtrapolateType;
+  extrapolateLeft?: ExtrapolateType;
 }
 
 export const interpolate = (value: any, config: InterpolateConfig) => {
@@ -79,14 +116,38 @@ export const interpolate = (value: any, config: InterpolateConfig) => {
       ...rest,
     });
   } else {
-    // Numbers - It only supports extrapolate for now
-    // Todo: SUPPORT extrapolateLeft, extrapolateRight
-    const { inputRange, outputRange, extrapolate = "extend" } = config;
+    const {
+      inputRange,
+      outputRange,
+      extrapolate,
+      extrapolateLeft,
+      extrapolateRight,
+    } = config;
     const narrowedInput = _getNarrowedInputArray(
       value,
       inputRange,
       outputRange,
     );
-    return _internalInterpolate(value, narrowedInput, extrapolate);
+
+    let _extrapolateLeft: ExtrapolateType = "extend";
+    if (extrapolateLeft !== undefined) {
+      _extrapolateLeft = extrapolateLeft;
+    } else if (extrapolate !== undefined) {
+      _extrapolateLeft = extrapolate;
+    }
+
+    let _extrapolateRight: ExtrapolateType = "extend";
+    if (extrapolateRight !== undefined) {
+      _extrapolateRight = extrapolateRight;
+    } else if (extrapolate !== undefined) {
+      _extrapolateRight = extrapolate;
+    }
+
+    return _internalInterpolate(
+      value,
+      narrowedInput,
+      _extrapolateLeft,
+      _extrapolateRight,
+    );
   }
 };

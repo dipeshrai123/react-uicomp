@@ -12,6 +12,14 @@ const Scroll = () => {
   const { width, height } = useWindowDimension();
   const yAnimated = useAnimatedValue(0);
 
+  console.log(
+    interpolate(scrollY, {
+      inputRange: [100, 200],
+      outputRange: [100, 400],
+      extrapolateRight: "clamp",
+    }),
+  );
+
   // WHENEVER SCROLLY CHANGES UPDATE ANIMATED VALUE
   useEffect(() => {
     yAnimated.value = scrollY;
