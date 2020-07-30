@@ -37,7 +37,7 @@ const Message = styled.div<{ type: "success" | "error" }>`
 const MasterContainerAnimated = animated(MasterContainer);
 
 type ToastObject = { message: string; type: "error" | "success" };
-type ItemObject = { key: number; message: string };
+type ItemObject = { key: number; message: string; type: "error" | "success" };
 
 interface ToastProps {
   child: (arg: (toastObj: ToastObject) => void) => void;
@@ -49,7 +49,6 @@ let id = 0;
 export const Toast = ({ child, timeout = 4000, style }: ToastProps) => {
   const [items, setItems] = useState<Array<ItemObject>>([]);
   const [refMap] = useState(new WeakMap());
-  const [type, setType] = useState<"success" | "error">("success");
 
   const onRest = (item: ItemObject) => {
     setItems((prev) => prev.filter((each) => each.key !== item.key));
@@ -75,8 +74,10 @@ export const Toast = ({ child, timeout = 4000, style }: ToastProps) => {
 
   useEffect(() => {
     child((toastObj: ToastObject) => {
-      setItems((prev) => [...prev, { key: id++, message: toastObj.message }]);
-      setType(toastObj.type);
+      setItems((prev) => [
+        ...prev,
+        { key: id++, message: toastObj.message, type: toastObj.type },
+      ]);
     });
   }, [child]);
 
@@ -87,7 +88,9 @@ export const Toast = ({ child, timeout = 4000, style }: ToastProps) => {
           item && (
             <MasterContainerAnimated onClick={() => onRest(item)} style={props}>
               <MessageContainer ref={(elem) => elem && refMap.set(item, elem)}>
-                <Message {...{ style, type }}>{item.message}</Message>
+                <Message {...{ style }} type={item.type}>
+                  {item.message}
+                </Message>
               </MessageContainer>
             </MasterContainerAnimated>
           ),
