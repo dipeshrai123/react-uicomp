@@ -22,29 +22,35 @@ const MessageContainer = styled.div`
   position: relative;
 `;
 
-const Message = styled.div`
-  background: #ffffff;
+type MessageProps = { type: "success" | "error" };
+
+const Message = styled.div<MessageProps>`
+  background: ${(props) =>
+    props.type === "success" ? "#68A362" : colors.light.highlightColor};
   padding: 6px 10px;
   border-radius: 4px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.12);
   border: 1px solid ${colors.light.defaultBorderColor};
-  color: ${colors.light.defaultTextColor};
+  color: #ffffff;
   font-family: ${fonts.family.arial};
 `;
 
 const MasterContainerAnimated = animated(MasterContainer);
 
+type ToastObject = { message: string; type: "error" | "success" };
 type ItemObject = { key: number; message: string };
 
 interface ToastProps {
-  child: (arg: (msg: string) => void) => void;
+  child: (arg: (toastObj: ToastObject) => void) => void;
   timeout: number;
+  style?: React.CSSProperties;
 }
 
 let id = 0;
-export const Toast = ({ child, timeout = 4000 }: ToastProps) => {
+export const Toast = ({ child, timeout = 4000, style }: ToastProps) => {
   const [items, setItems] = useState<Array<ItemObject>>([]);
   const [refMap] = useState(new WeakMap());
+  const [type, setType] = useState<"success" | "error">("success");
 
   const onRest = (item: ItemObject) => {
     setItems((prev) => prev.filter((each) => each.key !== item.key));
@@ -69,8 +75,9 @@ export const Toast = ({ child, timeout = 4000 }: ToastProps) => {
   });
 
   useEffect(() => {
-    child((msg) => {
-      setItems((prev) => [...prev, { key: id++, message: msg }]);
+    child((toastObj: ToastObject) => {
+      setItems((prev) => [...prev, { key: id++, message: toastObj.message }]);
+      setType(toastObj.type);
     });
   }, [child]);
 
@@ -81,7 +88,7 @@ export const Toast = ({ child, timeout = 4000 }: ToastProps) => {
           item && (
             <MasterContainerAnimated onClick={() => onRest(item)} style={props}>
               <MessageContainer ref={(elem) => elem && refMap.set(item, elem)}>
-                <Message>{item.message}</Message>
+                <Message {...{ style, type }}>{item.message}</Message>
               </MessageContainer>
             </MasterContainerAnimated>
           ),
@@ -99,9 +106,9 @@ export const useToast = (config?: ConfigProps) => {
 
   return {
     handler: {
-      child: (fn: (msg: string) => void) => (ref.current = fn),
+      child: (fn: (toastObj: ToastObject) => void) => (ref.current = fn),
       ...config,
     },
-    toast: (message: string) => ref.current(message),
+    toast: (toastObj: ToastObject) => ref.current(toastObj),
   };
 };

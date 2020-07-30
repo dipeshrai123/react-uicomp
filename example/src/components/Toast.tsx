@@ -1,5 +1,4 @@
 import React from "react";
-import { loremIpsum } from "lorem-ipsum";
 import { Toast, useToast } from "react-uicomp";
 
 const ToastPage = () => {
@@ -7,7 +6,9 @@ const ToastPage = () => {
 
   return (
     <div>
-      <button onClick={() => toast(loremIpsum())}>Open Toast</button>
+      <button onClick={() => toast({ message: "HEY", type: "error" })}>
+        Open Toast
+      </button>
 
       <Toast {...handler} />
     </div>
