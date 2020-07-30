@@ -340,16 +340,16 @@ UI component for Toast Notification allowing you to simply add snack for you not
 
 **props**
 
-| Props            | Type        | Description                                                  | Default   |
-| ---------------- | ----------- | ------------------------------------------------------------ | --------- |
-| timeout          | millisecond | Number of milliseconds after it unmounts.                    | 4000      |
-| style            | style       | Style object to styling notification card.                   | -         |
-| containerStyle   | function    | Function that is called when clicked outside or to close modal | -         |
-| successColor     | string      | Background color for success toast.                          | "#68A362" |
-| errorColor       | string      | Background color for error toast.                            | "#FFB17A" |
-| closeIconColor   | string      | Color for close icon.                                        | "white"   |
-| closeIconVisible | boolean     | Should close icon be visible or not.                         | true      |
-| dismissOnClick   | boolean     | Dismiss the message on click on card itself.                 | false     |
+| Props            | Type        | Description                                      | Default   |
+| ---------------- | ----------- | ------------------------------------------------ | --------- |
+| timeout          | millisecond | Number of milliseconds after it unmounts.        | 4000      |
+| style            | style       | Style object for styling notification card.      | -         |
+| containerStyle   | style       | Style object for styling notification container. | -         |
+| successColor     | string      | Background color for success toast.              | "#68A362" |
+| errorColor       | string      | Background color for error toast.                | "#FFB17A" |
+| closeIconColor   | string      | Color for close icon.                            | "white"   |
+| closeIconVisible | boolean     | Should close icon be visible or not.             | true      |
+| dismissOnClick   | boolean     | Dismiss the message on click on card itself.     | false     |
 
 React UI Comp provides **Toast** component and **useToast()** hook to handle toast notification.
 

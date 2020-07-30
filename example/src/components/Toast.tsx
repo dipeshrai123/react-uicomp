@@ -10,12 +10,6 @@ const ToastPage = () => {
         Open Toast
       </button>
 
-      <button
-        onClick={() => toast({ message: "HEY ONCE AGAIN", type: "error" })}
-      >
-        Open Toast
-      </button>
-
       <Toast {...handler} />
     </div>
   );
