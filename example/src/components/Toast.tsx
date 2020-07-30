@@ -16,7 +16,7 @@ const ToastPage = () => {
         Open Toast
       </button>
 
-      <Toast {...handler} />
+      <Toast {...handler} timeout={30000} />
     </div>
   );
 };
