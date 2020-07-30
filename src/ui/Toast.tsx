@@ -22,9 +22,7 @@ const MessageContainer = styled.div`
   position: relative;
 `;
 
-type MessageProps = { type: "success" | "error" };
-
-const Message = styled.div<MessageProps>`
+const Message = styled.div<{ type: "success" | "error" }>`
   background: ${(props) =>
     props.type === "success" ? "#68A362" : colors.light.highlightColor};
   padding: 6px 10px;
