@@ -334,6 +334,51 @@ export default function() {
 }
 ```
 
+#### Toast
+
+UI component for Toast Notification allowing you to simply add snack for you notification.
+
+**props**
+
+| Props            | Type        | Description                                                  | Default   |
+| ---------------- | ----------- | ------------------------------------------------------------ | --------- |
+| timeout          | millisecond | Number of milliseconds after it unmounts.                    | 4000      |
+| style            | style       | Style object to styling notification card.                   | -         |
+| containerStyle   | function    | Function that is called when clicked outside or to close modal | -         |
+| successColor     | string      | Background color for success toast.                          | "#68A362" |
+| errorColor       | string      | Background color for error toast.                            | "#FFB17A" |
+| closeIconColor   | string      | Color for close icon.                                        | "white"   |
+| closeIconVisible | boolean     | Should close icon be visible or not.                         | true      |
+| dismissOnClick   | boolean     | Dismiss the message on click on card itself.                 | false     |
+
+React UI Comp provides **Toast** component and **useToast()** hook to handle toast notification.
+
+**useToast()** returns object with following keys:
+
+| key     | Type     | Description                                                  | Default |
+| ------- | -------- | ------------------------------------------------------------ | ------- |
+| handler | object   | It should be spread to <Toast> Component                     | -       |
+| toast   | function | Function which accepts an object { message: string, type: "success" \| "error" } | -       |
+
+```tsx
+import React from "react";
+import { Toast, useToast } from "react-uicomp";
+
+export default function() {
+  const { handler, toast } = useToast();
+
+  return (
+    <div>
+      <button onClick={() => toast({ message: "Hey, Toast!", type: "success" })}>
+        Open Toast
+      </button>
+
+      <Toast {...handler} /> {/* Spread handler here */}
+    </div>
+  );
+};
+```
+
 #### useAnimatedValue()
 
 **useAnimatedValue()** is very flexible and powerful hook that lets you define animated values which is abstract implementation of useSpring() method. Its value is reserved until the component unmounts so, it will be very useful for creating smooth animations without any re-rendering issues. It takes any number as first argument and returns an object with just **value** property which will be more than enough to create any animation.
