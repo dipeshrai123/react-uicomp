@@ -11,7 +11,7 @@ const ToastPage = () => {
         Open Toast
       </button>
 
-      <Toast {...handler} style={{ paddingRight: 20 }} />
+      <Toast {...handler} />
     </div>
   );
 };
