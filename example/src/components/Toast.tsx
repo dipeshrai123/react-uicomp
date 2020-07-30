@@ -6,7 +6,7 @@ const ToastPage = () => {
 
   return (
     <div>
-      <button onClick={() => toast({ message: "HEY", type: "error" })}>
+      <button onClick={() => toast({ message: "HEY", type: "success" })}>
         Open Toast
       </button>
 

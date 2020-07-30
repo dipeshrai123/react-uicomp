@@ -8,7 +8,7 @@ const ToastContainer = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  right: 10px;
+  right: 40px;
   bottom: 10px;
 `;
 
@@ -18,7 +18,7 @@ const MasterContainer = styled.div`
 `;
 
 const MessageContainer = styled.div`
-  padding: 8px 0px;
+  padding: 6px 0px;
   position: relative;
 `;
 
@@ -33,6 +33,7 @@ const Message = styled.div<MessageProps>`
   border: 1px solid ${colors.light.defaultBorderColor};
   color: #ffffff;
   font-family: ${fonts.family.arial};
+  cursor: pointer;
 `;
 
 const MasterContainerAnimated = animated(MasterContainer);
