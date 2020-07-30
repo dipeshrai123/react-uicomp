@@ -56,6 +56,8 @@ export const useNavigation = () => {
     navigation: {
       routes: combinedRoutes,
       navigate: (path: string | object) => history.push(path),
+      goBack: () => history.goBack(),
+      goForward: () => history.goForward(),
     },
     history,
     location,
