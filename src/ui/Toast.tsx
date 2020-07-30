@@ -37,6 +37,7 @@ const Message = styled.div<MessageProps>`
       ? props.successColor || "#68A362"
       : props.errorColor || colors.light.highlightColor};
   padding: 6px 10px;
+  padding-right: 20px;
   border-radius: 4px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.12);
   border: 1px solid ${colors.light.defaultBorderColor};
