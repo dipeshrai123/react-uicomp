@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTransition, animated } from "react-spring";
 import styled from "styled-components";
+import { colors, fonts } from "./Constants";
 
 const ToastContainer = styled.div`
   position: fixed;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  bottom: 0;
+  right: 10px;
+  bottom: 10px;
 `;
 
 const MasterContainer = styled.div`
@@ -16,27 +18,31 @@ const MasterContainer = styled.div`
 `;
 
 const MessageContainer = styled.div`
-  padding: 5px 0px;
+  padding: 8px 0px;
   position: relative;
 `;
 
 const Message = styled.div`
-  background: #39f;
-  color: #fff;
-  padding: 10px;
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.12);
+  border: 1px solid ${colors.light.defaultBorderColor};
+  color: ${colors.light.defaultTextColor};
+  font-family: ${fonts.family.arial};
 `;
 
 const MasterContainerAnimated = animated(MasterContainer);
 
 type ItemObject = { key: number; message: string };
 
-let id = 0;
-export const Toast = ({
-  child,
-}: {
+interface ToastProps {
   child: (arg: (msg: string) => void) => void;
-}) => {
+  timeout: number;
+}
+
+let id = 0;
+export const Toast = ({ child, timeout = 4000 }: ToastProps) => {
   const [items, setItems] = useState<Array<ItemObject>>([]);
   const [refMap] = useState(new WeakMap());
 
@@ -52,7 +58,7 @@ export const Toast = ({
         opacity: 1,
         height: refMap.get(item).offsetHeight,
         onRest: () => {
-          setTimeout(() => onRest(item), 3000); // DELAY SOME TIME
+          setTimeout(() => onRest(item), timeout); // DELAY SOME TIME
         },
       });
     },
@@ -84,12 +90,17 @@ export const Toast = ({
   );
 };
 
-export const useToast = () => {
+type ConfigProps = {
+  timeout: number;
+};
+
+export const useToast = (config?: ConfigProps) => {
   const ref = useRef<any>();
 
   return {
     handler: {
       child: (fn: (msg: string) => void) => (ref.current = fn),
+      ...config,
     },
     toast: (message: string) => ref.current(message),
   };
