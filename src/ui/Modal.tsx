@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { useOutsideClick } from "../core";
+import { useOutsideClick } from "../animated";
 import styled from "styled-components";
 import { animated, useTransition, interpolate } from "react-spring";
 
@@ -47,7 +47,7 @@ export const Modal = ({
   style,
 }: ModalProps) => {
   const modalRef = useRef<HTMLElement>(null);
-  const transitions = useTransition(visible, null, {
+  const transitions = useTransition(visible, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
@@ -65,10 +65,10 @@ export const Modal = ({
 
   return (
     <div>
-      {transitions.map(
-        ({ item, key, props }) =>
+      {transitions(
+        (props, item) =>
           item && (
-            <Container key={key} style={props}>
+            <Container style={props}>
               <ModalContent
                 ref={modalRef}
                 style={{

@@ -1,5 +1,5 @@
 import React from "react";
-import { useOutsideClick } from "../core/Hooks";
+import { useOutsideClick } from "../animated";
 import { animated, useTransition } from "react-spring";
 
 type triggerElementArgType = {
@@ -47,7 +47,7 @@ export const Dropdown = ({
   >(null);
 
   const [dropdownActive, setDropdownActive] = React.useState<boolean>(active);
-  const dropdownAnimation = useTransition(dropdownActive, null, {
+  const dropdownAnimation = useTransition(dropdownActive, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
@@ -153,11 +153,10 @@ export const Dropdown = ({
           active: dropdownActive,
         })}
       </span>
-      {dropdownAnimation.map(
-        ({ item, key, props }) =>
+      {dropdownAnimation((props, item) => {
+        return (
           item && (
             <animated.div
-              key={key}
               onClick={() => (dismissOnInsideClick ? closeDropdown() : false)}
               style={{
                 ...dropdownMenuStyles,
@@ -170,14 +169,14 @@ export const Dropdown = ({
                           range: [0, 1],
                           output: [0.6, 1],
                         })
-                        .interpolate((s) => {
+                        .interpolate((s: any) => {
                           // Calculation for position
                           if (placement === "bottommiddle") {
                             return `scale(${s}) translateX(-50%)`;
                           } else if (placement === "topmiddle") {
                             return `scale(${s}) translateX(-50%)`;
                           } else {
-                            return `scale(${s}) translateX(0)`;
+                            return `scale(${s}) translateX(0%)`;
                           }
                         })
                     : "scaleY(1)",
@@ -185,8 +184,9 @@ export const Dropdown = ({
             >
               {children}
             </animated.div>
-          ),
-      )}
+          )
+        );
+      })}
     </span>
   );
 };

@@ -1,11 +1,31 @@
 /* eslint-disable no-unused-vars */
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { useSpring, config as springConfig } from "react-spring";
 import ResizeObserver from "resize-observer-polyfill";
 
 // boolean to binary
 const bin = (booleanValue: boolean) => {
   return booleanValue ? 1 : 0;
+};
+
+// useOutSideClick Hook - handles outside click
+export const useOutsideClick = (
+  elementRef: React.RefObject<HTMLElement>,
+  callback: (event: MouseEvent) => void,
+) => {
+  const callbackMemo = useMemo(() => callback, [callback]);
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (!elementRef?.current?.contains(e.target as Element) && callbackMemo) {
+        callbackMemo(e);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick, true);
+
+    return document.addEventListener("click", handleOutsideClick, true);
+  }, [callbackMemo, elementRef]);
 };
 
 interface UseAnimatedValueConfig {
@@ -44,7 +64,7 @@ export const useAnimatedValue = (
     set({
       value: updatedValue,
       // Config for value update
-      onRest: ({ value }: { value: number }) => {
+      onRest: ({ value }: { value: any }) => {
         onAnimationEnd && onAnimationEnd(value);
       },
     });
@@ -57,9 +77,9 @@ export const useAnimatedValue = (
     }
   }, [initialValue]);
 
-  const _targetObject: { value: number } = { value: props.value };
+  const _targetObject: { value: any } = { value: props.value };
   return new Proxy(_targetObject, {
-    set: function (target: { value: number }, key, value) {
+    set: function (target: { value: any }, key, value) {
       if (key === "value") {
         target.value = value;
         _update(value);

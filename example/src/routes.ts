@@ -5,6 +5,7 @@ import ScrollPage from "./components/Scroll";
 import TabsPage from "./components/Tabs";
 import MouseMovePage from "./components/MouseMove";
 import DragPage from "./components/Drag";
+import ToastPage from "./components/Toast";
 
 export const publicPaths = [
   {
@@ -56,6 +57,13 @@ export const publicPaths = [
     component: DragPage,
     restricted: true,
   },
+  {
+    key: "toast",
+    name: "toast",
+    path: "/toast",
+    component: ToastPage,
+    restricted: true,
+  },
 ];
 
 export const privatePaths = [];
@@ -69,7 +77,8 @@ export const userRoles = {
       "/scroll", 
       "/tabs", 
       "/mousemove", 
-      "/drag"
+      "/drag",
+      "/toast",
     ] 
   } 
 };
