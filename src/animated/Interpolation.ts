@@ -1,3 +1,5 @@
+import { processColor, rgbaToHex } from "./Colors";
+
 // Generic 0 - 1 Interpolation
 export const binaryInterpolate = (perc: number, val1: number, val2: number) => {
   return val1 * (1 - perc) + val2 * perc;
@@ -7,7 +9,7 @@ type ExtrapolateType = "identity" | "extend" | "clamp";
 
 const _internalInterpolate = (
   val: number,
-  arr: number[],
+  arr: any,
   extrapolateLeft: ExtrapolateType,
   extrapolateRight: ExtrapolateType,
 ) => {
@@ -70,10 +72,10 @@ const _internalInterpolate = (
 const _getNarrowedInputArray = function (
   x: number,
   input: number[],
-  output: number[],
-): number[] {
+  output: Array<number | string>,
+): Array<number | string> {
   const length = input.length;
-  let narrowedInput: number[] = [];
+  let narrowedInput: Array<number | string> = [];
 
   // Boundaries
   if (x < input[0]) {
@@ -100,7 +102,7 @@ const _getNarrowedInputArray = function (
 
 interface InterpolateConfig {
   inputRange: Array<number>;
-  outputRange: Array<any>;
+  outputRange: Array<number | string>;
   extrapolate?: ExtrapolateType;
   extrapolateRight?: ExtrapolateType;
   extrapolateLeft?: ExtrapolateType;
@@ -123,6 +125,7 @@ export const interpolate = (value: any, config: InterpolateConfig) => {
       extrapolateLeft,
       extrapolateRight,
     } = config;
+
     const narrowedInput = _getNarrowedInputArray(
       value,
       inputRange,
@@ -143,11 +146,53 @@ export const interpolate = (value: any, config: InterpolateConfig) => {
       _extrapolateRight = extrapolate;
     }
 
-    return _internalInterpolate(
-      value,
-      narrowedInput,
-      _extrapolateLeft,
-      _extrapolateRight,
-    );
+    if (outputRange.length) {
+      if (typeof outputRange[0] === "number") {
+        return _internalInterpolate(
+          value,
+          narrowedInput,
+          _extrapolateLeft,
+          _extrapolateRight,
+        );
+      } else {
+        // If outputRange is in string then is must be color otherwise.
+        const [inputMin, inputMax, outputMin, outputMax] = narrowedInput;
+
+        const outputMinProcessed = processColor(outputMin);
+        const outputMaxProcessed = processColor(outputMax);
+
+        const red = _internalInterpolate(
+          value,
+          [inputMin, inputMax, outputMinProcessed.r, outputMaxProcessed.r],
+          "clamp",
+          "clamp",
+        );
+
+        const green = _internalInterpolate(
+          value,
+          [inputMin, inputMax, outputMinProcessed.g, outputMaxProcessed.g],
+          "clamp",
+          "clamp",
+        );
+
+        const blue = _internalInterpolate(
+          value,
+          [inputMin, inputMax, outputMinProcessed.b, outputMaxProcessed.b],
+          "clamp",
+          "clamp",
+        );
+
+        const alpha = _internalInterpolate(
+          value,
+          [inputMin, inputMax, outputMinProcessed.a, outputMaxProcessed.a],
+          "clamp",
+          "clamp",
+        );
+
+        return rgbaToHex({ r: red, g: green, b: blue, a: alpha });
+      }
+    } else {
+      console.error(new Error("Output Range Cannot be Empty"));
+    }
   }
 };

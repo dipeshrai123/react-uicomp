@@ -1,5 +1,5 @@
 // Named colors
-export const colorNames: any = {
+const colorNames: any = {
   transparent: "00000000",
   aliceblue: "f0f8ffff",
   antiquewhite: "faebd7ff",
@@ -152,7 +152,7 @@ export const colorNames: any = {
   yellowgreen: "9acd32ff",
 };
 
-export function conv3to6(hex: string) {
+function conv3to6(hex: string) {
   const regex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
 
   return hex.replace(regex, function (_, r, g, b) {
@@ -160,7 +160,7 @@ export function conv3to6(hex: string) {
   });
 }
 
-export function conv6to8(hex: string) {
+function conv6to8(hex: string) {
   if (hex.length === 7) {
     return hex + "FF";
   }
@@ -168,7 +168,7 @@ export function conv6to8(hex: string) {
   return hex;
 }
 
-export function hexToRgba(hex: string) {
+function hexToRgba(hex: string) {
   const hex6: string = conv3to6(hex);
   const hex8: string = conv6to8(hex6);
   const hexRgba: any = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(
