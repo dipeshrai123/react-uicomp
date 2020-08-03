@@ -55,9 +55,6 @@ export const useAnimatedValue = (
   const [props, set] = useSpring(() => ({
     value: _initialValue,
     config: { ..._config, ...restConfig },
-    onFrame: ({ value }: { value: number }) => {
-      listener && listener(value);
-    },
   }));
 
   const _update = (updatedValue: number) => {
@@ -66,6 +63,9 @@ export const useAnimatedValue = (
       // Config for value update
       onRest: ({ value }: { value: any }) => {
         onAnimationEnd && onAnimationEnd(value);
+      },
+      onChange: function ({ value }: { value: number }) {
+        listener && listener(value);
       },
     });
   };
