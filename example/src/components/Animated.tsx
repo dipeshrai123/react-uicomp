@@ -4,7 +4,12 @@ import { AnimatedBlock, useAnimatedValue, useMeasure } from "react-uicomp";
 const Animated = () => {
   const [toggle, setToggle] = useState(false);
   const { handler, width } = useMeasure();
-  const animatedWidth = useAnimatedValue(100);
+  const animatedWidth2 = useAnimatedValue(0);
+  const animatedWidth = useAnimatedValue(100, {
+    listener: function (val) {
+      animatedWidth2.value = val;
+    },
+  });
 
   useEffect(() => {
     animatedWidth.value = toggle ? width : 100;
@@ -22,6 +27,14 @@ const Animated = () => {
           height: 100,
           position: "relative",
           background: "#39F",
+        }}
+      ></AnimatedBlock>
+      <AnimatedBlock
+        style={{
+          width: animatedWidth2.value,
+          height: 100,
+          position: "relative",
+          background: "#F00",
         }}
       ></AnimatedBlock>
       <div style={{ height: 10 }}></div>
