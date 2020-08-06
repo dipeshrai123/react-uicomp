@@ -236,6 +236,14 @@ export const useWindowDimension = (): useWindowDimensionMeasurement => {
   return measurement; // { width, height }
 };
 
+export enum DirectionState {
+  UP = -1,
+  DOWN = 1,
+  RIGHT = 2,
+  LEFT = -2,
+  UNDETERMINED = 0,
+}
+
 type UseMouseMoveState = { mouseX: number; mouseY: number };
 export const useMouseMove = (): {
   mouseX: number;
@@ -280,6 +288,8 @@ export const useDrag = (): {
   mouseX: number;
   mouseY: number;
   isDragging: boolean;
+  hDirection: number;
+  vDirection: number;
 } => {
   const ref = useRef<any>();
   const [position, setPosition] = useState<UseDragState>({ x: 0, y: 0 });
@@ -288,16 +298,25 @@ export const useDrag = (): {
   const prevPosition = useRef<UseDragState>({ x: 0, y: 0 });
   const newPosition = useRef<UseDragState>({ x: 0, y: 0 });
   const _elementOffset = useRef<UseDragState>({ x: 0, y: 0 });
+  const _hDragDirection = useRef<number>(DirectionState.UNDETERMINED);
+  const _vDragDirection = useRef<number>(DirectionState.UNDETERMINED);
 
   useEffect(() => {
     const _element = ref.current;
 
     const _mouseUpHandler: () => void = function () {
       _isDragging.current = false;
+
+      // Reset Positions
       prevPosition.current.x = 0;
       prevPosition.current.y = 0;
       newPosition.current.x = 0;
       newPosition.current.y = 0;
+
+      // Reset Direction
+      _hDragDirection.current = DirectionState.UNDETERMINED;
+      _vDragDirection.current = DirectionState.UNDETERMINED;
+
       setIsDragging(false);
     };
 
@@ -309,6 +328,24 @@ export const useDrag = (): {
           newPosition.current.x + (event.clientX - prevPosition.current.x);
         newPosition.current.y =
           prevPosition.current.y + (event.clientY - prevPosition.current.y);
+
+        // For horizontal direction
+        if (event.clientX > prevPosition.current.x) {
+          _hDragDirection.current = DirectionState.RIGHT;
+        } else if (event.clientX < prevPosition.current.x) {
+          _hDragDirection.current = DirectionState.LEFT;
+        } else {
+          _hDragDirection.current = DirectionState.UNDETERMINED;
+        }
+
+        // For vertical direction
+        if (event.clientY > prevPosition.current.y) {
+          _vDragDirection.current = DirectionState.DOWN;
+        } else if (event.clientY < prevPosition.current.y) {
+          _vDragDirection.current = DirectionState.UP;
+        } else {
+          _vDragDirection.current = DirectionState.UNDETERMINED;
+        }
 
         prevPosition.current.x = newPosition.current.x;
         prevPosition.current.y = newPosition.current.y;
@@ -349,5 +386,7 @@ export const useDrag = (): {
     mouseX: position.x,
     mouseY: position.y,
     isDragging,
+    hDirection: _hDragDirection.current,
+    vDirection: _vDragDirection.current,
   };
 };
