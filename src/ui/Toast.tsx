@@ -16,7 +16,6 @@ const ToastContainer = styled.div`
 `;
 
 const MasterContainer = styled.div`
-  width: 200px;
   overflow: hidden;
 `;
 
@@ -45,6 +44,7 @@ const Message = styled.div<MessageProps>`
   font-family: ${fonts.family.arial};
   cursor: pointer;
   position: relative;
+  width: 200px;
 `;
 
 const IconContainer = styled.div`
