@@ -8,7 +8,6 @@ const bin = (booleanValue: boolean) => {
   return booleanValue ? 1 : 0;
 };
 
-// useOutSideClick Hook - handles outside click
 export const useOutsideClick = (
   elementRef: React.RefObject<HTMLElement>,
   callback: (event: MouseEvent) => void,
@@ -104,7 +103,7 @@ export enum ScrollState {
   UNDETERMINED = 0,
 }
 
-// TODO : Handler for HTMLElement, isScrolling
+// TODO : Handler for HTMLElement
 type ScrollUseStateProp = { scrollX: number; scrollY: number };
 export const useScroll = (): {
   scrollX: number;
