@@ -36,10 +36,11 @@ const MouseMove = () => {
           position: "absolute",
           left: transX.value,
           top: transY.value,
-          transform: interpolate(scale.value, {
-            inputRange: [0, 1],
-            outputRange: [`scale(1)`, `scale(0.5)`],
-          }),
+          transform: interpolate(
+            scale.value,
+            [0, 1],
+            [`scale(1)`, `scale(0.5)`],
+          ),
         }}
       ></AnimatedBlock>
     </div>
