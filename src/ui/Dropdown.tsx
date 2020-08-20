@@ -37,7 +37,7 @@ export const Dropdown = ({
   triggerElement,
   active = false,
   isAnimated = true,
-  animationType = "expand",
+  animationType = "fade",
   dropdownStyles,
   placement = "bottomleft",
   dismissOnOutsideClick = true,
@@ -157,24 +157,27 @@ export const Dropdown = ({
                 ...dropdownMenuStyles,
                 position: "absolute",
                 opacity: props.opacity,
-                transform:
-                  animationType === "expand" || animationType === "elastic"
-                    ? props.opacity
-                        .interpolate({
-                          range: [0, 1],
-                          output: [0.6, 1],
-                        })
-                        .interpolate((s: any) => {
-                          // Calculation for position
-                          if (placement === "bottommiddle") {
-                            return `scale(${s}) translateX(-50%)`;
-                          } else if (placement === "topmiddle") {
-                            return `scale(${s}) translateX(-50%)`;
-                          } else {
-                            return `scale(${s}) translateX(0%)`;
-                          }
-                        })
-                    : "scaleY(1)",
+                transform: props.opacity
+                  .interpolate({
+                    range: [0, 1],
+                    output: [0.6, 1],
+                  })
+                  .interpolate((s: any) => {
+                    // Calculation for position
+                    if (placement === "bottommiddle") {
+                      return `scale(${
+                        animationType !== "fade" ? s : 1
+                      }) translateX(-50%)`;
+                    } else if (placement === "topmiddle") {
+                      return `scale(${
+                        animationType !== "fade" ? s : 1
+                      }) translateX(-50%)`;
+                    } else {
+                      return `scale(${
+                        animationType !== "fade" ? s : 1
+                      }) translateX(0%)`;
+                    }
+                  }),
               }}
             >
               {children}
