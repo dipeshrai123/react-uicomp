@@ -10,7 +10,7 @@ const DropdownPage = () => {
   return (
     <div style={{ display: "flex", justifyContent: "center", paddingTop: 300 }}>
       <Dropdown
-        animationType="fade"
+        animationType="elastic"
         placement="topleft"
         triggerElement={() => <button>Toggle Menu</button>}
       >
