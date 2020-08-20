@@ -1,15 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React, { useRef } from "react";
 import { useOutsideClick } from "../animated";
 import styled from "styled-components";
 import { animated, useTransition, interpolate } from "react-spring";
-
-interface ModalProps {
-  children: React.ReactNode;
-  visible: boolean;
-  onClose: () => void;
-  dismissOnOutsideClick?: boolean;
-  style?: Omit<React.CSSProperties, "transform">;
-}
+import { AnimationType, getAnimationConfig } from "./Modules";
 
 const ContainerStyled = styled.div`
   position: fixed;
@@ -39,29 +33,35 @@ const ModalContentStyled = styled.div`
 const Container = animated(ContainerStyled);
 const ModalContent = animated(ModalContentStyled);
 
+interface ModalProps {
+  children: React.ReactNode;
+  visible: boolean;
+  onClose: () => void;
+  dismissOnOutsideClick?: boolean;
+  style?: Omit<React.CSSProperties, "transform">;
+  isAnimated?: boolean;
+  animationType?: AnimationType;
+}
+
 export const Modal = ({
   children,
   visible,
   onClose,
   dismissOnOutsideClick = true,
   style,
+  isAnimated = true,
+  animationType = "expand",
 }: ModalProps) => {
   const modalRef = useRef<HTMLElement>(null);
   const transitions = useTransition(visible, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
-    leave: { opacity: 0 },
-    config: {
-      mass: 1,
-      tension: 250,
-      friction: 18,
-    },
+    leave: { opacity: 0, config: { duration: isAnimated ? 100 : 0 } },
+    config: isAnimated ? getAnimationConfig(animationType) : { duration: 0 },
   });
 
   // Handle outside click
-  if (dismissOnOutsideClick) {
-    useOutsideClick(modalRef, onClose);
-  }
+  if (dismissOnOutsideClick) useOutsideClick(modalRef, onClose);
 
   return (
     <div>

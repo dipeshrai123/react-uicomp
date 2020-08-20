@@ -49,13 +49,12 @@ export const Dropdown = ({
   >(null);
 
   const [dropdownActive, setDropdownActive] = React.useState<boolean>(active);
-  const animatedConfig = getAnimationConfig(animationType);
 
   const dropdownAnimation = useTransition(dropdownActive, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
-    config: isAnimated ? animatedConfig : { duration: 0 },
+    config: isAnimated ? getAnimationConfig(animationType) : { duration: 0 },
   });
 
   const toggleDropdown: () => void = React.useCallback(() => {
