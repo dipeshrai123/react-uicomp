@@ -37,7 +37,7 @@ export const Dropdown = ({
   triggerElement,
   active = false,
   isAnimated = true,
-  animationType = "fade",
+  animationType = "expand",
   dropdownStyles,
   placement = "bottomleft",
   dismissOnOutsideClick = true,
