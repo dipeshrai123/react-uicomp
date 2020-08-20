@@ -25,7 +25,7 @@ const ModalContentStyled = styled.div`
   overflow-y: auto;
   padding: 20px;
   background: #ffffff;
-  border-radius: 4px;
+  border-radius: 10px;
   box-shadow: 0px 6px 46px rgba(0, 0, 0, 0.08);
   font-family: Arial;
 `;
@@ -36,8 +36,7 @@ const ModalContent = animated(ModalContentStyled);
 interface ModalProps {
   children: React.ReactNode;
   visible: boolean;
-  onClose: () => void;
-  dismissOnOutsideClick?: boolean;
+  onOutsideClick?: () => void;
   style?: Omit<React.CSSProperties, "transform">;
   isAnimated?: boolean;
   animationType?: AnimationType;
@@ -46,8 +45,7 @@ interface ModalProps {
 export const Modal = ({
   children,
   visible,
-  onClose,
-  dismissOnOutsideClick = true,
+  onOutsideClick,
   style,
   isAnimated = true,
   animationType = "expand",
@@ -61,7 +59,7 @@ export const Modal = ({
   });
 
   // Handle outside click
-  if (dismissOnOutsideClick) useOutsideClick(modalRef, onClose);
+  if (onOutsideClick) useOutsideClick(modalRef, onOutsideClick);
 
   return (
     <div>

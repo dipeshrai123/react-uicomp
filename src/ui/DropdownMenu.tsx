@@ -12,9 +12,9 @@ const MenuContainer = styled.ul`
   background-color: #ffffff;
   padding: 6px 0px;
   list-style-type: none;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.12);
-  border: 1px solid ${colors.light.defaultBorderColor};
-  border-radius: 4px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid ${colors.light.lightBorderColor};
+  border-radius: 10px;
   margin: 0px;
 `;
 
@@ -32,7 +32,7 @@ interface DropdownMenuItemProps {
 }
 
 const Item = styled.li<Pick<DropdownMenuItemProps, "danger">>`
-  padding: 10px 20px;
+  padding: 10px 24px;
   font-family: ${fonts.family.arial};
   cursor: pointer;
   color: ${(props) =>

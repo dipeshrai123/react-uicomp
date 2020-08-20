@@ -7,11 +7,7 @@ const ModalPage = () => {
   return (
     <div>
       <button onClick={() => setVisible(true)}>Open Modal</button>
-      <Modal
-        visible={visible}
-        onClose={() => setVisible(false)}
-        dismissOnOutsideClick={false}
-      >
+      <Modal visible={visible} onOutsideClick={() => setVisible(false)}>
         Modal Content Goes Here...
         <div>
           <button onClick={() => setVisible(false)}>Close Modal</button>
