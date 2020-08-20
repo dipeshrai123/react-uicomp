@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import { useOutsideClick } from "../animated";
 import { animated, useTransition } from "react-spring";
+import { AnimationType, getAnimationConfig } from "./Modules";
 
 type triggerElementArgType = {
   active: boolean;
@@ -19,7 +21,7 @@ interface DropdownProps {
   triggerElement: (elementArg: triggerElementArgType) => React.ReactNode;
   active?: boolean;
   isAnimated?: boolean;
-  animationType?: "fade" | "expand";
+  animationType?: AnimationType;
   dropdownStyles?: Omit<
     React.CSSProperties,
     "transform" | "position" | "opacity"
@@ -47,19 +49,12 @@ export const Dropdown = ({
   >(null);
 
   const [dropdownActive, setDropdownActive] = React.useState<boolean>(active);
+
   const dropdownAnimation = useTransition(dropdownActive, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
-    config: isAnimated
-      ? animationType === "expand"
-        ? {
-            mass: 1,
-            friction: 18,
-            tension: 250,
-          }
-        : { duration: 200 }
-      : { duration: 0 },
+    config: isAnimated ? getAnimationConfig(animationType) : { duration: 0 },
   });
 
   const toggleDropdown: () => void = React.useCallback(() => {
@@ -163,7 +158,7 @@ export const Dropdown = ({
                 position: "absolute",
                 opacity: props.opacity,
                 transform:
-                  animationType === "expand"
+                  animationType === "expand" || animationType === "elastic"
                     ? props.opacity
                         .interpolate({
                           range: [0, 1],

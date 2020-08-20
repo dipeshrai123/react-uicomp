@@ -28,16 +28,22 @@ const Tabs = () => {
               key={index}
               style={{
                 ...tabStyle,
-                background: interpolate(activeTabAnimated.value, {
-                  inputRange: [index - 1, index, index + 1],
-                  outputRange: ["#39F", "red", "#39F"],
-                  extrapolate: "clamp",
-                }),
-                transform: interpolate(activeTabAnimated.value, {
-                  inputRange: [index - 1, index, index + 1],
-                  outputRange: [`scale(1)`, `scale(1.2)`, `scale(1)`],
-                  extrapolate: "clamp",
-                }),
+                background: interpolate(
+                  activeTabAnimated.value,
+                  [index - 1, index, index + 1],
+                  ["#39F", "red", "#39F"],
+                  {
+                    extrapolate: "clamp",
+                  },
+                ),
+                transform: interpolate(
+                  activeTabAnimated.value,
+                  [index - 1, index, index + 1],
+                  [`scale(1)`, `scale(1.2)`, `scale(1)`],
+                  {
+                    extrapolate: "clamp",
+                  },
+                ),
               }}
             >
               Tab {index + 1}

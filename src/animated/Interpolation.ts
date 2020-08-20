@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { processColor, rgbaToHex } from "./Colors";
+import { SpringValue } from "react-spring";
 
 export const mix = (perc: number, val1: number, val2: number) => {
   return val1 * (1 - perc) + val2 * perc;
@@ -99,31 +101,31 @@ const _getNarrowedInputArray = function (
   return narrowedInput;
 };
 
-interface InterpolateConfig {
-  inputRange: Array<number>;
-  outputRange: Array<number | string>;
+interface ExtrapolateConfig {
   extrapolate?: ExtrapolateType;
   extrapolateRight?: ExtrapolateType;
   extrapolateLeft?: ExtrapolateType;
 }
 
-export const interpolate = (value: any, config: InterpolateConfig) => {
-  if (typeof value === "object") {
+export const interpolate = (
+  value: SpringValue<number> | number,
+  inputRange: Array<number>,
+  outputRange: Array<number | string>,
+  extrapolateConfig?: ExtrapolateConfig,
+) => {
+  if (value instanceof SpringValue) {
     // Animated Value
-    const { inputRange, outputRange, ...rest } = config;
     return value.interpolate({
       range: inputRange,
       output: outputRange,
-      ...rest,
+      ...extrapolateConfig,
     });
   } else {
     const {
-      inputRange,
-      outputRange,
       extrapolate,
       extrapolateLeft,
       extrapolateRight,
-    } = config;
+    } = extrapolateConfig;
 
     const narrowedInput = _getNarrowedInputArray(
       value,

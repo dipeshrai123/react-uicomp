@@ -17,19 +17,13 @@ const Scroll = () => {
       <AnimatedBlock
         style={{
           bottom: 50,
-          width: interpolate(yAnimated.value, {
-            inputRange: [0, 500],
-            outputRange: [100, 400],
+          width: interpolate(yAnimated.value, [0, 500], [100, 400], {
             extrapolate: "clamp",
           }),
-          height: interpolate(yAnimated.value, {
-            inputRange: [0, 500],
-            outputRange: [20, height - 100],
+          height: interpolate(yAnimated.value, [0, 500], [20, height - 100], {
             extrapolate: "clamp",
           }),
-          left: interpolate(yAnimated.value, {
-            inputRange: [0, 500],
-            outputRange: [width - 150, 50],
+          left: interpolate(yAnimated.value, [0, 500], [width - 150, 50], {
             extrapolate: "clamp",
           }),
           borderRadius: 4,
