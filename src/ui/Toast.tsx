@@ -35,10 +35,10 @@ const Message = styled.div<MessageProps>`
     props.type === "success"
       ? props.successColor || "#68A362"
       : props.errorColor || colors.light.highlightColor};
-  padding: 6px 10px;
-  padding-right: 20px;
-  border-radius: 4px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.12);
+  padding: 14px;
+  padding-right: 24px;
+  border-radius: 10px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid ${colors.light.defaultBorderColor};
   color: #ffffff;
   font-family: ${fonts.family.arial};
@@ -49,8 +49,8 @@ const Message = styled.div<MessageProps>`
 
 const IconContainer = styled.div`
   position: absolute;
-  right: 4px;
-  top: 4px;
+  right: 6px;
+  top: 6px;
 `;
 
 const MasterContainerAnimated = animated(MasterContainer);
