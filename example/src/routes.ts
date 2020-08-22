@@ -6,6 +6,7 @@ import TabsPage from "./components/Tabs";
 import MouseMovePage from "./components/MouseMove";
 import DragPage from "./components/Drag";
 import ToastPage from "./components/Toast";
+import UseMountedValuePage from "./components/UseMountedValue";
 
 export const publicPaths = [
   {
@@ -64,6 +65,13 @@ export const publicPaths = [
     component: ToastPage,
     restricted: true,
   },
+  {
+    key: "usemountedvalue",
+    name: "usemountedvalue",
+    path: "/usemountedvalue",
+    component: UseMountedValuePage,
+    restricted: true,
+  },
 ];
 
 export const privatePaths = [];
@@ -79,6 +87,7 @@ export const userRoles = {
       "/mousemove", 
       "/drag",
       "/toast",
+      "/usemountedvalue",
     ] 
   } 
 };

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useRef, useState, useEffect, useMemo } from "react";
-import { useSpring, config as springConfig } from "react-spring";
+import { useSpring, config as springConfig, useTransition } from "react-spring";
 import ResizeObserver from "resize-observer-polyfill";
 
 // boolean to binary
@@ -95,6 +95,21 @@ export const useAnimatedValue = (
       return false;
     },
   });
+};
+
+export const useMountedValue = (
+  initialState: boolean,
+  fel: [number, number, number],
+) => {
+  const [from, enter, leave] = fel;
+
+  const transition = useTransition(initialState, {
+    from: { value: from },
+    enter: { value: enter },
+    leave: { value: leave },
+  });
+
+  return transition;
 };
 
 export enum ScrollState {
