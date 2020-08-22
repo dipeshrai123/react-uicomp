@@ -106,10 +106,10 @@ interface UseMountedValueConfig {
 
 export const useMountedValue = (
   initialState: boolean,
-  fel: [number, number, number],
+  phases: [number, number, number],
   config?: UseMountedValueConfig,
 ) => {
-  const [from, enter, leave] = fel;
+  const [from, enter, leave] = phases;
 
   const { animationType = "ease", enterDuration, exitDuration, ...restConfig } =
     config !== undefined && config;
