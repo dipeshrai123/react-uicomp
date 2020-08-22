@@ -97,16 +97,35 @@ export const useAnimatedValue = (
   });
 };
 
+interface UseMountedValueConfig {
+  animationType?: "ease" | "elastic";
+  duration?: number;
+  enterDuration?: number;
+  exitDuration?: number;
+}
+
 export const useMountedValue = (
   initialState: boolean,
   fel: [number, number, number],
+  config?: UseMountedValueConfig,
 ) => {
   const [from, enter, leave] = fel;
 
+  const { animationType = "ease", enterDuration, exitDuration, ...restConfig } =
+    config !== undefined && config;
+  const _config =
+    animationType === "ease"
+      ? springConfig.default
+      : { mass: 1, friction: 18, tension: 250 };
+
+  const _enterConfig = enterDuration ? { duration: enterDuration } : null;
+  const _exitConfig = exitDuration ? { duration: exitDuration } : null;
+
   const transition = useTransition(initialState, {
     from: { value: from },
-    enter: { value: enter },
-    leave: { value: leave },
+    enter: { value: enter, config: _enterConfig },
+    leave: { value: leave, config: _exitConfig },
+    config: { ..._config, ...restConfig },
   });
 
   return transition;

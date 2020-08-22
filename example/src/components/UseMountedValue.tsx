@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useMountedValue, AnimatedBlock } from "react-uicomp";
+import { useMountedValue, AnimatedBlock, interpolate } from "react-uicomp";
 
 const UseMountedValue = () => {
   const [open, setOpen] = useState(false);
@@ -16,10 +16,9 @@ const UseMountedValue = () => {
           mounted && (
             <AnimatedBlock
               style={{
-                width: 100,
+                width: interpolate(animation.value, [0, 1], [100, 500]),
                 height: 100,
                 background: "#39F",
-                opacity: animation.value,
               }}
             />
           ),
