@@ -17,9 +17,7 @@ const Scroll = () => {
       <AnimatedBlock
         style={{
           bottom: 50,
-          width: interpolate(yAnimated.value, [0, 500], [100, 400], {
-            extrapolate: "clamp",
-          }),
+          width: interpolate(scrollY, [0, 500], [100, 400]),
           height: interpolate(yAnimated.value, [0, 500], [20, height - 100], {
             extrapolate: "clamp",
           }),
