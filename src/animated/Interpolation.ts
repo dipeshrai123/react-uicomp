@@ -121,11 +121,9 @@ export const interpolate = (
       ...extrapolateConfig,
     });
   } else {
-    const {
-      extrapolate,
-      extrapolateLeft,
-      extrapolateRight,
-    } = extrapolateConfig;
+    const extrapolate = extrapolateConfig?.extrapolate;
+    const extrapolateLeft = extrapolateConfig?.extrapolateLeft;
+    const extrapolateRight = extrapolateConfig?.extrapolateRight;
 
     const narrowedInput = _getNarrowedInputArray(
       value,
