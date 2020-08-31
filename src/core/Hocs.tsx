@@ -13,9 +13,7 @@ import {
   AuthProviderParams,
   NavigationProviderParams,
   ThemeProviderParams,
-  PublicPathParams,
-  PrivatePathParams,
-  UserRoleParams,
+  NavigationConfigParams,
 } from "./Types";
 import { AuthContext, NavigationContext, ThemeContext } from "./Context";
 
@@ -120,23 +118,20 @@ export const Navigation = {
   },
 };
 
-interface WithNavigationConfig {
-  publicPaths: PublicPathParams[];
-  privatePaths: PrivatePathParams[];
-  userRoles: UserRoleParams;
-}
-
 export const withNavigation = (
   Component: React.ComponentType,
-  navigationConfig: WithNavigationConfig,
+  navigationConfig: NavigationConfigParams,
 ) => {
-  const { publicPaths, privatePaths, userRoles } = navigationConfig;
+  const {
+    publicPaths,
+    privatePaths,
+    userRoles,
+    routerType = "browser",
+  } = navigationConfig;
   return function (props: any) {
     return (
       <Navigation.Provider
-        publicPaths={publicPaths}
-        privatePaths={privatePaths}
-        userRoles={userRoles}
+        {...{ routerType, publicPaths, privatePaths, userRoles }}
       >
         <Component {...props} />
       </Navigation.Provider>

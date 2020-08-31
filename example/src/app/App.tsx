@@ -1,19 +1,18 @@
 import React from "react";
-import { Navigation, Auth } from "react-uicomp";
+import { Auth, withNavigation } from "react-uicomp";
 import { publicPaths, privatePaths, userRoles } from "./Routes";
 
 const App = () => {
   return (
-    <Navigation.Provider
-      publicPaths={publicPaths}
-      privatePaths={privatePaths}
-      userRoles={userRoles}
-    >
-      <Auth.Provider config={{ isLoggedIn: false, userRole: "user" }}>
-        <Auth.Screens />
-      </Auth.Provider>
-    </Navigation.Provider>
+    <Auth.Provider config={{ isLoggedIn: false, userRole: "user" }}>
+      <Auth.Screens />
+    </Auth.Provider>
   );
 };
 
-export default App;
+export default withNavigation(App, {
+  publicPaths,
+  privatePaths,
+  userRoles,
+  routerType: "hash",
+});
