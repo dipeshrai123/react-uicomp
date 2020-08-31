@@ -14,28 +14,32 @@ export interface AuthProviderParams {
 
 // Navigation
 export interface PublicPathParams {
-  key: string | number;
+  key?: string | number;
   name: string;
   path: string;
   component: React.ComponentType;
   exact?: boolean;
   visible?: boolean;
   restricted: boolean;
+  props?: any;
 }
 
 export interface PrivatePathParams {
-  key: string | number;
+  key?: string | number;
   name: string;
   path: string;
   component: React.ComponentType;
   exact?: boolean;
   visible?: boolean;
+  props?: any;
 }
+
+export type UserRoleParams = { [role: string]: { access: string[] } };
 
 export interface NavigationConfigParams {
   publicPaths: PublicPathParams[];
   privatePaths: PrivatePathParams[];
-  userRoles: { [role: string]: { access: string[] } };
+  userRoles: UserRoleParams;
   routerType?: "browser" | "hash";
 }
 
@@ -44,7 +48,7 @@ export interface NavigationProviderParams extends NavigationConfigParams {
 }
 
 export type publicReturnType = {
-  [key: string]: { name: string; path: string };
+  [key: string]: { name: string; path: string; props: any; active: boolean };
 };
 
 // Theme

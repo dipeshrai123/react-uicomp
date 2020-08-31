@@ -13,6 +13,7 @@ import {
   AuthProviderParams,
   NavigationProviderParams,
   ThemeProviderParams,
+  NavigationConfigParams,
 } from "./Types";
 import { AuthContext, NavigationContext, ThemeContext } from "./Context";
 
@@ -115,6 +116,27 @@ export const Navigation = {
       </NavigationContext.Provider>
     );
   },
+};
+
+export const withNavigation = (
+  Component: React.ComponentType,
+  navigationConfig: NavigationConfigParams,
+) => {
+  const {
+    publicPaths,
+    privatePaths,
+    userRoles,
+    routerType = "browser",
+  } = navigationConfig;
+  return function (props: any) {
+    return (
+      <Navigation.Provider
+        {...{ routerType, publicPaths, privatePaths, userRoles }}
+      >
+        <Component {...props} />
+      </Navigation.Provider>
+    );
+  };
 };
 
 // Theme
