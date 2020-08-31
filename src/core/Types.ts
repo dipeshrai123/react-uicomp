@@ -48,7 +48,7 @@ export interface NavigationProviderParams extends NavigationConfigParams {
 }
 
 export type publicReturnType = {
-  [key: string]: { name: string; path: string };
+  [key: string]: { name: string; path: string; props: any; active: boolean };
 };
 
 // Theme

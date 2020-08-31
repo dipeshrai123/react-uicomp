@@ -1,6 +1,11 @@
 /* eslint-disable no-unused-vars */
 import { useContext } from "react";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import {
+  useHistory,
+  useLocation,
+  useParams,
+  matchPath,
+} from "react-router-dom";
 import { stateType, DefaultAuthConfigParams, publicReturnType } from "./Types";
 import { AuthContext, NavigationContext, ThemeContext } from "./Context";
 
@@ -33,8 +38,12 @@ export const useNavigation = () => {
 
   const publicRoutes: publicReturnType = {};
   filteredPublicRoutes.forEach(({ key, name, path, props = null }) => {
+    const isActiveLink = !!matchPath(location.pathname, path);
     const routeKey = key || name;
-    publicRoutes[routeKey] = Object.assign({}, { name, path, props });
+    publicRoutes[routeKey] = Object.assign(
+      {},
+      { name, path, props, active: isActiveLink },
+    );
   });
 
   const filteredPrivateRoutes = PRIVATE_PATHS.filter(
@@ -48,8 +57,12 @@ export const useNavigation = () => {
 
   const privateRoutes: publicReturnType = {};
   filteredPrivateRoutes.forEach(({ key, name, path, props = null }) => {
+    const isActiveLink = !!matchPath(location.pathname, path);
     const routeKey = key || name;
-    privateRoutes[routeKey] = Object.assign({}, { name, path, props });
+    privateRoutes[routeKey] = Object.assign(
+      {},
+      { name, path, props, active: isActiveLink },
+    );
   });
 
   const combinedRoutes = { ...publicRoutes, ...privateRoutes };
