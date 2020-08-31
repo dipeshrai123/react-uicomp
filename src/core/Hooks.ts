@@ -38,12 +38,9 @@ export const useNavigation = () => {
 
   const publicRoutes: publicReturnType = {};
   filteredPublicRoutes.forEach(({ key, name, path, props = null }) => {
-    const isActiveLink = !!matchPath(location.pathname, path);
+    const active = !!matchPath(location.pathname, path);
     const routeKey = key || name;
-    publicRoutes[routeKey] = Object.assign(
-      {},
-      { name, path, props, active: isActiveLink },
-    );
+    publicRoutes[routeKey] = Object.assign({}, { name, path, active, props });
   });
 
   const filteredPrivateRoutes = PRIVATE_PATHS.filter(
@@ -57,12 +54,9 @@ export const useNavigation = () => {
 
   const privateRoutes: publicReturnType = {};
   filteredPrivateRoutes.forEach(({ key, name, path, props = null }) => {
-    const isActiveLink = !!matchPath(location.pathname, path);
+    const active = !!matchPath(location.pathname, path);
     const routeKey = key || name;
-    privateRoutes[routeKey] = Object.assign(
-      {},
-      { name, path, props, active: isActiveLink },
-    );
+    privateRoutes[routeKey] = Object.assign({}, { name, path, active, props });
   });
 
   const combinedRoutes = { ...publicRoutes, ...privateRoutes };
