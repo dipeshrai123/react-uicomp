@@ -32,8 +32,9 @@ export const useNavigation = () => {
   );
 
   const publicRoutes: publicReturnType = {};
-  filteredPublicRoutes.forEach(({ key, name, path }) => {
-    publicRoutes[key] = Object.assign({}, { name, path });
+  filteredPublicRoutes.forEach(({ key, name, path, props = null }) => {
+    const routeKey = key || name;
+    publicRoutes[routeKey] = Object.assign({}, { name, path, props });
   });
 
   const filteredPrivateRoutes = PRIVATE_PATHS.filter(
@@ -46,8 +47,9 @@ export const useNavigation = () => {
   );
 
   const privateRoutes: publicReturnType = {};
-  filteredPrivateRoutes.forEach(({ key, name, path }) => {
-    privateRoutes[key] = Object.assign({}, { name, path });
+  filteredPrivateRoutes.forEach(({ key, name, path, props = null }) => {
+    const routeKey = key || name;
+    privateRoutes[routeKey] = Object.assign({}, { name, path, props });
   });
 
   const combinedRoutes = { ...publicRoutes, ...privateRoutes };

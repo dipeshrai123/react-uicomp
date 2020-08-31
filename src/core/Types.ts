@@ -14,22 +14,24 @@ export interface AuthProviderParams {
 
 // Navigation
 export interface PublicPathParams {
-  key: string | number;
+  key?: string | number;
   name: string;
   path: string;
   component: React.ComponentType;
   exact?: boolean;
   visible?: boolean;
   restricted: boolean;
+  props?: any;
 }
 
 export interface PrivatePathParams {
-  key: string | number;
+  key?: string | number;
   name: string;
   path: string;
   component: React.ComponentType;
   exact?: boolean;
   visible?: boolean;
+  props?: any;
 }
 
 export type UserRoleParams = { [role: string]: { access: string[] } };
