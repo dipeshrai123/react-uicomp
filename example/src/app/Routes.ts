@@ -1,12 +1,12 @@
-import DropdownPage from "./components/DropdownPage";
-import ModalPage from "./components/ModalPage";
-import AnimatedPage from "./components/Animated";
-import ScrollPage from "./components/Scroll";
-import TabsPage from "./components/Tabs";
-import MouseMovePage from "./components/MouseMove";
-import DragPage from "./components/Drag";
-import ToastPage from "./components/Toast";
-import UseMountedValuePage from "./components/UseMountedValue";
+import DropdownPage from "../components/DropdownPage";
+import ModalPage from "../components/ModalPage";
+import AnimatedPage from "../components/Animated";
+import ScrollPage from "../components/Scroll";
+import TabsPage from "../components/Tabs";
+import MouseMovePage from "../components/MouseMove";
+import DragPage from "../components/Drag";
+import ToastPage from "../components/Toast";
+import UseMountedValuePage from "../components/UseMountedValue";
 
 export const publicPaths = [
   {

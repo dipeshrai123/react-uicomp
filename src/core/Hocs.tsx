@@ -13,6 +13,9 @@ import {
   AuthProviderParams,
   NavigationProviderParams,
   ThemeProviderParams,
+  PublicPathParams,
+  PrivatePathParams,
+  UserRoleParams,
 } from "./Types";
 import { AuthContext, NavigationContext, ThemeContext } from "./Context";
 
@@ -115,6 +118,30 @@ export const Navigation = {
       </NavigationContext.Provider>
     );
   },
+};
+
+interface WithNavigationConfig {
+  publicPaths: PublicPathParams[];
+  privatePaths: PrivatePathParams[];
+  userRoles: UserRoleParams;
+}
+
+export const withNavigation = (
+  Component: React.ComponentType,
+  navigationConfig: WithNavigationConfig,
+) => {
+  const { publicPaths, privatePaths, userRoles } = navigationConfig;
+  return function (props: any) {
+    return (
+      <Navigation.Provider
+        publicPaths={publicPaths}
+        privatePaths={privatePaths}
+        userRoles={userRoles}
+      >
+        <Component {...props} />
+      </Navigation.Provider>
+    );
+  };
 };
 
 // Theme
