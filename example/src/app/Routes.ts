@@ -77,16 +77,7 @@ export const privatePaths = [];
 export const userRoles = { 
   user: { 
     access: [
-      "/",
-      "/dropdown", 
-      "/modal", 
-      "/animated", 
-      "/scroll", 
-      "/tabs", 
-      "/mousemove", 
-      "/drag",
-      "/toast",
-      "/usemountedvalue",
+      "*",
     ] 
   } 
 };
