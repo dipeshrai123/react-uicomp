@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { matchPath } from "react-router-dom";
 
 // /a/* to /a and /a/*
@@ -41,4 +42,22 @@ export const canUserAccess = (userRoles: Array<string>, path: string) => {
   }
 
   return false;
+};
+
+// PARSE PATHS - FLATTEN - paths
+export const getParsedPaths = (paths: Array<any>) => {
+  const getNestedArray = (pathObj: any): any => {
+    if (pathObj.subPaths) {
+      const routes = pathObj.subPaths.map((route: any) =>
+        getNestedArray(route),
+      );
+      return [pathObj, ...routes].flat();
+    } else return pathObj;
+  };
+
+  const allPaths = paths.map((path) => {
+    return getNestedArray(path);
+  });
+
+  return allPaths.flat();
 };

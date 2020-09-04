@@ -14,9 +14,9 @@ import {
   NavigationProviderParams,
   ThemeProviderParams,
   NavigationConfigParams,
-  PublicPathParams,
 } from "./Types";
 import { AuthContext, NavigationContext, ThemeContext } from "./Context";
+import { getParsedPaths } from "./Utils";
 
 // Auth
 export const Auth = {
@@ -94,39 +94,18 @@ export const Navigation = {
       routerType,
     } = props;
 
-    const {
-      privatePaths: privateP,
-      publicPaths: publicP,
-      userRoles: roles,
-    } = React.useMemo(() => ({ privatePaths, publicPaths, userRoles }), [
-      privatePaths,
-      publicPaths,
-      userRoles,
-    ]);
+    const _privatePaths = getParsedPaths(privatePaths);
+    const _publicPaths = getParsedPaths(publicPaths);
 
-    const getNestedArray = (
-      pathObj: PublicPathParams,
-    ): Array<PublicPathParams> | PublicPathParams => {
-      if (pathObj.subPaths) {
-        const routes = pathObj.subPaths.map((route: PublicPathParams) =>
-          getNestedArray(route),
-        );
-        return [pathObj, ...routes].flat();
-      } else return pathObj;
-    };
-
-    const allPublicPaths = publicPaths.map((path) => {
-      return getNestedArray(path);
-    });
-
-    console.log(allPublicPaths.flat(), "Hi");
+    console.log(_publicPaths, "Hi");
+    console.log(_privatePaths, "Hi");
 
     return (
       <NavigationContext.Provider
         value={{
-          privatePaths: privateP,
-          publicPaths: publicP,
-          userRoles: roles,
+          privatePaths: _privatePaths,
+          publicPaths: _publicPaths,
+          userRoles: userRoles,
           routerType,
         }}
       >

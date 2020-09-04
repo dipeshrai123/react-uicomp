@@ -114,7 +114,47 @@ export const publicPaths = [
   },
 ];
 
-export const privatePaths = [];
+export const privatePaths = [
+  {
+    name: "1",
+    path: "/drag",
+    component: DragPage,
+  },
+  {
+    name: "2",
+    path: "/toast",
+    component: ToastPage,
+  },
+  {
+    name: "3",
+    path: "/usemountedvalue",
+    component: UseMountedValuePage,
+    subPaths: [
+      {
+        name: "A",
+        path: "/a",
+        component: UseMountedValuePage,
+      },
+      {
+        name: "B",
+        path: "/b",
+        component: UseMountedValuePage,
+        subPaths: [
+          {
+            name: "C",
+            path: "/1",
+            component: UseMountedValuePage,
+          },
+          {
+            name: "D",
+            path: "/2",
+            component: UseMountedValuePage,
+          }
+        ]
+      },
+    ]
+  },
+];
 
 export const userRoles = {
   user: {

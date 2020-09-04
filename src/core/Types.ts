@@ -32,7 +32,7 @@ export interface PrivatePathParams {
   component: React.ComponentType;
   exact?: boolean;
   visible?: boolean;
-  subPaths?: PublicPathParams[];
+  subPaths?: PrivatePathParams[];
   props?: any;
 }
 
