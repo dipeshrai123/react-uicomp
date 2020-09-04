@@ -14,6 +14,7 @@ import {
   NavigationProviderParams,
   ThemeProviderParams,
   NavigationConfigParams,
+  PublicPathParams,
 } from "./Types";
 import { AuthContext, NavigationContext, ThemeContext } from "./Context";
 
@@ -103,11 +104,15 @@ export const Navigation = {
       userRoles,
     ]);
 
-    const getNestedArray = (obj: any) => {
-      if (obj.subRoutes) {
-        const routes = obj.subRoutes.map((route: any) => getNestedArray(route));
-        return [obj, ...routes].flat();
-      } else return obj;
+    const getNestedArray = (
+      pathObj: PublicPathParams,
+    ): Array<PublicPathParams> | PublicPathParams => {
+      if (pathObj.subPaths) {
+        const routes = pathObj.subPaths.map((route: PublicPathParams) =>
+          getNestedArray(route),
+        );
+        return [pathObj, ...routes].flat();
+      } else return pathObj;
     };
 
     const allPublicPaths = publicPaths.map((path) => {
