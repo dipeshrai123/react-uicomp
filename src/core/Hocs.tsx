@@ -60,8 +60,6 @@ export const Auth = {
         (val) => val.path !== path,
       );
 
-      console.log(filteredNestedPublicRoutes);
-
       return (
         <Switch>
           {
