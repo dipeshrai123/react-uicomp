@@ -53,44 +53,16 @@ export const publicPaths = [
     restricted: true,
     subPaths: [
       {
-        name: "MouseMove2",
+        name: "Nested 1",
         path: "/1",
         component: MouseMovePage,
         restricted: true,
       },
       {
-        name: "MouseMove3",
+        name: "Nested 2",
         path: "/2",
         component: MouseMovePage,
-        restricted: true,
-        subPaths: [
-          {
-            name: "MouseMove4",
-            path: "/3",
-            component: MouseMovePage,
-            restricted: true,
-          },
-          {
-            name: "MouseMove5",
-            path: "/4",
-            component: MouseMovePage,
-            restricted: true,
-            subPaths: [
-              {
-                name: "MouseMove6",
-                path: "/5",
-                component: MouseMovePage,
-                restricted: true,
-              },
-              {
-                name: "MouseMove7",
-                path: "/5",
-                component: MouseMovePage,
-                restricted: true,
-              },
-            ],
-          },
-        ],
+        restricted: true
       },
     ],
   },
@@ -114,50 +86,8 @@ export const publicPaths = [
   },
 ];
 
-export const privatePaths = [
-  {
-    name: "1",
-    path: "/drag",
-    component: DragPage,
-  },
-  {
-    name: "2",
-    path: "/toast",
-    component: ToastPage,
-  },
-  {
-    name: "3",
-    path: "/usemountedvalue",
-    component: UseMountedValuePage,
-    subPaths: [
-      {
-        name: "A",
-        path: "/a",
-        component: UseMountedValuePage,
-      },
-      {
-        name: "B",
-        path: "/b",
-        component: UseMountedValuePage,
-        subPaths: [
-          {
-            name: "C",
-            path: "/1",
-            component: UseMountedValuePage,
-          },
-          {
-            name: "D",
-            path: "/2",
-            component: UseMountedValuePage,
-          }
-        ]
-      },
-    ]
-  },
-];
+export const privatePaths = [];
 
 export const userRoles = {
-  user: {
-    access: ["*"],
-  },
+  user: { access: ["*"] },
 };
