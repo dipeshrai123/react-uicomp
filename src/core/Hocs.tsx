@@ -97,9 +97,6 @@ export const Navigation = {
     const _privatePaths = getParsedPaths(privatePaths);
     const _publicPaths = getParsedPaths(publicPaths);
 
-    console.log(_publicPaths, "Hi");
-    console.log(_privatePaths, "Hi");
-
     return (
       <NavigationContext.Provider
         value={{
