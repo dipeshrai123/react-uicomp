@@ -10,7 +10,7 @@ import DragPage from "../components/Drag";
 import ToastPage from "../components/Toast";
 import UseMountedValuePage from "../components/UseMountedValue";
 
-const Comp = () => <div>Select any</div>;
+// const Comp = () => <div>Select any</div>;
 const Comp1 = () => <div>comp1</div>;
 const Comp2 = () => <div>comp2</div>;
 
@@ -58,12 +58,6 @@ export const publicPaths = [
     restricted: true,
     nestedPaths: [
       {
-        name: "Sample Name",
-        path: "/",
-        component: Comp,
-        restricted: true,
-      },
-      {
         name: "Nested 1",
         path: "/1",
         component: Comp1,
@@ -100,5 +94,5 @@ export const publicPaths = [
 export const privatePaths = [];
 
 export const userRoles = {
-  user: { access: ["/", "/mousemove/*"] },
+  user: { access: ["*"] },
 };
