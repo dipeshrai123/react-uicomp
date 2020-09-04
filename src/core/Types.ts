@@ -22,6 +22,7 @@ export interface PublicPathParams {
   visible?: boolean;
   restricted: boolean;
   subPaths?: PublicPathParams[];
+  nestedPaths?: PublicPathParams[];
   props?: any;
 }
 
@@ -33,6 +34,7 @@ export interface PrivatePathParams {
   exact?: boolean;
   visible?: boolean;
   subPaths?: PrivatePathParams[];
+  nestedPaths?: PrivatePathParams[];
   props?: any;
 }
 

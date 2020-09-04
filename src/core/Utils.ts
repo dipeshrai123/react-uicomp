@@ -45,10 +45,12 @@ export const canUserAccess = (userRoles: Array<string>, path: string) => {
 };
 
 // PARSE PATHS - FLATTEN - paths
-export const getParsedPaths = (paths: Array<any>) => {
+export const getParsedPaths = (pathType: "subPaths" | "nestedPaths") => (
+  paths: Array<any>,
+) => {
   const getNestedArray = (pathObj: any): any => {
-    if (pathObj.subPaths) {
-      const routes = pathObj.subPaths.map((route: any) => {
+    if (pathObj[pathType]) {
+      const routes = pathObj[pathType].map((route: any) => {
         const modRoute = { ...route, path: `${pathObj.path}${route.path}` };
         return getNestedArray(modRoute);
       });
