@@ -103,6 +103,19 @@ export const Navigation = {
       userRoles,
     ]);
 
+    const getNestedArray = (obj: any) => {
+      if (obj.subRoutes) {
+        const routes = obj.subRoutes.map((route: any) => getNestedArray(route));
+        return [obj, ...routes].flat();
+      } else return obj;
+    };
+
+    const allPublicPaths = publicPaths.map((path) => {
+      return getNestedArray(path);
+    });
+
+    console.log(allPublicPaths.flat(), "Hi");
+
     return (
       <NavigationContext.Provider
         value={{

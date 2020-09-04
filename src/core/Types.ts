@@ -21,6 +21,7 @@ export interface PublicPathParams {
   exact?: boolean;
   visible?: boolean;
   restricted: boolean;
+  subRoutes: PublicPathParams[];
   props?: any;
 }
 

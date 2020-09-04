@@ -51,6 +51,48 @@ export const publicPaths = [
     path: "/mousemove",
     component: MouseMovePage,
     restricted: true,
+    subRoutes: [
+      {
+        name: "MouseMove",
+        path: "/mousemove/1",
+        component: MouseMovePage,
+        restricted: true,
+      },
+      {
+        name: "MouseMove",
+        path: "/mousemove/2",
+        component: MouseMovePage,
+        restricted: true,
+        subRoutes: [
+          {
+            name: "MouseMove",
+            path: "/mousemove/2/3",
+            component: MouseMovePage,
+            restricted: true,
+          },
+          {
+            name: "MouseMove",
+            path: "/mousemove/2/4",
+            component: MouseMovePage,
+            restricted: true,
+            subRoutes: [
+              {
+                name: "MouseMove",
+                path: "/mousemove/2/4/5",
+                component: MouseMovePage,
+                restricted: true,
+              },
+              {
+                name: "MouseMove",
+                path: "/mousemove/2/4/5",
+                component: MouseMovePage,
+                restricted: true,
+              },
+            ],
+          },
+        ],
+      },
+    ],
   },
   {
     name: "drag",
@@ -74,10 +116,8 @@ export const publicPaths = [
 
 export const privatePaths = [];
 
-export const userRoles = { 
-  user: { 
-    access: [
-      "*",
-    ] 
-  } 
+export const userRoles = {
+  user: {
+    access: ["*"],
+  },
 };
