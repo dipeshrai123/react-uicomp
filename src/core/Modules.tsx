@@ -3,10 +3,10 @@ import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 import { AuthContext, NavigationContext } from "./Context";
 import { PrivatePathParams, PublicPathParams } from "./Types";
+import { getParsedUserRole, canUserAccess } from "./Utils";
 
 // Private Routes
 export const PrivateRoute = (props: {
-  key: string | number;
   path: string;
   component: React.ComponentType;
   exact: boolean;
@@ -16,14 +16,20 @@ export const PrivateRoute = (props: {
     NavigationContext,
   );
   const { isLoggedIn, userRole } = useContext(AuthContext);
+  const userRolesAccessPaths: Array<string> = USER_ROLES[userRole].access;
+  const parsedUserRolesAccessPaths: Array<string> = getParsedUserRole(
+    userRolesAccessPaths,
+  );
+
   const accessPublicPath = PUBLIC_PATHS.filter((path: PublicPathParams) => {
-    return userRole && USER_ROLES[userRole]?.access.indexOf(path.path) >= 0;
+    return userRole && canUserAccess(parsedUserRolesAccessPaths, path.path);
   });
   const initialPublicPath =
     accessPublicPath.length > 0 ? accessPublicPath[0] : null;
   const redirectToPath = initialPublicPath?.path;
+
   const canAccess =
-    userRole && USER_ROLES[userRole]?.access.indexOf(rest.path) >= 0;
+    userRole && canUserAccess(parsedUserRolesAccessPaths, rest.path);
 
   return (
     <Route
@@ -45,7 +51,6 @@ export const PrivateRoute = (props: {
 
 // Public and Restricted Routes
 export const PublicRoute = (props: {
-  key: string | number;
   path: string;
   component: React.ComponentType;
   restricted: boolean;
@@ -56,14 +61,21 @@ export const PublicRoute = (props: {
     NavigationContext,
   );
   const { isLoggedIn, userRole } = useContext(AuthContext);
+  const userRolesAccessPaths: Array<string> = USER_ROLES[userRole].access;
+  const parsedUserRolesAccessPaths: Array<string> = getParsedUserRole(
+    userRolesAccessPaths,
+  );
+
   const accessPrivatePaths = PRIVATE_PATHS.filter((path: PrivatePathParams) => {
-    return userRole && USER_ROLES[userRole]?.access.indexOf(path.path) >= 0;
+    return userRole && canUserAccess(parsedUserRolesAccessPaths, path.path);
   });
+
   const initialPrivatePath =
     accessPrivatePaths.length > 0 ? accessPrivatePaths[0] : null;
   const redirectToPath = initialPrivatePath?.path;
+
   const canAccess =
-    userRole && USER_ROLES[userRole]?.access.indexOf(rest.path) >= 0;
+    userRole && canUserAccess(parsedUserRolesAccessPaths, rest.path);
 
   return (
     <Route

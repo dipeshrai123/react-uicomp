@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { stateType, DefaultAuthConfigParams, publicReturnType } from "./Types";
 import { AuthContext, NavigationContext, ThemeContext } from "./Context";
+import { getParsedUserRole, canUserAccess } from "./Utils";
 
 // Auth
 export const useAuth = () => {
@@ -27,10 +28,15 @@ export const useNavigation = () => {
     userRoles: USER_ROLES,
   } = useContext(NavigationContext);
 
+  const userRolesAccessPaths: Array<string> = USER_ROLES[userRole].access;
+  const parsedUserRolesAccessPaths: Array<string> = getParsedUserRole(
+    userRolesAccessPaths,
+  );
+
   const filteredPublicRoutes = PUBLIC_PATHS.filter(
     ({ path, restricted, visible = true }) => {
       const canAccess =
-        userRole && USER_ROLES[userRole].access.indexOf(path) >= 0;
+        userRole && canUserAccess(parsedUserRolesAccessPaths, path);
 
       return restricted && isLoggedIn ? false : visible && canAccess;
     },
@@ -46,7 +52,7 @@ export const useNavigation = () => {
   const filteredPrivateRoutes = PRIVATE_PATHS.filter(
     ({ path, visible = true }) => {
       const canAccess =
-        userRole && USER_ROLES[userRole].access.indexOf(path) >= 0;
+        userRole && canUserAccess(parsedUserRolesAccessPaths, path);
 
       return isLoggedIn ? visible && canAccess : false;
     },

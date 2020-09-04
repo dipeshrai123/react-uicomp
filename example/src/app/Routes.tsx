@@ -1,3 +1,4 @@
+import React from "react";
 import HomePage from "../components/HomePage";
 import DropdownPage from "../components/DropdownPage";
 import ModalPage from "../components/ModalPage";
@@ -8,6 +9,10 @@ import MouseMovePage from "../components/MouseMove";
 import DragPage from "../components/Drag";
 import ToastPage from "../components/Toast";
 import UseMountedValuePage from "../components/UseMountedValue";
+
+// const Comp = () => <div>Select any</div>;
+const Comp1 = () => <div>comp1</div>;
+const Comp2 = () => <div>comp2</div>;
 
 export const publicPaths = [
   {
@@ -51,6 +56,20 @@ export const publicPaths = [
     path: "/mousemove",
     component: MouseMovePage,
     restricted: true,
+    nestedPaths: [
+      {
+        name: "Nested 1",
+        path: "/1",
+        component: Comp1,
+        restricted: true,
+      },
+      {
+        name: "Nested 2",
+        path: "/2",
+        component: Comp2,
+        restricted: true,
+      },
+    ],
   },
   {
     name: "drag",
@@ -74,19 +93,6 @@ export const publicPaths = [
 
 export const privatePaths = [];
 
-export const userRoles = { 
-  user: { 
-    access: [
-      "/",
-      "/dropdown", 
-      "/modal", 
-      "/animated", 
-      "/scroll", 
-      "/tabs", 
-      "/mousemove", 
-      "/drag",
-      "/toast",
-      "/usemountedvalue",
-    ] 
-  } 
+export const userRoles = {
+  user: { access: ["*"] },
 };

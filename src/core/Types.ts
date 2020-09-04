@@ -21,6 +21,8 @@ export interface PublicPathParams {
   exact?: boolean;
   visible?: boolean;
   restricted: boolean;
+  subPaths?: PublicPathParams[];
+  nestedPaths?: PublicPathParams[];
   props?: any;
 }
 
@@ -31,6 +33,8 @@ export interface PrivatePathParams {
   component: React.ComponentType;
   exact?: boolean;
   visible?: boolean;
+  subPaths?: PrivatePathParams[];
+  nestedPaths?: PrivatePathParams[];
   props?: any;
 }
 
