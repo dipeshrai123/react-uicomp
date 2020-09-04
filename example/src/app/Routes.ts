@@ -54,37 +54,37 @@ export const publicPaths = [
     subPaths: [
       {
         name: "MouseMove2",
-        path: "/mousemove/1",
+        path: "/1",
         component: MouseMovePage,
         restricted: true,
       },
       {
         name: "MouseMove3",
-        path: "/mousemove/2",
+        path: "/2",
         component: MouseMovePage,
         restricted: true,
         subPaths: [
           {
             name: "MouseMove4",
-            path: "/mousemove/2/3",
+            path: "/3",
             component: MouseMovePage,
             restricted: true,
           },
           {
             name: "MouseMove5",
-            path: "/mousemove/2/4",
+            path: "/4",
             component: MouseMovePage,
             restricted: true,
             subPaths: [
               {
                 name: "MouseMove6",
-                path: "/mousemove/2/4/5",
+                path: "/5",
                 component: MouseMovePage,
                 restricted: true,
               },
               {
                 name: "MouseMove7",
-                path: "/mousemove/2/4/5",
+                path: "/5",
                 component: MouseMovePage,
                 restricted: true,
               },

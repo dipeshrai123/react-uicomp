@@ -48,9 +48,10 @@ export const canUserAccess = (userRoles: Array<string>, path: string) => {
 export const getParsedPaths = (paths: Array<any>) => {
   const getNestedArray = (pathObj: any): any => {
     if (pathObj.subPaths) {
-      const routes = pathObj.subPaths.map((route: any) =>
-        getNestedArray(route),
-      );
+      const routes = pathObj.subPaths.map((route: any) => {
+        const modRoute = { ...route, path: `${pathObj.path}${route.path}` };
+        return getNestedArray(modRoute);
+      });
       return [pathObj, ...routes].flat();
     } else return pathObj;
   };
