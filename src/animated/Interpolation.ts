@@ -224,7 +224,7 @@ export const interpolate = (
 ) => {
   if (value instanceof SpringValue) {
     // Animated Value
-    return value.interpolate({
+    return value.to({
       range: inputRange,
       output: outputRange,
       ...extrapolateConfig,
