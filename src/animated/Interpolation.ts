@@ -300,3 +300,12 @@ export const interpolate = (
     }
   }
 };
+
+// INTERPOLATE FROM 0 TO 1
+export const bInterpolate = (
+  value: SpringValue<number> | number,
+  outputRange: Array<number | string>,
+  extrapolateConfig?: ExtrapolateConfig,
+) => {
+  return interpolate(value, [0, 1], outputRange, extrapolateConfig);
+};
