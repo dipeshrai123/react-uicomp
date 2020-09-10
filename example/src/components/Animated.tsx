@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { AnimatedBlock, useAnimatedValue, useMeasure } from "react-uicomp";
+import {
+  AnimatedBlock,
+  useAnimatedValue,
+  useMeasure,
+  bInterpolate,
+} from "react-uicomp";
 
 const Animated = () => {
   const [toggle, setToggle] = useState(false);
   const { handler, width } = useMeasure();
+  const anim = useAnimatedValue(0);
   const animatedWidth2 = useAnimatedValue(0);
   const animatedWidth = useAnimatedValue(100, {
     listener: function (val) {
@@ -13,7 +19,8 @@ const Animated = () => {
 
   useEffect(() => {
     animatedWidth.value = toggle ? width : 100;
-  }, [toggle, animatedWidth, width]);
+    anim.value = toggle ? 1 : 0;
+  }, [toggle, animatedWidth, width, anim]);
 
   return (
     <>
@@ -21,6 +28,15 @@ const Animated = () => {
         {...handler}
         style={{ width: "30%", height: 100, background: "red" }}
       ></div>
+      <AnimatedBlock
+        style={{
+          opacity: bInterpolate(anim.value, [1, 0]),
+          height: 100,
+          width: 100,
+          position: "relative",
+          background: "#39F",
+        }}
+      ></AnimatedBlock>
       <AnimatedBlock
         style={{
           width: animatedWidth.value,

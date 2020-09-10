@@ -1,5 +1,12 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable no-unused-vars */
-import { processColor, rgbaToHex } from "./Colors";
+import {
+  rgbaToHex,
+  hexToRgba,
+  COLOR_NUMBER_REGEX,
+  HEX_NAME_COLOR,
+  colorNames,
+} from "./Colors";
 import { SpringValue } from "react-spring";
 
 export const mix = (perc: number, val1: number, val2: number) => {
@@ -101,6 +108,108 @@ const _getNarrowedInputArray = function (
   return narrowedInput;
 };
 
+const _getColorInterpolate = (value: number, narrowedInput: Array<string>) => {
+  const [inputMin, inputMax, outputMin, outputMax] = narrowedInput;
+
+  const outputMinProcessed = hexToRgba(outputMin);
+  const outputMaxProcessed = hexToRgba(outputMax);
+
+  const red = _internalInterpolate(
+    value,
+    [inputMin, inputMax, outputMinProcessed.r, outputMaxProcessed.r],
+    "clamp",
+    "clamp",
+  );
+
+  const green = _internalInterpolate(
+    value,
+    [inputMin, inputMax, outputMinProcessed.g, outputMaxProcessed.g],
+    "clamp",
+    "clamp",
+  );
+
+  const blue = _internalInterpolate(
+    value,
+    [inputMin, inputMax, outputMinProcessed.b, outputMaxProcessed.b],
+    "clamp",
+    "clamp",
+  );
+
+  const alpha = _internalInterpolate(
+    value,
+    [inputMin, inputMax, outputMinProcessed.a, outputMaxProcessed.a],
+    "clamp",
+    "clamp",
+  );
+
+  return rgbaToHex({ r: red, g: green, b: blue, a: alpha });
+};
+
+const _getArrayInterpolate = (
+  value: number,
+  narrowedInput: Array<any>,
+  _extrapolateLeft: ExtrapolateType,
+  _extrapolateRight: ExtrapolateType,
+) => {
+  const [inputMin, inputMax, outputMin, outputMax] = narrowedInput;
+
+  if (outputMin.length === outputMax.length) {
+    return outputMin.map((val: any, index: number) => {
+      if (typeof val === "string") {
+        // IF IT IS STRING THEN IT MUST BE HEX COLOR
+        return _getColorInterpolate(value, [
+          inputMin,
+          inputMax,
+          val,
+          outputMax[index],
+        ]);
+      } else {
+        return _internalInterpolate(
+          value,
+          [inputMin, inputMax, val, outputMax[index]],
+          _extrapolateLeft,
+          _extrapolateRight,
+        );
+      }
+    });
+  } else {
+    throw new Error("Array length doesn't match");
+  }
+};
+
+const _getTemplateString = (str: string) => {
+  return str.replace(COLOR_NUMBER_REGEX, "$");
+};
+
+const _getParsedStringArray = (str: string) => {
+  return str.match(COLOR_NUMBER_REGEX).map((v) => {
+    if (v.indexOf("#") !== -1) {
+      return v;
+    } else {
+      return Number(v);
+    }
+  });
+};
+
+const _isStringMatched = (str1: string, str2: string) => {
+  return (
+    _getTemplateString(str1).trim().replaceAll(" ", "").length ===
+    _getTemplateString(str2).trim().replaceAll(" ", "").length
+  );
+};
+
+const _colorProcessedString = (str: any) => {
+  return str.replace(HEX_NAME_COLOR, function (match: any) {
+    if (match.indexOf("#") !== -1) {
+      return rgbaToHex(hexToRgba(match));
+    } else if (colorNames.hasOwnProperty(match)) {
+      return colorNames[match];
+    } else {
+      throw new Error("String cannot be parsed!");
+    }
+  });
+};
+
 interface ExtrapolateConfig {
   extrapolate?: ExtrapolateType;
   extrapolateRight?: ExtrapolateType;
@@ -115,7 +224,7 @@ export const interpolate = (
 ) => {
   if (value instanceof SpringValue) {
     // Animated Value
-    return value.interpolate({
+    return value.to({
       range: inputRange,
       output: outputRange,
       ...extrapolateConfig,
@@ -153,45 +262,50 @@ export const interpolate = (
           _extrapolateLeft,
           _extrapolateRight,
         );
+      } else if (Array.isArray(outputRange[0])) {
+        return _getArrayInterpolate(
+          value,
+          narrowedInput,
+          _extrapolateLeft,
+          _extrapolateRight,
+        );
       } else {
-        // If outputRange is in string then is must be color otherwise.
         const [inputMin, inputMax, outputMin, outputMax] = narrowedInput;
 
-        const outputMinProcessed = processColor(outputMin);
-        const outputMaxProcessed = processColor(outputMax);
+        const processedOutputMin = _colorProcessedString(outputMin);
+        const processedOutputMax = _colorProcessedString(outputMax);
 
-        const red = _internalInterpolate(
-          value,
-          [inputMin, inputMax, outputMinProcessed.r, outputMaxProcessed.r],
-          "clamp",
-          "clamp",
-        );
+        let templateString = _getTemplateString(processedOutputMin);
 
-        const green = _internalInterpolate(
-          value,
-          [inputMin, inputMax, outputMinProcessed.g, outputMaxProcessed.g],
-          "clamp",
-          "clamp",
-        );
+        if (_isStringMatched(processedOutputMin, processedOutputMax)) {
+          const outputMinParsed = _getParsedStringArray(processedOutputMin);
+          const outputMaxParsed = _getParsedStringArray(processedOutputMax);
 
-        const blue = _internalInterpolate(
-          value,
-          [inputMin, inputMax, outputMinProcessed.b, outputMaxProcessed.b],
-          "clamp",
-          "clamp",
-        );
+          const result = _getArrayInterpolate(
+            value,
+            [inputMin, inputMax, outputMinParsed, outputMaxParsed],
+            _extrapolateLeft,
+            _extrapolateRight,
+          );
 
-        const alpha = _internalInterpolate(
-          value,
-          [inputMin, inputMax, outputMinProcessed.a, outputMaxProcessed.a],
-          "clamp",
-          "clamp",
-        );
-
-        return rgbaToHex({ r: red, g: green, b: blue, a: alpha });
+          for (const v of result)
+            templateString = templateString.replace("$", v);
+          return templateString;
+        } else {
+          throw new Error("String cannot be parsed!");
+        }
       }
     } else {
       console.error(new Error("Output Range Cannot be Empty"));
     }
   }
+};
+
+// INTERPOLATE FROM 0 TO 1
+export const bInterpolate = (
+  value: SpringValue<number> | number,
+  outputRange: Array<number | string>,
+  extrapolateConfig?: ExtrapolateConfig,
+) => {
+  return interpolate(value, [0, 1], outputRange, extrapolateConfig);
 };
