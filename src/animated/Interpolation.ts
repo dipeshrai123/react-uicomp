@@ -178,7 +178,13 @@ const _getArrayInterpolate = (
 };
 
 const _getTemplateString = (str: string) => {
-  return str.replace(COLOR_NUMBER_REGEX, "$");
+  return str.replace(COLOR_NUMBER_REGEX, function (match) {
+    if (match.indexOf(" ") === 0) {
+      return " $";
+    }
+
+    return "$";
+  });
 };
 
 const _getParsedStringArray = (str: string) => {
@@ -292,11 +298,11 @@ export const interpolate = (
             templateString = templateString.replace("$", v);
           return templateString;
         } else {
-          throw new Error("String cannot be parsed!");
+          throw new Error("Output range doesn't match string format!");
         }
       }
     } else {
-      console.error(new Error("Output Range Cannot be Empty"));
+      throw new Error("Output range cannot be Empty");
     }
   }
 };

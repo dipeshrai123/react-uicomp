@@ -140,11 +140,13 @@ export enum ScrollState {
 // TODO : Handler for HTMLElement
 type ScrollUseStateProp = { scrollX: number; scrollY: number };
 export const useScroll = (): {
+  handler: { ref: React.RefObject<any> };
   scrollX: number;
   scrollY: number;
   scrollDirection: number;
   isScrolling: boolean;
 } => {
+  const ref = useRef<any>(null);
   const [scroll, setScroll] = useState<ScrollUseStateProp>({
     scrollX: 0,
     scrollY: 0,
@@ -178,20 +180,54 @@ export const useScroll = (): {
     _prevScrollY.current = pageYOffset;
   };
 
-  useEffect(() => {
-    window.addEventListener("scroll", scrollListener);
+  const scrollElementListener: () => void = () => {
+    const { scrollTop, scrollLeft } = ref.current;
+    setScroll({ scrollX: scrollLeft, scrollY: scrollTop });
 
-    return () => window.removeEventListener("scroll", scrollListener);
+    // Clear if scrolling
+    if (_isScrolling.current !== -1) {
+      setIsScrolling(true);
+      clearTimeout(_isScrolling.current);
+    }
+
+    _isScrolling.current = setTimeout(() => {
+      setIsScrolling(false);
+      _scrollDirection.current = ScrollState.UNDETERMINED; // reset
+    }, 250);
+
+    const diff = scrollTop - _prevScrollY.current;
+    if (diff > 0) {
+      _scrollDirection.current = ScrollState.DOWN;
+    } else {
+      _scrollDirection.current = ScrollState.UP;
+    }
+    _prevScrollY.current = scrollTop;
+  };
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.addEventListener("scroll", scrollElementListener);
+    } else {
+      window.addEventListener("scroll", scrollListener);
+    }
+
+    return () => {
+      if (ref.current) {
+        ref.current.removeEventListener("scroll", scrollElementListener);
+      } else {
+        window.removeEventListener("scroll", scrollListener);
+      }
+    };
   }, []);
 
   return {
+    handler: { ref },
     ...scroll,
     scrollDirection: _scrollDirection.current,
     isScrolling,
   };
 };
 
-// Todo: Implementation of ResizeObserver
 type UseMeasureMeasurement = {
   left: number;
   top: number;
@@ -316,111 +352,112 @@ export const useMouseMove = (): {
   return { ...pointerPosition, isMoving };
 };
 
-type UseDragState = { x: number; y: number };
-export const useDrag = (): {
-  handler: { ref: React.RefObject<any> };
-  mouseX: number;
-  mouseY: number;
-  isDragging: boolean;
-  hDirection: number;
-  vDirection: number;
-} => {
-  const ref = useRef<any>();
-  const [position, setPosition] = useState<UseDragState>({ x: 0, y: 0 });
-  const _isDragging = useRef<boolean>(false);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-  const prevPosition = useRef<UseDragState>({ x: 0, y: 0 });
-  const newPosition = useRef<UseDragState>({ x: 0, y: 0 });
-  const _elementOffset = useRef<UseDragState>({ x: 0, y: 0 });
-  const _hDragDirection = useRef<number>(DirectionState.UNDETERMINED);
-  const _vDragDirection = useRef<number>(DirectionState.UNDETERMINED);
+// TODO: Erros availabe for useDrag() hook. Need to be fixed
+// type UseDragState = { x: number; y: number };
+// export const useDrag = (): {
+//   handler: { ref: React.RefObject<any> };
+//   mouseX: number;
+//   mouseY: number;
+//   isDragging: boolean;
+//   hDirection: number;
+//   vDirection: number;
+// } => {
+//   const ref = useRef<any>();
+//   const [position, setPosition] = useState<UseDragState>({ x: 0, y: 0 });
+//   const _isDragging = useRef<boolean>(false);
+//   const [isDragging, setIsDragging] = useState<boolean>(false);
+//   const prevPosition = useRef<UseDragState>({ x: 0, y: 0 });
+//   const newPosition = useRef<UseDragState>({ x: 0, y: 0 });
+//   const _elementOffset = useRef<UseDragState>({ x: 0, y: 0 });
+//   const _hDragDirection = useRef<number>(DirectionState.UNDETERMINED);
+//   const _vDragDirection = useRef<number>(DirectionState.UNDETERMINED);
 
-  useEffect(() => {
-    const _element = ref.current;
+//   useEffect(() => {
+//     const _element = ref.current;
 
-    const _mouseUpHandler: () => void = function () {
-      _isDragging.current = false;
+//     const _mouseUpHandler: () => void = function () {
+//       _isDragging.current = false;
 
-      // Reset Positions
-      prevPosition.current.x = 0;
-      prevPosition.current.y = 0;
-      newPosition.current.x = 0;
-      newPosition.current.y = 0;
+//       // Reset Positions
+//       prevPosition.current.x = 0;
+//       prevPosition.current.y = 0;
+//       newPosition.current.x = 0;
+//       newPosition.current.y = 0;
 
-      // Reset Direction
-      _hDragDirection.current = DirectionState.UNDETERMINED;
-      _vDragDirection.current = DirectionState.UNDETERMINED;
+//       // Reset Direction
+//       _hDragDirection.current = DirectionState.UNDETERMINED;
+//       _vDragDirection.current = DirectionState.UNDETERMINED;
 
-      setIsDragging(false);
-    };
+//       setIsDragging(false);
+//     };
 
-    const _mouseMoveHandler: (event: MouseEvent) => void = function (
-      event: MouseEvent,
-    ) {
-      if (_isDragging.current) {
-        newPosition.current.x =
-          newPosition.current.x + (event.clientX - prevPosition.current.x);
-        newPosition.current.y =
-          prevPosition.current.y + (event.clientY - prevPosition.current.y);
+//     const _mouseMoveHandler: (event: MouseEvent) => void = function (
+//       event: MouseEvent,
+//     ) {
+//       if (_isDragging.current) {
+//         newPosition.current.x =
+//           newPosition.current.x + (event.clientX - prevPosition.current.x);
+//         newPosition.current.y =
+//           prevPosition.current.y + (event.clientY - prevPosition.current.y);
 
-        // For horizontal direction
-        if (event.clientX > prevPosition.current.x) {
-          _hDragDirection.current = DirectionState.RIGHT;
-        } else if (event.clientX < prevPosition.current.x) {
-          _hDragDirection.current = DirectionState.LEFT;
-        } else {
-          _hDragDirection.current = DirectionState.UNDETERMINED;
-        }
+//         // For horizontal direction
+//         if (event.clientX > prevPosition.current.x) {
+//           _hDragDirection.current = DirectionState.RIGHT;
+//         } else if (event.clientX < prevPosition.current.x) {
+//           _hDragDirection.current = DirectionState.LEFT;
+//         } else {
+//           _hDragDirection.current = DirectionState.UNDETERMINED;
+//         }
 
-        // For vertical direction
-        if (event.clientY > prevPosition.current.y) {
-          _vDragDirection.current = DirectionState.DOWN;
-        } else if (event.clientY < prevPosition.current.y) {
-          _vDragDirection.current = DirectionState.UP;
-        } else {
-          _vDragDirection.current = DirectionState.UNDETERMINED;
-        }
+//         // For vertical direction
+//         if (event.clientY > prevPosition.current.y) {
+//           _vDragDirection.current = DirectionState.DOWN;
+//         } else if (event.clientY < prevPosition.current.y) {
+//           _vDragDirection.current = DirectionState.UP;
+//         } else {
+//           _vDragDirection.current = DirectionState.UNDETERMINED;
+//         }
 
-        prevPosition.current.x = newPosition.current.x;
-        prevPosition.current.y = newPosition.current.y;
+//         prevPosition.current.x = newPosition.current.x;
+//         prevPosition.current.y = newPosition.current.y;
 
-        setPosition({
-          x: newPosition.current.x - _elementOffset.current.x,
-          y: newPosition.current.y - _elementOffset.current.y,
-        });
-      }
-    };
+//         setPosition({
+//           x: newPosition.current.x - _elementOffset.current.x,
+//           y: newPosition.current.y - _elementOffset.current.y,
+//         });
+//       }
+//     };
 
-    const _mouseDownHandlerElement: (event: MouseEvent) => void = function (
-      event: MouseEvent,
-    ) {
-      _isDragging.current = true;
-      const _newOffsetX = event.pageX - _element.offsetLeft;
-      const _newOffsetY = event.pageY - _element.offsetTop;
-      _elementOffset.current.x = _newOffsetX;
-      _elementOffset.current.y = _newOffsetY;
-      setIsDragging(true);
-    };
+//     const _mouseDownHandlerElement: (event: MouseEvent) => void = function (
+//       event: MouseEvent,
+//     ) {
+//       _isDragging.current = true;
+//       const _newOffsetX = event.pageX - _element.offsetLeft;
+//       const _newOffsetY = event.pageY - _element.offsetTop;
+//       _elementOffset.current.x = _newOffsetX;
+//       _elementOffset.current.y = _newOffsetY;
+//       setIsDragging(true);
+//     };
 
-    document.addEventListener("mouseup", _mouseUpHandler);
-    document.addEventListener("mousemove", _mouseMoveHandler);
+//     document.addEventListener("mouseup", _mouseUpHandler);
+//     document.addEventListener("mousemove", _mouseMoveHandler);
 
-    if (_element) {
-      _element.addEventListener("mousedown", _mouseDownHandlerElement);
-    }
+//     if (_element) {
+//       _element.addEventListener("mousedown", _mouseDownHandlerElement);
+//     }
 
-    return () => {
-      document.removeEventListener("mouseup", _mouseUpHandler);
-      document.removeEventListener("mousemove", _mouseMoveHandler);
-    };
-  }, []);
+//     return () => {
+//       document.removeEventListener("mouseup", _mouseUpHandler);
+//       document.removeEventListener("mousemove", _mouseMoveHandler);
+//     };
+//   }, []);
 
-  return {
-    handler: { ref },
-    mouseX: position.x,
-    mouseY: position.y,
-    isDragging,
-    hDirection: _hDragDirection.current,
-    vDirection: _vDragDirection.current,
-  };
-};
+//   return {
+//     handler: { ref },
+//     mouseX: position.x,
+//     mouseY: position.y,
+//     isDragging,
+//     hDirection: _hDragDirection.current,
+//     vDirection: _vDragDirection.current,
+//   };
+// };
