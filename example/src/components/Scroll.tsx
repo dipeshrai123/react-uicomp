@@ -2,41 +2,46 @@ import React from "react";
 import { useScroll, interpolate } from "react-uicomp";
 
 const Scroll = () => {
-  const { scrollY } = useScroll();
+  const { handler, scrollY } = useScroll();
 
   return (
     <div>
       <div
+        {...handler}
         style={{
-          bottom: 50,
-          right: 50,
-          width: 100,
-          height: 100,
-          background: "#3399ff",
-          position: "fixed",
-          border: interpolate(
-            scrollY,
-            [0, 500],
-            ["0.1px solid red", "12px solid blue"],
-            {
-              extrapolate: "clamp",
-            },
-          ),
-          transform: interpolate(
-            scrollY,
-            [0, 500],
-            ["rotate(0deg)", "rotate(180deg)"],
-            {
-              extrapolate: "clamp",
-            },
-          ),
+          height: 500,
+          backgroundColor: "#e1e1e1",
+          overflowY: "scroll",
+          position: "relative",
         }}
-      />
-      <div style={{ height: 800, backgroundColor: "#e1e1e1" }}></div>
-      <div style={{ height: 400, backgroundColor: "#FFF" }}></div>
-      <div style={{ height: 200, backgroundColor: "#e1e1e1" }}></div>
-      <div style={{ height: 500, backgroundColor: "#FFF" }}></div>
-      <div style={{ height: 400, backgroundColor: "#e1e1e1" }}></div>
+      >
+        {Array(10)
+          .fill(null)
+          .map((_, i) => (
+            <div
+              key={i}
+              style={{
+                backgroundColor: "#3399ff",
+                width: 100,
+                margin: "20px auto",
+                height: 80,
+              }}
+            />
+          ))}
+        <div
+          style={{
+            background: "red",
+            width: 100,
+            height: 100,
+            position: "absolute",
+            right: 10,
+            bottom: 10,
+            borderRadius: interpolate(scrollY, [0, 100], ["0%", "50%"]),
+          }}
+        />
+      </div>
+
+      <div style={{ height: 1000 }} />
     </div>
   );
 };
