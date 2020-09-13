@@ -17,7 +17,7 @@ const Scroll = () => {
           border: interpolate(
             scrollY,
             [0, 500],
-            ["1px solid red", "12px solid blue"],
+            ["0.1px solid red", "12px solid blue"],
             {
               extrapolate: "clamp",
             },
