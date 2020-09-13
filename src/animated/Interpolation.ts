@@ -178,7 +178,13 @@ const _getArrayInterpolate = (
 };
 
 const _getTemplateString = (str: string) => {
-  return str.replace(COLOR_NUMBER_REGEX, "$");
+  return str.replace(COLOR_NUMBER_REGEX, function (match) {
+    if (match.indexOf(" ") === 0) {
+      return " $";
+    }
+
+    return "$";
+  });
 };
 
 const _getParsedStringArray = (str: string) => {
