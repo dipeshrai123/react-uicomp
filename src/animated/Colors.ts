@@ -220,8 +220,7 @@ export function processColor(color: number | string) {
       if (hexColorName) {
         return hexToRgba(hexColorName);
       } else {
-        console.error(new Error("String cannot be parsed!"));
-        return null;
+        throw new Error("String cannot be parsed!");
       }
     }
   }
