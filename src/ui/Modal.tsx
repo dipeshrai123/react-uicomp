@@ -2,7 +2,7 @@
 import React, { useRef } from "react";
 import { useOutsideClick } from "../animated";
 import styled from "styled-components";
-import { animated, useTransition, interpolate } from "react-spring";
+import { animated, useTransition, to } from "react-spring";
 import { AnimationType, getAnimationConfig } from "./Modules";
 
 const ContainerStyled = styled.div`
@@ -71,13 +71,13 @@ export const Modal = ({
                 ref={modalRef}
                 style={{
                   ...style,
-                  transform: interpolate(
+                  transform: to(
                     [
-                      props.opacity.interpolate({
+                      props.opacity.to({
                         range: [0, 1],
                         output: [0.9, 1],
                       }),
-                      props.opacity.interpolate({
+                      props.opacity.to({
                         range: [0, 1],
                         output: [-50, 0],
                       }),

@@ -158,24 +158,21 @@ export const Dropdown = ({
                 position: "absolute",
                 opacity: props.opacity,
                 transform: props.opacity
-                  .interpolate({
+                  .to({
                     range: [0, 1],
                     output: [0.6, 1],
                   })
-                  .interpolate((s: any) => {
+                  .to((s: any) => {
                     // Calculation for position
                     if (placement === "bottommiddle") {
-                      return `scale(${
-                        animationType !== "fade" ? s : 1
-                      }) translateX(-50%)`;
+                      return `scale(${animationType !== "fade" ? s : 1
+                        }) translateX(-50%)`;
                     } else if (placement === "topmiddle") {
-                      return `scale(${
-                        animationType !== "fade" ? s : 1
-                      }) translateX(-50%)`;
+                      return `scale(${animationType !== "fade" ? s : 1
+                        }) translateX(-50%)`;
                     } else {
-                      return `scale(${
-                        animationType !== "fade" ? s : 1
-                      }) translateX(0%)`;
+                      return `scale(${animationType !== "fade" ? s : 1
+                        }) translateX(0%)`;
                     }
                   }),
               }}
