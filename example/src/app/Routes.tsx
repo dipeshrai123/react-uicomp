@@ -1,6 +1,6 @@
 import React from "react";
 import HomePage from "../components/HomePage";
-import DropdownPage from "../components/DropdownPage";
+import DropdownPage from "../components/DropdownPage/DropdownPage";
 import ModalPage from "../components/ModalPage";
 import AnimatedPage from "../components/Animated";
 import ScrollPage from "../components/Scroll";

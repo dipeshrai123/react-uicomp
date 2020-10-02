@@ -2,6 +2,7 @@
 import React from "react";
 import { useOutsideClick } from "../animated";
 import { animated, useTransition } from "react-spring";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator } from "./DropdownMenu";
 import { AnimationType, getAnimationConfig } from "./Modules";
 
 type triggerElementArgType = {
@@ -16,13 +17,15 @@ type placementType =
   | "topright"
   | "topmiddle";
 
+type DropdownOptions = Array<{ title?: string; onClick?: () => void; danger?: boolean; style?: React.CSSProperties, type?: "item" | "separator", className?: string }>;
+
 interface DropdownProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   triggerElement: (elementArg: triggerElementArgType) => React.ReactNode;
   active?: boolean;
   isAnimated?: boolean;
   animationType?: AnimationType;
-  dropdownStyles?: Omit<
+  dropdownStyle?: Omit<
     React.CSSProperties,
     "transform" | "position" | "opacity"
   >;
@@ -30,6 +33,9 @@ interface DropdownProps {
   dismissOnOutsideClick?: boolean;
   dismissOnInsideClick?: boolean;
   toggleOnTriggerElementClick?: boolean;
+  options?: DropdownOptions;
+  containerStyle?: React.CSSProperties;
+  containerClassName?: string;
 }
 
 export const Dropdown = ({
@@ -38,11 +44,14 @@ export const Dropdown = ({
   active = false,
   isAnimated = true,
   animationType = "expand",
-  dropdownStyles,
+  dropdownStyle,
   placement = "bottomleft",
   dismissOnOutsideClick = true,
   toggleOnTriggerElementClick = false,
   dismissOnInsideClick = false,
+  options,
+  containerStyle,
+  containerClassName,
 }: DropdownProps) => {
   const containerRef: React.RefObject<HTMLDivElement> = React.useRef<
     HTMLDivElement
@@ -135,7 +144,7 @@ export const Dropdown = ({
     whiteSpace: "nowrap",
     ...getDirectionStyles(placement),
     ...getTransformOrigin(placement),
-    ...dropdownStyles,
+    ...dropdownStyle,
   };
 
   // DismissOnElementClick
@@ -177,7 +186,22 @@ export const Dropdown = ({
                   }),
               }}
             >
-              {children}
+              { options ?
+                <DropdownMenu style={containerStyle} className={containerClassName}>
+                  {
+                    options.map(({ title, onClick, danger, style, type, className }, index) => {
+                      if (type === "separator") {
+                        return (<DropdownMenuSeparator key={index} />)
+                      } else {
+                        return (
+                          <DropdownMenuItem key={index} {...{ onClick, danger, style, className }}>{title}</DropdownMenuItem>
+                        )
+                      }
+                    })
+                  }
+                </DropdownMenu>
+                : children
+              }
             </animated.div>
           )
         );
