@@ -2,7 +2,11 @@
 import React from "react";
 import { useOutsideClick } from "../animated";
 import { animated, useTransition } from "react-spring";
-import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator } from "./DropdownMenu";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "./DropdownMenu";
 import { AnimationType, getAnimationConfig } from "./Modules";
 
 type triggerElementArgType = {
@@ -17,7 +21,13 @@ type placementType =
   | "topright"
   | "topmiddle";
 
-type DropdownOptions = Array<{ title?: string; onClick?: () => void; danger?: boolean; style?: React.CSSProperties, type?: "item" | "separator", className?: string }>;
+type DropdownOptions = Array<{
+  title?: string;
+  onClick?: () => void;
+  danger?: boolean;
+  style?: React.CSSProperties;
+  type?: "item" | "separator";
+}>;
 
 interface DropdownProps {
   children?: React.ReactNode;
@@ -25,17 +35,16 @@ interface DropdownProps {
   active?: boolean;
   isAnimated?: boolean;
   animationType?: AnimationType;
-  dropdownStyle?: Omit<
-    React.CSSProperties,
-    "transform" | "position" | "opacity"
-  >;
+  style?: Omit<React.CSSProperties, "transform" | "position" | "opacity">;
   placement?: placementType;
   dismissOnOutsideClick?: boolean;
   dismissOnInsideClick?: boolean;
   toggleOnTriggerElementClick?: boolean;
   options?: DropdownOptions;
   containerStyle?: React.CSSProperties;
+  itemStyle?: React.CSSProperties;
   containerClassName?: string;
+  itemClassName?: string;
 }
 
 export const Dropdown = ({
@@ -44,14 +53,16 @@ export const Dropdown = ({
   active = false,
   isAnimated = true,
   animationType = "expand",
-  dropdownStyle,
+  style,
   placement = "bottomleft",
   dismissOnOutsideClick = true,
   toggleOnTriggerElementClick = false,
   dismissOnInsideClick = false,
   options,
   containerStyle,
+  itemStyle,
   containerClassName,
+  itemClassName,
 }: DropdownProps) => {
   const containerRef: React.RefObject<HTMLDivElement> = React.useRef<
     HTMLDivElement
@@ -144,7 +155,7 @@ export const Dropdown = ({
     whiteSpace: "nowrap",
     ...getDirectionStyles(placement),
     ...getTransformOrigin(placement),
-    ...dropdownStyle,
+    ...style,
   };
 
   // DismissOnElementClick
@@ -174,34 +185,48 @@ export const Dropdown = ({
                   .to((s: any) => {
                     // Calculation for position
                     if (placement === "bottommiddle") {
-                      return `scale(${animationType !== "fade" ? s : 1
-                        }) translateX(-50%)`;
+                      return `scale(${
+                        animationType !== "fade" ? s : 1
+                      }) translateX(-50%)`;
                     } else if (placement === "topmiddle") {
-                      return `scale(${animationType !== "fade" ? s : 1
-                        }) translateX(-50%)`;
+                      return `scale(${
+                        animationType !== "fade" ? s : 1
+                      }) translateX(-50%)`;
                     } else {
-                      return `scale(${animationType !== "fade" ? s : 1
-                        }) translateX(0%)`;
+                      return `scale(${
+                        animationType !== "fade" ? s : 1
+                      }) translateX(0%)`;
                     }
                   }),
               }}
             >
-              { options ?
-                <DropdownMenu style={containerStyle} className={containerClassName}>
-                  {
-                    options.map(({ title, onClick, danger, style, type, className }, index) => {
+              {options ? (
+                <DropdownMenu
+                  style={containerStyle}
+                  className={containerClassName}
+                >
+                  {options.map(
+                    ({ title, onClick, danger, style, type }, index) => {
                       if (type === "separator") {
-                        return (<DropdownMenuSeparator key={index} />)
+                        return <DropdownMenuSeparator key={index} />;
                       } else {
                         return (
-                          <DropdownMenuItem key={index} {...{ onClick, danger, style, className }}>{title}</DropdownMenuItem>
-                        )
+                          <DropdownMenuItem
+                            key={index}
+                            {...{ onClick, danger }}
+                            className={itemClassName}
+                            style={style ? style : itemStyle}
+                          >
+                            {title}
+                          </DropdownMenuItem>
+                        );
                       }
-                    })
-                  }
+                    },
+                  )}
                 </DropdownMenu>
-                : children
-              }
+              ) : (
+                children
+              )}
             </animated.div>
           )
         );
