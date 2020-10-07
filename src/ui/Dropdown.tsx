@@ -2,6 +2,11 @@
 import React from "react";
 import { useOutsideClick } from "../animated";
 import { animated, useTransition } from "react-spring";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "./DropdownMenu";
 import { AnimationType, getAnimationConfig } from "./Modules";
 
 type triggerElementArgType = {
@@ -16,20 +21,30 @@ type placementType =
   | "topright"
   | "topmiddle";
 
+type DropdownOptions = Array<{
+  title?: string;
+  onClick?: () => void;
+  danger?: boolean;
+  style?: React.CSSProperties;
+  type?: "item" | "separator";
+}>;
+
 interface DropdownProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   triggerElement: (elementArg: triggerElementArgType) => React.ReactNode;
   active?: boolean;
   isAnimated?: boolean;
   animationType?: AnimationType;
-  dropdownStyles?: Omit<
-    React.CSSProperties,
-    "transform" | "position" | "opacity"
-  >;
+  style?: Omit<React.CSSProperties, "transform" | "position" | "opacity">;
   placement?: placementType;
   dismissOnOutsideClick?: boolean;
   dismissOnInsideClick?: boolean;
   toggleOnTriggerElementClick?: boolean;
+  options?: DropdownOptions;
+  containerStyle?: React.CSSProperties;
+  itemStyle?: React.CSSProperties;
+  containerClassName?: string;
+  itemClassName?: string;
 }
 
 export const Dropdown = ({
@@ -38,11 +53,16 @@ export const Dropdown = ({
   active = false,
   isAnimated = true,
   animationType = "expand",
-  dropdownStyles,
+  style,
   placement = "bottomleft",
   dismissOnOutsideClick = true,
   toggleOnTriggerElementClick = false,
   dismissOnInsideClick = false,
+  options,
+  containerStyle,
+  itemStyle,
+  containerClassName,
+  itemClassName,
 }: DropdownProps) => {
   const containerRef: React.RefObject<HTMLDivElement> = React.useRef<
     HTMLDivElement
@@ -135,7 +155,7 @@ export const Dropdown = ({
     whiteSpace: "nowrap",
     ...getDirectionStyles(placement),
     ...getTransformOrigin(placement),
-    ...dropdownStyles,
+    ...style,
   };
 
   // DismissOnElementClick
@@ -158,11 +178,11 @@ export const Dropdown = ({
                 position: "absolute",
                 opacity: props.opacity,
                 transform: props.opacity
-                  .interpolate({
+                  .to({
                     range: [0, 1],
                     output: [0.6, 1],
                   })
-                  .interpolate((s: any) => {
+                  .to((s: any) => {
                     // Calculation for position
                     if (placement === "bottommiddle") {
                       return `scale(${
@@ -180,7 +200,33 @@ export const Dropdown = ({
                   }),
               }}
             >
-              {children}
+              {options ? (
+                <DropdownMenu
+                  style={containerStyle}
+                  className={containerClassName}
+                >
+                  {options.map(
+                    ({ title, onClick, danger, style, type }, index) => {
+                      if (type === "separator") {
+                        return <DropdownMenuSeparator key={index} />;
+                      } else {
+                        return (
+                          <DropdownMenuItem
+                            key={index}
+                            {...{ onClick, danger }}
+                            className={itemClassName}
+                            style={style ? style : itemStyle}
+                          >
+                            {title}
+                          </DropdownMenuItem>
+                        );
+                      }
+                    },
+                  )}
+                </DropdownMenu>
+              ) : (
+                children
+              )}
             </animated.div>
           )
         );

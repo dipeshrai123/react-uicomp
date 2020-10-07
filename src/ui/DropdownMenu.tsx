@@ -6,12 +6,12 @@ import { colors, fonts } from "./Constants";
 interface DropdownMenuProps {
   children: React.ReactNode;
   style?: React.CSSProperties;
+  className?: string;
 }
 
-const MenuContainer = styled.ul`
+const MenuContainer = styled.div`
   background-color: #ffffff;
   padding: 6px 0px;
-  list-style-type: none;
   box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid ${colors.light.lightBorderColor};
   border-radius: 10px;
@@ -19,8 +19,8 @@ const MenuContainer = styled.ul`
 `;
 
 export const DropdownMenu = (props: DropdownMenuProps) => {
-  const { children, style } = props;
-  return <MenuContainer {...{ style }}>{children}</MenuContainer>;
+  const { children, style, className } = props;
+  return <MenuContainer {...{ style, className }}>{children}</MenuContainer>;
 };
 
 // Menu Item
@@ -29,10 +29,15 @@ interface DropdownMenuItemProps {
   danger?: boolean;
   style?: React.CSSProperties;
   onClick: () => void;
+  className?: string;
 }
 
-const Item = styled.li<Pick<DropdownMenuItemProps, "danger">>`
+const Item = styled.button<Pick<DropdownMenuItemProps, "danger">>`
   padding: 10px 24px;
+  display: block;
+  background-color: white;
+  border: none;
+  outline: none;
   font-family: ${fonts.family.arial};
   cursor: pointer;
   color: ${(props) =>
@@ -43,14 +48,22 @@ const Item = styled.li<Pick<DropdownMenuItemProps, "danger">>`
     background-color: ${colors.light.backgroundColor};
   }
 
+  &:active {
+    background-color: ${colors.light.backgroundColor};
+  }
+
+  &:focus {
+    outline: 1px solid ${colors.light.defaultBorderColor};
+  }
+
   &.danger {
     color: ${colors.light.highlightColor};
   }
 `;
 
 export const DropdownMenuItem = (props: DropdownMenuItemProps) => {
-  const { children, danger = false, onClick, style } = props;
-  return <Item {...{ danger, onClick, style }}>{children}</Item>;
+  const { children, danger = false, onClick, style, className } = props;
+  return <Item {...{ danger, onClick, style, className }}>{children}</Item>;
 };
 
 // Menu Item Separator
