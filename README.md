@@ -1,6 +1,6 @@
 # react-uicomp
 
-> Utility library for creating complex routing with beautiful animated ui components
+> Utility Library for Web Routing and Animation
 
 [![NPM](https://img.shields.io/npm/v/react-uicomp.svg)](https://www.npmjs.com/package/react-uicomp) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
