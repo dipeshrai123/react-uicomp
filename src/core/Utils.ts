@@ -64,3 +64,12 @@ export const getParsedPaths = (pathType: "subPaths" | "nestedPaths") => (
 
   return allPaths.flat();
 };
+
+// RE-ORDER FLATTEN ARRAYS
+export const reOrderPaths = (pathArray: any) => {
+  const clonePathArray = [...pathArray];
+  const withoutNestedPaths = clonePathArray.filter((val) => !val.nestedPaths);
+  const withNestedPaths = clonePathArray.filter((val) => !!val.nestedPaths);
+
+  return [...withoutNestedPaths, ...withNestedPaths];
+};

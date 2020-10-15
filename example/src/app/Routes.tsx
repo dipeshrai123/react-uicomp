@@ -14,6 +14,9 @@ import UseMountedValuePage from "../components/UseMountedValue";
 const Comp1 = () => <div>comp1</div>;
 const Comp2 = () => <div>comp2</div>;
 
+const Page1 = () => <div>page1</div>;
+const Page2 = () => <div>page2</div>;
+
 export const publicPaths = [
   {
     name: "Home",
@@ -56,6 +59,20 @@ export const publicPaths = [
     path: "/mousemove",
     component: MouseMovePage,
     restricted: true,
+    subPaths: [
+      {
+        name: "NestedSub 1",
+        path: "/a",
+        component: Page1,
+        restricted: true,
+      },
+      {
+        name: "NestedSub 2",
+        path: "/b",
+        component: Page2,
+        restricted: true,
+      },
+    ],
     nestedPaths: [
       {
         name: "Nested 1",
