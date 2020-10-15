@@ -17,7 +17,7 @@ import {
   NavigationConfigParams,
 } from "./Types";
 import { AuthContext, NavigationContext, ThemeContext } from "./Context";
-import { getParsedPaths } from "./Utils";
+import { getParsedPaths, reOrderPaths } from "./Utils";
 
 // Auth
 export const Auth = {
@@ -67,28 +67,47 @@ export const Auth = {
             filteredNestedPublicRoutes.length &&
               filteredNestedPublicRoutes
                 .filter(({ path }) => path !== null) // Other than Not Found Page
-                .map(({ path, component, restricted, exact = true }, index) => (
-                  <PublicRoute
-                    key={index}
-                    path={path}
-                    component={component}
-                    restricted={!!restricted}
-                    exact={exact}
-                  />
-                ))
+                .map(
+                  (
+                    { path, component, restricted, exact = true, nestedPaths },
+                    index,
+                  ) => {
+                    let _exact = exact;
+                    if (!!nestedPaths) {
+                      _exact = false;
+                    }
+
+                    return (
+                      <PublicRoute
+                        key={index}
+                        path={path}
+                        component={component}
+                        restricted={!!restricted}
+                        exact={_exact}
+                      />
+                    );
+                  },
+                )
           }
           {
             // PRIVATE ROUTES
             filteredNestedPrivateRoutes.length &&
               filteredNestedPrivateRoutes.map(
-                ({ path, component, exact = true }, index) => (
-                  <PrivateRoute
-                    key={index}
-                    path={path}
-                    component={component}
-                    exact={exact}
-                  />
-                ),
+                ({ path, component, exact = true, nestedPaths }, index) => {
+                  let _exact = exact;
+                  if (!!nestedPaths) {
+                    _exact = false;
+                  }
+
+                  return (
+                    <PrivateRoute
+                      key={index}
+                      path={path}
+                      component={component}
+                      exact={_exact}
+                    />
+                  );
+                },
               )
           }
         </Switch>
@@ -173,11 +192,14 @@ export const Navigation = {
     const _privatePaths = parser(privatePaths);
     const _publicPaths = parser(publicPaths);
 
+    const __privatePaths = reOrderPaths(_privatePaths);
+    const __publicPaths = reOrderPaths(_publicPaths);
+
     return (
       <NavigationContext.Provider
         value={{
-          privatePaths: _privatePaths,
-          publicPaths: _publicPaths,
+          privatePaths: __privatePaths,
+          publicPaths: __publicPaths,
           userRoles: userRoles,
           routerType,
         }}
