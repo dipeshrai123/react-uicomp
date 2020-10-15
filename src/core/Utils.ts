@@ -65,11 +65,18 @@ export const getParsedPaths = (pathType: "subPaths" | "nestedPaths") => (
   return allPaths.flat();
 };
 
-// RE-ORDER FLATTEN ARRAYS
+// RE-ORDER FLATTEN ARRAYS ON THE BASIS OF PATH LENGTH DESCENDING WISE TO
+// SOLVE PROBLEM OF NOT EXACT NESTEDPATHS
 export const reOrderPaths = (pathArray: any) => {
   const clonePathArray = [...pathArray];
-  const withoutNestedPaths = clonePathArray.filter((val) => !val.nestedPaths);
-  const withNestedPaths = clonePathArray.filter((val) => !!val.nestedPaths);
 
-  return [...withoutNestedPaths, ...withNestedPaths];
+  return clonePathArray.sort(function (a, b) {
+    if (a.path.length > b.path.length) {
+      return -1;
+    } else if (a.path.length < b.path.length) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
 };
