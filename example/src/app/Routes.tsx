@@ -10,7 +10,6 @@ import DragPage from "../components/Drag";
 import ToastPage from "../components/Toast";
 import UseMountedValuePage from "../components/UseMountedValue";
 
-// const Comp = () => <div>Select any</div>;
 const Comp1 = () => <div>comp1</div>;
 const Comp2 = () => <div>comp2</div>;
 

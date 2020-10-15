@@ -71,9 +71,9 @@ export const reOrderPaths = (pathArray: any) => {
   const clonePathArray = [...pathArray];
 
   return clonePathArray.sort(function (a, b) {
-    if (a.path.length > b.path.length) {
+    if (a.path?.length > b.path?.length) {
       return -1;
-    } else if (a.path.length < b.path.length) {
+    } else if (a.path?.length < b.path?.length) {
       return 1;
     } else {
       return 0;
