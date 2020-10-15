@@ -4,7 +4,7 @@ import { useNavigation, Auth } from "react-uicomp";
 const MouseMove = () => {
   const { navigation } = useNavigation();
 
-  console.log(navigation.routes);
+  console.log("nav", navigation.routes);
 
   return (
     <div>

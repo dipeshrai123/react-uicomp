@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { stateType, DefaultAuthConfigParams, publicReturnType } from "./Types";
 import { AuthContext, NavigationContext, ThemeContext } from "./Context";
-import { getParsedUserRole, canUserAccess } from "./Utils";
+import { getParsedUserRole, canUserAccess, getParsedPaths } from "./Utils";
 
 // Auth
 export const useAuth = () => {
@@ -28,12 +28,17 @@ export const useNavigation = () => {
     userRoles: USER_ROLES,
   } = useContext(NavigationContext);
 
+  // FOR FLATTING NESTED PATHS
+  const parser = getParsedPaths("nestedPaths");
+  const parsedPublicPaths = parser(PUBLIC_PATHS);
+  const parsedPrivatePaths = parser(PRIVATE_PATHS);
+
   const userRolesAccessPaths: Array<string> = USER_ROLES[userRole].access;
   const parsedUserRolesAccessPaths: Array<string> = getParsedUserRole(
     userRolesAccessPaths,
   );
 
-  const filteredPublicRoutes = PUBLIC_PATHS.filter(
+  const filteredPublicRoutes = parsedPublicPaths.filter(
     ({ path, restricted, visible = true }) => {
       const canAccess =
         userRole && canUserAccess(parsedUserRolesAccessPaths, path);
@@ -49,7 +54,7 @@ export const useNavigation = () => {
     publicRoutes[routeKey] = Object.assign({}, { name, path, active, props });
   });
 
-  const filteredPrivateRoutes = PRIVATE_PATHS.filter(
+  const filteredPrivateRoutes = parsedPrivatePaths.filter(
     ({ path, visible = true }) => {
       const canAccess =
         userRole && canUserAccess(parsedUserRolesAccessPaths, path);
