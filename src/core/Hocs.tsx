@@ -189,17 +189,14 @@ export const Navigation = {
     } = props;
 
     const parser = getParsedPaths("subPaths");
-    const _privatePaths = parser(privatePaths);
-    const _publicPaths = parser(publicPaths);
-
-    const __privatePaths = reOrderPaths(_privatePaths);
-    const __publicPaths = reOrderPaths(_publicPaths);
+    const _privatePaths = reOrderPaths(parser(privatePaths));
+    const _publicPaths = reOrderPaths(parser(publicPaths));
 
     return (
       <NavigationContext.Provider
         value={{
-          privatePaths: __privatePaths,
-          publicPaths: __publicPaths,
+          privatePaths: _privatePaths,
+          publicPaths: _publicPaths,
           userRoles: userRoles,
           routerType,
         }}
