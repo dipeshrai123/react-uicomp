@@ -23,8 +23,8 @@ export const useNavigation = () => {
 
   const { isLoggedIn, userRole } = useContext(AuthContext);
   const {
-    privatePaths: PRIVATE_PATHS,
-    publicPaths: PUBLIC_PATHS,
+    origPublicPaths: PUBLIC_PATHS,
+    origPrivatePaths: PRIVATE_PATHS,
     userRoles: USER_ROLES,
   } = useContext(NavigationContext);
 
