@@ -4,6 +4,8 @@ import {
   DefaultAuthConfigParams,
   NavigationConfigParams,
   DefaultThemeConfigParams,
+  PublicPathParams,
+  PrivatePathParams,
 } from "./Types";
 
 export const DefaultAuthConfig: DefaultAuthConfigParams = {
@@ -13,7 +15,12 @@ export const DefaultAuthConfig: DefaultAuthConfigParams = {
 
 export const AuthContext = React.createContext(DefaultAuthConfig);
 
-export const navigationConfig: NavigationConfigParams = {
+interface InternalNavigationConfig extends NavigationConfigParams {
+  origPublicPaths?: PublicPathParams[];
+  origPrivatePaths?: PrivatePathParams[];
+}
+
+export const navigationConfig: InternalNavigationConfig = {
   publicPaths: [],
   privatePaths: [],
   userRoles: {},

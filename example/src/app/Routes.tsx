@@ -10,11 +10,11 @@ import DragPage from "../components/Drag";
 import ToastPage from "../components/Toast";
 import UseMountedValuePage from "../components/UseMountedValue";
 
-const Comp1 = () => <div>comp1</div>;
-const Comp2 = () => <div>comp2</div>;
+const Comp1 = () => <div>Nested Comp 1</div>;
+const Comp2 = () => <div>Nested Comp 2</div>;
 
-const Page1 = () => <div>page1</div>;
-const Page2 = () => <div>page2</div>;
+const Page1 = () => <div>Mouse Move Sub 1</div>;
+const Page2 = () => <div>Mouse Move Sub 2</div>;
 
 export const publicPaths = [
   {
@@ -60,13 +60,13 @@ export const publicPaths = [
     restricted: true,
     subPaths: [
       {
-        name: "NestedSub 1",
+        name: "Sub 1",
         path: "/a",
         component: Page1,
         restricted: true,
       },
       {
-        name: "NestedSub 2",
+        name: "Sub 2",
         path: "/b",
         component: Page2,
         restricted: true,
