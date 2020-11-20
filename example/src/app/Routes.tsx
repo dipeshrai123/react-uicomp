@@ -7,7 +7,6 @@ import ModalPage from "../components/ModalPage";
 import AnimatedPage from "../components/Animated";
 import ScrollPage from "../components/Scroll";
 import TabsPage from "../components/Tabs";
-import DragPage from "../components/Drag";
 import ToastPage from "../components/Toast";
 import UseMountedValuePage from "../components/UseMountedValue";
 
@@ -66,19 +65,13 @@ export const publicPaths = [
     restricted: true,
   },
   {
-    name: "drag",
-    path: "/drag",
-    component: DragPage,
-    restricted: true,
-  },
-  {
-    name: "toast",
+    name: "Toast",
     path: "/toast",
     component: ToastPage,
     restricted: true,
   },
   {
-    name: "usemountedvalue",
+    name: "Use Mounted Value",
     path: "/usemountedvalue",
     component: UseMountedValuePage,
     restricted: true,
