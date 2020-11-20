@@ -8,7 +8,9 @@ const App = () => {
   return (
     <Auth.Provider config={{ isLoggedIn: false, userRole: "user" }}>
       <Header />
-      <Auth.Screens />
+      <div style={{ padding: "0px 30px" }}>
+        <Auth.Screens />
+      </div>
     </Auth.Provider>
   );
 };
