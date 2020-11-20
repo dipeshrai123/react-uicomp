@@ -30,8 +30,8 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "react": ">=17.0.1",
-    "react-dom": ">=17.0.1",
+    "react": ">=16.13.1",
+    "react-dom": ">=16.13.1",
     "react-router-dom": ">=5.2.0"
   },
   "devDependencies": {
