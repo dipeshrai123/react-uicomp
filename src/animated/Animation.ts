@@ -78,6 +78,7 @@ interface UseMountedValueConfig {
   duration?: number;
   enterDuration?: number;
   exitDuration?: number;
+  [prop: string]: any;
 }
 
 export const useMountedValue = (
