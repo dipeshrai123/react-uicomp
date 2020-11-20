@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import { useOutsideClick } from "../animated";
-import { animated, useTransition } from "react-spring";
+import { a, useTransition } from "react-spring";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -64,9 +64,9 @@ export const Dropdown = ({
   containerClassName,
   itemClassName,
 }: DropdownProps) => {
-  const containerRef: React.RefObject<HTMLDivElement> = React.useRef<
-    HTMLDivElement
-  >(null);
+  const containerRef: React.RefObject<HTMLDivElement> = React.useRef<HTMLDivElement>(
+    null,
+  );
 
   const [dropdownActive, setDropdownActive] = React.useState<boolean>(active);
 
@@ -150,7 +150,7 @@ export const Dropdown = ({
   };
 
   const dropdownElementStyles: React.CSSProperties = {};
-  const dropdownMenuStyles: React.CSSProperties = {
+  const dropdownMenuStyles: any = {
     zIndex: 100,
     whiteSpace: "nowrap",
     ...getDirectionStyles(placement),
@@ -171,7 +171,7 @@ export const Dropdown = ({
       {dropdownAnimation((props, item) => {
         return (
           item && (
-            <animated.div
+            <a.div
               onClick={() => (dismissOnInsideClick ? closeDropdown() : false)}
               style={{
                 ...dropdownMenuStyles,
@@ -215,7 +215,7 @@ export const Dropdown = ({
                             key={index}
                             {...{ onClick, danger }}
                             className={itemClassName}
-                            style={style ? style : itemStyle}
+                            style={style || itemStyle}
                           >
                             {title}
                           </DropdownMenuItem>
@@ -227,7 +227,7 @@ export const Dropdown = ({
               ) : (
                 children
               )}
-            </animated.div>
+            </a.div>
           )
         );
       })}
