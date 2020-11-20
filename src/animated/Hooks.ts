@@ -137,7 +137,6 @@ export enum ScrollState {
   UNDETERMINED = 0,
 }
 
-// TODO : Handler for HTMLElement
 type ScrollUseStateProp = { scrollX: number; scrollY: number };
 export const useScroll = (): {
   handler: { ref: React.RefObject<any> };
