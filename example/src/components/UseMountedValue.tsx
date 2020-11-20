@@ -6,11 +6,7 @@ const UseMountedValue = () => {
   const mountedValue = useMountedValue(open, [0, 1, 0]);
 
   return (
-    <div
-      style={{
-        padding: "20px 50px",
-      }}
-    >
+    <>
       {mountedValue(
         (animation, mounted) =>
           mounted && (
@@ -25,7 +21,7 @@ const UseMountedValue = () => {
       )}
 
       <button onClick={() => setOpen((prev) => !prev)}>Toggle</button>
-    </div>
+    </>
   );
 };
 

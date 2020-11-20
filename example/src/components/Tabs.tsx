@@ -14,11 +14,7 @@ const Tabs = () => {
   };
 
   return (
-    <div
-      style={{
-        padding: "20px 50px",
-      }}
-    >
+    <>
       {Array(5)
         .fill(null)
         .map((_, index) => {
@@ -50,7 +46,7 @@ const Tabs = () => {
             </AnimatedBlock>
           );
         })}
-    </div>
+    </>
   );
 };
 
