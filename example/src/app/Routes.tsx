@@ -1,25 +1,37 @@
 import React from "react";
+import { useNavigation } from "react-uicomp";
+
 import HomePage from "../components/HomePage";
 import DropdownPage from "../components/DropdownPage/DropdownPage";
 import ModalPage from "../components/ModalPage";
 import AnimatedPage from "../components/Animated";
 import ScrollPage from "../components/Scroll";
 import TabsPage from "../components/Tabs";
-import MouseMovePage from "../components/MouseMove";
 import DragPage from "../components/Drag";
 import ToastPage from "../components/Toast";
 import UseMountedValuePage from "../components/UseMountedValue";
 
-const Comp1 = () => <div>Nested Comp 1</div>;
-const Comp2 = () => <div>Nested Comp 2</div>;
+const Redirect = () => {
+  const { navigation } = useNavigation();
 
-const Page1 = () => <div>Mouse Move Sub 1</div>;
-const Page2 = () => <div>Mouse Move Sub 2</div>;
+  React.useEffect(() => {
+    navigation.navigate("/home");
+  }, [navigation]);
+
+  return null;
+};
 
 export const publicPaths = [
   {
-    name: "Home",
+    name: "Root",
     path: "/",
+    component: Redirect,
+    restricted: true,
+    visible: false,
+  },
+  {
+    name: "Home",
+    path: "/home",
     component: HomePage,
     restricted: true,
   },
@@ -52,40 +64,6 @@ export const publicPaths = [
     path: "/tabs",
     component: TabsPage,
     restricted: true,
-  },
-  {
-    name: "MouseMove",
-    path: "/mousemove",
-    component: MouseMovePage,
-    restricted: true,
-    subPaths: [
-      {
-        name: "Sub 1",
-        path: "/a",
-        component: Page1,
-        restricted: true,
-      },
-      {
-        name: "Sub 2",
-        path: "/b",
-        component: Page2,
-        restricted: true,
-      },
-    ],
-    nestedPaths: [
-      {
-        name: "Nested 1",
-        path: "/1",
-        component: Comp1,
-        restricted: true,
-      },
-      {
-        name: "Nested 2",
-        path: "/2",
-        component: Comp2,
-        restricted: true,
-      },
-    ],
   },
   {
     name: "drag",

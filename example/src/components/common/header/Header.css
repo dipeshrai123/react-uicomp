@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+}
+
+.header .header-items {
+  padding: 10px;
+  border: 1px solid #e1e1e1;
+  margin: 5px 0px;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex: 1;
+  text-align: center;
+}
+
+.header .header-items.active {
+  background: #3399ff;
+  color: white;
+}
+
+.header .header-items:hover {
+  background: #f1f1f1;
+}
