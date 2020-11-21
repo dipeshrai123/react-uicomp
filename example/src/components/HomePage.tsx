@@ -1,12 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { AnimatedBlock, ScrollableBlock, bInterpolate } from "react-uicomp";
 
-const Cards = ({ bg, index }: { bg: string; index: number }) => {
-  const outputRange =
-    index % 2
-      ? ["scale(0.5) translateX(100px)", "scale(1) translateX(0px)"]
-      : ["scale(0.5) translateX(-100px)", "scale(1) translateX(0px)"];
-
+const Cards = () => {
   return (
     <ScrollableBlock>
       {(animation: { value: any }) => {
@@ -14,8 +9,11 @@ const Cards = ({ bg, index }: { bg: string; index: number }) => {
           <AnimatedBlock
             style={{
               height: 500,
-              background: bg,
-              transform: bInterpolate(animation.value, outputRange),
+              background: bInterpolate(animation.value, ["#e1e1e1", "#3399ff"]),
+              transform: bInterpolate(animation.value, [
+                "scale(0.5)",
+                "scale(0.8)",
+              ]),
             }}
           />
         );
@@ -24,15 +22,19 @@ const Cards = ({ bg, index }: { bg: string; index: number }) => {
   );
 };
 
-const colors = ["#39F", "#00ff00", "#FF38EE"];
-
 export default function HomePage() {
+  const [elements] = useState(50);
+
   return (
-    <div style={{ background: "#e1e1e1" }}>
-      {Array(50)
+    <div
+      style={{
+        background: "#e1e1e1",
+      }}
+    >
+      {Array(elements)
         .fill(null)
         .map((_, i) => (
-          <Cards key={i} bg={colors[i % colors.length]} index={i} />
+          <Cards key={i} />
         ))}
     </div>
   );

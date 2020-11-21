@@ -1,6 +1,6 @@
 import React from "react";
-import { useAnimatedValue } from "./Animation";
 import { animated } from "react-spring";
+import { useAnimatedValue } from "./Animation";
 
 // Animated Block - can receive all props from useAnimatedValue() hook
 interface AnimatedBlockProps {
@@ -22,14 +22,24 @@ export const AnimatedBlock = React.forwardRef(
 // ScrollableBlock - New AnimatedBLock
 // TODO: Bidirectional Animation
 // Container element
+interface UseAnimatedValueConfig {
+  onAnimationEnd?: (value: number) => void;
+  listener?: (value: number) => void;
+  animationType?: "ease" | "elastic";
+  duration?: number;
+  [prop: string]: any;
+}
+
 interface ScrollableBlockProps {
   children?: (animation: any) => React.ReactNode;
+  direction?: "single" | "both";
+  animationConfig?: UseAnimatedValueConfig;
 }
 
 export const ScrollableBlock: React.FC<ScrollableBlockProps> = (props) => {
-  const { children } = props;
+  const { children, direction = "single", animationConfig } = props;
   const scrollableBlockRef = React.useRef(null);
-  const animation = useAnimatedValue(0); // 0: not intersecting | 1: intersecting
+  const animation = useAnimatedValue(0, animationConfig); // 0: not intersecting | 1: intersecting
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(
@@ -39,8 +49,7 @@ export const ScrollableBlock: React.FC<ScrollableBlockProps> = (props) => {
         if (isIntersecting) {
           animation.value = 1;
         } else {
-          console.log(entry);
-          animation.value = 0;
+          if (direction === "both") animation.value = 0;
         }
       },
       {
@@ -50,9 +59,15 @@ export const ScrollableBlock: React.FC<ScrollableBlockProps> = (props) => {
       },
     );
 
-    observer.observe(scrollableBlockRef.current);
+    if (scrollableBlockRef.current) {
+      observer.observe(scrollableBlockRef.current);
+    }
 
-    return () => observer.unobserve(scrollableBlockRef.current);
+    return () => {
+      if (scrollableBlockRef.current) {
+        observer.unobserve(scrollableBlockRef.current);
+      }
+    };
   }, []);
 
   return <div ref={scrollableBlockRef}>{children(animation)}</div>;
