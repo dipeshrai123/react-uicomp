@@ -1,26 +1,4 @@
 .header {
-  display: flex;
-  padding: 10px 20px;
-  margin-bottom: 20px;
-}
-
-.header .header-items {
-  padding: 10px;
-  border: 1px solid #e1e1e1;
-  margin: 5px;
-  cursor: pointer;
-  transition: background 0.2s;
-  flex: 1;
-  text-align: center;
-  border-radius: 4px;
-}
-
-.header .header-items.active {
-  background: #3399ff;
-  color: white;
-}
-
-.header .header-items:hover {
-  background: #3399ff;
-  color: white;
+  padding: 20px 0px;
+  font-weight: bold;
 }

@@ -3,12 +3,14 @@ import { Auth, withNavigation } from "react-uicomp";
 import { publicPaths, privatePaths, userRoles } from "./Routes";
 
 import Header from "../components/common/header/Header";
+import Sidenav from "../components/common/sidenav/Sidenav";
 
 const App = () => {
   return (
     <Auth.Provider config={{ isLoggedIn: false, userRole: "user" }}>
-      <Header />
-      <div style={{ padding: "0px 30px" }}>
+      <Sidenav />
+      <div style={{ marginLeft: 260 }}>
+        <Header />
         <Auth.Screens />
       </div>
     </Auth.Provider>
