@@ -75,6 +75,14 @@ export const publicPaths = [
     path: "/usemountedvalue",
     component: UseMountedValuePage,
     restricted: true,
+    subPaths: [
+      {
+        name: "Sub",
+        path: "/newpathishere",
+        component: UseMountedValuePage,
+        restricted: true,
+      },
+    ],
   },
 ];
 
