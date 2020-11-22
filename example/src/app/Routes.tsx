@@ -75,10 +75,36 @@ export const publicPaths = [
     path: "/usemountedvalue",
     component: UseMountedValuePage,
     restricted: true,
+    subPaths: [
+      {
+        name: "Sub",
+        path: "/newpathishere",
+        component: UseMountedValuePage,
+        restricted: true,
+      },
+    ],
   },
 ];
 
-export const privatePaths = [];
+export const privatePaths = [
+  {
+    name: "Toast2",
+    path: "/toast2",
+    component: ToastPage,
+  },
+  {
+    name: "Use Mounted Value2",
+    path: "/usemountedvalue2",
+    component: UseMountedValuePage,
+    subPaths: [
+      {
+        name: "Sub2",
+        path: "/newpathishere2",
+        component: UseMountedValuePage,
+      },
+    ],
+  },
+];
 
 export const userRoles = {
   user: { access: ["*"] },

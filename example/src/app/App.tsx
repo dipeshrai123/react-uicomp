@@ -7,7 +7,7 @@ import Sidenav from "../components/common/sidenav/Sidenav";
 
 const App = () => {
   return (
-    <Auth.Provider config={{ isLoggedIn: false, userRole: "user" }}>
+    <Auth.Provider config={{ isLoggedIn: true, userRole: "user" }}>
       <Sidenav />
       <div style={{ marginLeft: 260 }}>
         <Header />
