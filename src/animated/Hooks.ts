@@ -1,24 +1,37 @@
 /* eslint-disable no-unused-vars */
-import { useRef, useState, useEffect, useMemo } from "react";
+import { useRef, useState, useEffect } from "react";
 import ResizeObserver from "resize-observer-polyfill";
 
 export const useOutsideClick = (
   elementRef: React.RefObject<HTMLElement>,
   callback: (event: MouseEvent) => void,
 ) => {
-  const callbackMemo = useMemo(() => callback, [callback]);
+  const callbackRef = useRef<(e: MouseEvent) => void>(null);
+
+  if (callbackRef.current === null) {
+    callbackRef.current = callback;
+  }
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
-      if (!elementRef?.current?.contains(e.target as Element) && callbackMemo) {
-        callbackMemo(e);
+      if (
+        !elementRef?.current?.contains(e.target as Element) &&
+        callbackRef.current
+      ) {
+        callbackRef.current(e);
       }
     };
 
-    document.addEventListener("click", handleOutsideClick, true);
+    if (callbackRef.current) {
+      document.addEventListener("click", handleOutsideClick, true);
+    }
 
-    return document.addEventListener("click", handleOutsideClick, true);
-  }, [callbackMemo, elementRef]);
+    return () => {
+      if (callbackRef.current) {
+        document.addEventListener("click", handleOutsideClick, true);
+      }
+    };
+  }, [callbackRef.current, elementRef]);
 };
 
 export enum ScrollState {

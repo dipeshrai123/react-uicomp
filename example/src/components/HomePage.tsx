@@ -1,41 +1,22 @@
-import React, { useState } from "react";
-import { AnimatedBlock, ScrollableBlock, bInterpolate } from "react-uicomp";
-
-const Cards = () => {
-  return (
-    <ScrollableBlock>
-      {(animation: { value: any }) => {
-        return (
-          <AnimatedBlock
-            style={{
-              height: 500,
-              background: bInterpolate(animation.value, ["#e1e1e1", "#3399ff"]),
-              transform: bInterpolate(animation.value, [
-                "scale(0.5)",
-                "scale(0.8)",
-              ]),
-            }}
-          />
-        );
-      }}
-    </ScrollableBlock>
-  );
-};
+import React from "react";
+import { useOutsideClick } from "react-uicomp";
 
 export default function HomePage() {
-  const [elements] = useState(50);
+  const boxRef = React.useRef<HTMLDivElement>(null);
+
+  useOutsideClick(boxRef, () => {
+    console.log("You clicked outside box");
+  });
 
   return (
-    <div
-      style={{
-        background: "#e1e1e1",
-      }}
-    >
-      {Array(elements)
-        .fill(null)
-        .map((_, i) => (
-          <Cards key={i} />
-        ))}
+    <div>
+      <div
+        ref={boxRef}
+        onClick={() => console.log("You clicked inside box")}
+        style={{ width: 100, height: 100, background: "#3399ff" }}
+      >
+        <div style={{ width: 20, height: 20, background: "red" }}></div>
+      </div>
     </div>
   );
 }

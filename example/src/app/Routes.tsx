@@ -9,6 +9,7 @@ import ScrollPage from "../components/Scroll";
 import TabsPage from "../components/Tabs";
 import ToastPage from "../components/Toast";
 import UseMountedValuePage from "../components/UseMountedValue";
+import ScrollableBlock from "../components/ScrollableBlock/ScrollableBlock";
 
 const Redirect = () => {
   const { navigation } = useNavigation();
@@ -75,14 +76,12 @@ export const publicPaths = [
     path: "/usemountedvalue",
     component: UseMountedValuePage,
     restricted: true,
-    subPaths: [
-      {
-        name: "Sub",
-        path: "/newpathishere",
-        component: UseMountedValuePage,
-        restricted: true,
-      },
-    ],
+  },
+  {
+    name: "ScrollableBlock",
+    path: "/scrollableblock",
+    component: ScrollableBlock,
+    restricted: true,
   },
 ];
 
