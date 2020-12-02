@@ -5,7 +5,7 @@ import { useAnimatedValue } from "./Animation";
 // Animated Block - can receive all props from useAnimatedValue() hook
 interface AnimatedBlockProps {
   children?: React.ReactNode;
-  [name: string]: any; // ACCEPT ANY PROPS
+  [name: string]: any;
 }
 
 export const AnimatedBlock = React.forwardRef(
@@ -19,9 +19,7 @@ export const AnimatedBlock = React.forwardRef(
   ),
 );
 
-// ScrollableBlock - New AnimatedBLock
-// TODO: Bidirectional Animation
-// Container element
+// ScrollableBlock
 interface UseAnimatedValueConfig {
   onAnimationEnd?: (value: number) => void;
   listener?: (value: number) => void;
