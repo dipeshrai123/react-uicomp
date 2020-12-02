@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-vars */
 import { useRef, useState, useEffect } from "react";
 import ResizeObserver from "resize-observer-polyfill";
+import { ScrollState } from "./Constants";
 
 export const useOutsideClick = (
   elementRef: React.RefObject<HTMLElement>,
@@ -34,12 +34,7 @@ export const useOutsideClick = (
   }, [callbackRef.current, elementRef]);
 };
 
-export enum ScrollState {
-  UP = -1,
-  DOWN = 1,
-  UNDETERMINED = 0,
-}
-
+// Todo: Re-structure without re-rendering ( callbacks )
 type ScrollUseStateProp = { scrollX: number; scrollY: number };
 export const useScroll = (): {
   handler: { ref: React.RefObject<any> };
@@ -130,6 +125,7 @@ export const useScroll = (): {
   };
 };
 
+// Todo: Re-structure without re-rendering ( callbacks )
 type UseMeasureMeasurement = {
   left: number;
   top: number;
@@ -139,6 +135,7 @@ type UseMeasureMeasurement = {
   viewportTop: number;
 };
 
+// Todo: Re-structure without re-rendering ( callbacks )
 export const useMeasure = (): {
   handler: { ref: React.RefObject<any> };
   left: number;
@@ -183,6 +180,7 @@ export const useMeasure = (): {
   return { handler: { ref }, ...measurement };
 };
 
+// Todo: Re-structure without re-rendering ( callbacks )
 type useWindowDimensionMeasurement = { width: number; height: number };
 export const useWindowDimension = (): useWindowDimensionMeasurement => {
   const [measurement, setMeasurement] = useState<useWindowDimensionMeasurement>(
@@ -205,51 +203,5 @@ export const useWindowDimension = (): useWindowDimensionMeasurement => {
     return () => ro.disconnect;
   }, []);
 
-  return measurement; // { width, height }
-};
-
-export enum DirectionState {
-  UP = -1,
-  DOWN = 1,
-  RIGHT = 2,
-  LEFT = -2,
-  UNDETERMINED = 0,
-}
-
-type UseMouseMoveState = { mouseX: number; mouseY: number };
-export const useMouseMove = (): {
-  mouseX: number;
-  mouseY: number;
-  isMoving: boolean;
-} => {
-  const [isMoving, setIsMoving] = useState<boolean>(false);
-  const _isMoving = useRef<number>(-1);
-  const [pointerPosition, setPointerPosition] = useState<UseMouseMoveState>({
-    mouseX: 0,
-    mouseY: 0,
-  });
-
-  useEffect(() => {
-    const moveHandler = function (event: MouseEvent) {
-      if (_isMoving.current !== -1) {
-        setIsMoving(true);
-        clearTimeout(_isMoving.current);
-      }
-
-      _isMoving.current = setTimeout(() => {
-        setIsMoving(false);
-      }, 250);
-
-      setPointerPosition({
-        mouseX: event.clientX,
-        mouseY: event.clientY,
-      });
-    };
-
-    document.addEventListener("mousemove", moveHandler);
-
-    return () => document.removeEventListener("mousemove", moveHandler);
-  }, []);
-
-  return { ...pointerPosition, isMoving };
+  return measurement;
 };
