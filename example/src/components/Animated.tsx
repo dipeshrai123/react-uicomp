@@ -8,7 +8,10 @@ import {
 
 const Animated = () => {
   const [toggle, setToggle] = useState(false);
-  const { handler, width } = useMeasure();
+  const [width, setWidth] = useState(0);
+  const bind = useMeasure(({ width }) => {
+    setWidth(width);
+  });
   const anim = useAnimatedValue(0);
   const animatedWidth2 = useAnimatedValue(0);
   const animatedWidth = useAnimatedValue(100, {
@@ -25,7 +28,7 @@ const Animated = () => {
   return (
     <>
       <div
-        {...handler}
+        {...bind()}
         style={{ width: "30%", height: 100, background: "red" }}
       ></div>
       <AnimatedBlock

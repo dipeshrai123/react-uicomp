@@ -1,14 +1,40 @@
-import React from "react";
-import { interpolate } from "react-uicomp";
+import React, { useState, useEffect } from "react";
+import { AnimatedBlock, useAnimatedValue } from "react-uicomp";
 
 const Homepage = () => {
-  const x = 10;
+  const [toggle, setToggle] = useState(false);
+  const animatedWidth = useAnimatedValue(100);
+  const animatedWidth2 = useAnimatedValue(animatedWidth.value);
 
-  const modX = interpolate(x, [0, 100], ["red", "blue"]);
+  useEffect(() => {
+    animatedWidth.value = toggle ? 500 : 100;
+  }, [toggle, animatedWidth]);
 
-  console.log(modX);
+  return (
+    <>
+      <AnimatedBlock
+        style={{
+          width: animatedWidth.value,
+          height: 100,
+          position: "relative",
+          background: "#39F",
+        }}
+      />
 
-  return <div>HOMEPAGE</div>;
+      <AnimatedBlock
+        style={{
+          width: animatedWidth2.value,
+          height: 100,
+          position: "relative",
+          background: "#f00",
+        }}
+      />
+
+      <div style={{ height: 10 }}></div>
+
+      <button onClick={() => setToggle((prev) => !prev)}>Open</button>
+    </>
+  );
 };
 
 export default Homepage;

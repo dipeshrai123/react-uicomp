@@ -1,6 +1,65 @@
+/* eslint-disable no-unused-vars */
 import { useRef, useState, useEffect } from "react";
 import ResizeObserver from "resize-observer-polyfill";
 import { ScrollState } from "./Constants";
+import { MeasurementType } from "./Types";
+
+export const useMeasure = (callback: (event: MeasurementType) => void) => {
+  const ref = useRef(null);
+  const callbackRef = useRef<(event: MeasurementType) => void>(null);
+  const measurementRef = useRef<MeasurementType>({
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
+    vLeft: 0,
+    vTop: 0,
+  });
+
+  if (!callbackRef.current) {
+    callbackRef.current = callback;
+  }
+
+  const handleCallback: () => void = () => {
+    if (callbackRef.current) {
+      callbackRef.current({
+        ...measurementRef.current,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const _refElement = ref.current || document.documentElement;
+
+    const resizeObserver = new ResizeObserver(([entry]) => {
+      const { left, top, width, height } = entry.target.getBoundingClientRect();
+      const { pageXOffset, pageYOffset } = window;
+
+      measurementRef.current = {
+        left: left + pageXOffset,
+        top: top + pageYOffset,
+        width,
+        height,
+        vLeft: left,
+        vTop: top,
+      };
+
+      handleCallback();
+    });
+
+    if (_refElement) {
+      resizeObserver.observe(_refElement);
+    }
+
+    return () => {
+      if (_refElement) {
+        resizeObserver.observe(_refElement);
+      }
+    };
+  }, []);
+
+  return () => ({ ref }); // ...bind()
+};
 
 export const useOutsideClick = (
   elementRef: React.RefObject<HTMLElement>,
@@ -123,61 +182,6 @@ export const useScroll = (): {
     scrollDirection: _scrollDirection.current,
     isScrolling,
   };
-};
-
-// Todo: Re-structure without re-rendering ( callbacks )
-type UseMeasureMeasurement = {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-  viewportLeft: number;
-  viewportTop: number;
-};
-
-// Todo: Re-structure without re-rendering ( callbacks )
-export const useMeasure = (): {
-  handler: { ref: React.RefObject<any> };
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-  viewportLeft: number;
-  viewportTop: number;
-} => {
-  const ref = useRef<any>(null);
-  const [measurement, setMeasurement] = useState<UseMeasureMeasurement>({
-    left: 0,
-    top: 0,
-    width: 0,
-    height: 0,
-    viewportLeft: 0,
-    viewportTop: 0,
-  });
-
-  useEffect(() => {
-    const _refElement = ref.current ? ref.current : document.documentElement;
-
-    const _resizeObserver: () => void = function () {
-      // Only gives relative to viewport
-      const { left, top, width, height } = _refElement.getBoundingClientRect();
-      const { pageXOffset, pageYOffset } = window;
-      setMeasurement({
-        left: left + pageXOffset,
-        top: top + pageYOffset,
-        width,
-        height,
-        viewportLeft: left,
-        viewportTop: top,
-      });
-    };
-    _resizeObserver(); // Init
-    window.addEventListener("resize", _resizeObserver);
-
-    return () => window.removeEventListener("resize", _resizeObserver);
-  }, []);
-
-  return { handler: { ref }, ...measurement };
 };
 
 // Todo: Re-structure without re-rendering ( callbacks )
