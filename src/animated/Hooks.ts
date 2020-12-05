@@ -145,6 +145,9 @@ export const useWindowDimension = (
   }, []);
 };
 
+// Used to define the current scrolling direction with enums
+// Usage:
+// ScrollDirectionState.[UP, DOWN, LEFT, RIGHT] === event.scrollDirection
 export enum ScrollDirectionState {
   UP = -1,
   DOWN = 1,
@@ -153,6 +156,10 @@ export enum ScrollDirectionState {
   LEFT = -2,
 }
 
+// Gives scrolling measurement through callback.
+// Usage:
+// bind = useScroll(({isScrolling, scrollX, scrollY, scrollDirection}) => {...})
+// if bind() spread over any HTMLElement then element scrolling is measured else window's
 export const useScroll = (callback: (event: ScrollEventType) => void) => {
   const ref = useRef(null);
 
