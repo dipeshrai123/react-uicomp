@@ -145,7 +145,7 @@ export const useWindowDimension = (
   }, []);
 };
 
-export enum ScrollState {
+export enum ScrollDirectionState {
   UP = -1,
   DOWN = 1,
   UNDETERMINED = 0,
@@ -165,7 +165,7 @@ export const useScroll = (callback: (event: ScrollEventType) => void) => {
     y: 0,
   });
   const isScrolling = useRef<boolean>(false);
-  const scrollDirection = useRef<number>(ScrollState.UNDETERMINED);
+  const scrollDirection = useRef<number>(ScrollDirectionState.UNDETERMINED);
   const _isScrolling = useRef<number>(-1); // For checking scrolling and add throttle
 
   const callbackRef = useRef<(event: ScrollEventType) => void>(null);
@@ -199,7 +199,7 @@ export const useScroll = (callback: (event: ScrollEventType) => void) => {
 
       _isScrolling.current = setTimeout(() => {
         isScrolling.current = false;
-        scrollDirection.current = ScrollState.UNDETERMINED;
+        scrollDirection.current = ScrollDirectionState.UNDETERMINED;
 
         handleCallback(); // Throttle 250milliseconds
       }, 250);
@@ -208,15 +208,15 @@ export const useScroll = (callback: (event: ScrollEventType) => void) => {
       const diffY = scrollXY.current.y - previousScrollXY.current.y;
 
       if (diffX > 0) {
-        scrollDirection.current = ScrollState.RIGHT;
+        scrollDirection.current = ScrollDirectionState.RIGHT;
       } else {
-        scrollDirection.current = ScrollState.LEFT;
+        scrollDirection.current = ScrollDirectionState.LEFT;
       }
 
       if (diffY > 0) {
-        scrollDirection.current = ScrollState.DOWN;
+        scrollDirection.current = ScrollDirectionState.DOWN;
       } else {
-        scrollDirection.current = ScrollState.UP;
+        scrollDirection.current = ScrollDirectionState.UP;
       }
 
       previousScrollXY.current = {
