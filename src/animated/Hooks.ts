@@ -1,107 +1,257 @@
 /* eslint-disable no-unused-vars */
-import { useRef, useState, useEffect, useMemo } from "react";
+import { useRef, useEffect } from "react";
 import ResizeObserver from "resize-observer-polyfill";
+import { MeasurementType, WindowDimensionType, ScrollEventType } from "./Types";
 
+// Handles outside click of any element.
+// callback is called when user clicks outside the reference element.
+// Usage:
+// useOutsideClick(elementRef, () => {...})
 export const useOutsideClick = (
   elementRef: React.RefObject<HTMLElement>,
   callback: (event: MouseEvent) => void,
 ) => {
-  const callbackMemo = useMemo(() => callback, [callback]);
+  const callbackRef = useRef<(e: MouseEvent) => void>(null);
+
+  if (!callbackRef.current) {
+    callbackRef.current = callback;
+  }
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
-      if (!elementRef?.current?.contains(e.target as Element) && callbackMemo) {
-        callbackMemo(e);
+      if (
+        !elementRef?.current?.contains(e.target as Element) &&
+        callbackRef.current
+      ) {
+        callbackRef.current(e);
       }
     };
 
-    document.addEventListener("click", handleOutsideClick, true);
+    if (callbackRef.current) {
+      document.addEventListener("click", handleOutsideClick, true);
+    }
 
-    return document.addEventListener("click", handleOutsideClick, true);
-  }, [callbackMemo, elementRef]);
+    return () => {
+      if (callbackRef.current) {
+        document.addEventListener("click", handleOutsideClick, true);
+      }
+    };
+  }, [callbackRef.current, elementRef]);
 };
 
-export enum ScrollState {
-  UP = -1,
-  DOWN = 1,
-  UNDETERMINED = 0,
-}
-
-type ScrollUseStateProp = { scrollX: number; scrollY: number };
-export const useScroll = (): {
-  handler: { ref: React.RefObject<any> };
-  scrollX: number;
-  scrollY: number;
-  scrollDirection: number;
-  isScrolling: boolean;
-} => {
-  const ref = useRef<any>(null);
-  const [scroll, setScroll] = useState<ScrollUseStateProp>({
-    scrollX: 0,
-    scrollY: 0,
+// Measure any HTMLElement renderered in DOM.
+// callback is called in first layout render & when element size is changed.
+// Usage:
+// useMeasure(({ left, top, width, height, vLeft, vTop }) => {...})
+// left and top accounts horizontal and vertical scrolled amount
+// vLeft and vTop gives relative to viewport
+export const useMeasure = (callback: (event: MeasurementType) => void) => {
+  const ref = useRef(null);
+  const callbackRef = useRef<(event: MeasurementType) => void>(null);
+  const measurementRef = useRef<MeasurementType>({
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
+    vLeft: 0,
+    vTop: 0,
   });
-  const [isScrolling, setIsScrolling] = useState<boolean>(false);
-  const _isScrolling = useRef<number>(-1);
-  const _scrollDirection = useRef<number>(ScrollState.UNDETERMINED);
-  const _prevScrollY = useRef<number>(0);
 
-  const scrollListener: () => void = () => {
-    const { pageYOffset, pageXOffset } = window;
-    setScroll({ scrollX: pageXOffset, scrollY: pageYOffset });
+  if (!callbackRef.current) {
+    callbackRef.current = callback;
+  }
 
-    // Clear if scrolling
-    if (_isScrolling.current !== -1) {
-      setIsScrolling(true);
-      clearTimeout(_isScrolling.current);
+  const handleCallback: () => void = () => {
+    if (callbackRef.current) {
+      callbackRef.current({
+        ...measurementRef.current,
+      });
     }
-
-    _isScrolling.current = setTimeout(() => {
-      setIsScrolling(false);
-      _scrollDirection.current = ScrollState.UNDETERMINED; // reset
-    }, 250);
-
-    const diff = pageYOffset - _prevScrollY.current;
-    if (diff > 0) {
-      _scrollDirection.current = ScrollState.DOWN;
-    } else {
-      _scrollDirection.current = ScrollState.UP;
-    }
-    _prevScrollY.current = pageYOffset;
-  };
-
-  const scrollElementListener: () => void = () => {
-    const { scrollTop, scrollLeft } = ref.current;
-    setScroll({ scrollX: scrollLeft, scrollY: scrollTop });
-
-    // Clear if scrolling
-    if (_isScrolling.current !== -1) {
-      setIsScrolling(true);
-      clearTimeout(_isScrolling.current);
-    }
-
-    _isScrolling.current = setTimeout(() => {
-      setIsScrolling(false);
-      _scrollDirection.current = ScrollState.UNDETERMINED; // reset
-    }, 250);
-
-    const diff = scrollTop - _prevScrollY.current;
-    if (diff > 0) {
-      _scrollDirection.current = ScrollState.DOWN;
-    } else {
-      _scrollDirection.current = ScrollState.UP;
-    }
-    _prevScrollY.current = scrollTop;
   };
 
   useEffect(() => {
-    if (ref.current) {
+    const _refElement = ref.current || document.documentElement;
+
+    const resizeObserver = new ResizeObserver(([entry]) => {
+      const { left, top, width, height } = entry.target.getBoundingClientRect();
+      const { pageXOffset, pageYOffset } = window;
+
+      measurementRef.current = {
+        left: left + pageXOffset,
+        top: top + pageYOffset,
+        width,
+        height,
+        vLeft: left,
+        vTop: top,
+      };
+
+      handleCallback();
+    });
+
+    if (_refElement) {
+      resizeObserver.observe(_refElement);
+    }
+
+    return () => {
+      if (_refElement) {
+        resizeObserver.observe(_refElement);
+      }
+    };
+  }, []);
+
+  return () => ({ ref }); // ...bind()
+};
+
+// Gives width and height of viewport in callback
+// Resizeobserver for watching window resize
+// Usage:
+// useWindowDimension(({width, height}) => {...})
+export const useWindowDimension = (
+  callback: (event: WindowDimensionType) => void,
+) => {
+  const windowDimensionsRef = useRef<WindowDimensionType>({
+    width: 0,
+    height: 0,
+  });
+  const callbackRef = useRef<(event: WindowDimensionType) => void>(null);
+
+  if (!callbackRef.current) {
+    callbackRef.current = callback;
+  }
+
+  const handleCallback: () => void = () => {
+    if (callbackRef.current) {
+      callbackRef.current({
+        ...windowDimensionsRef.current,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(([entry]) => {
+      const { clientWidth, clientHeight } = entry.target;
+
+      windowDimensionsRef.current = {
+        width: clientWidth,
+        height: clientHeight,
+      };
+
+      handleCallback();
+    });
+
+    resizeObserver.observe(document.documentElement);
+
+    return () => resizeObserver.unobserve(document.documentElement);
+  }, []);
+};
+
+// Used to define the current scrolling direction with enums
+// Usage:
+// ScrollDirectionState.[UP, DOWN, LEFT, RIGHT] === event.scrollDirection
+export enum ScrollDirectionState {
+  UP = -1,
+  DOWN = 1,
+  UNDETERMINED = 0,
+  RIGHT = 2,
+  LEFT = -2,
+}
+
+// Gives scrolling measurement through callback.
+// Usage:
+// bind = useScroll(({isScrolling, scrollX, scrollY, scrollDirection}) => {...})
+// if bind() spread over any HTMLElement then element scrolling is measured else window's
+export const useScroll = (callback: (event: ScrollEventType) => void) => {
+  const ref = useRef(null);
+
+  const scrollXY = useRef<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const previousScrollXY = useRef<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const isScrolling = useRef<boolean>(false);
+  const scrollDirection = useRef<number>(ScrollDirectionState.UNDETERMINED);
+  const _isScrolling = useRef<number>(-1); // For checking scrolling and add throttle
+
+  const callbackRef = useRef<(event: ScrollEventType) => void>(null);
+
+  if (!callbackRef.current) {
+    callbackRef.current = callback;
+  }
+
+  const handleCallback: () => void = () => {
+    if (callbackRef.current) {
+      callbackRef.current({
+        isScrolling: isScrolling.current,
+        scrollX: scrollXY.current.x,
+        scrollY: scrollXY.current.y,
+        scrollDirection: scrollDirection.current,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const _refElement = ref.current;
+
+    const scrollCallback = ({ x, y }: { x: number; y: number }) => {
+      scrollXY.current = { x, y };
+
+      // Clear if scrolling
+      if (_isScrolling.current !== -1) {
+        isScrolling.current = true;
+        clearTimeout(_isScrolling.current);
+      }
+
+      _isScrolling.current = setTimeout(() => {
+        isScrolling.current = false;
+        scrollDirection.current = ScrollDirectionState.UNDETERMINED;
+
+        handleCallback(); // Throttle 250milliseconds
+      }, 250);
+
+      const diffX = scrollXY.current.x - previousScrollXY.current.x;
+      const diffY = scrollXY.current.y - previousScrollXY.current.y;
+
+      if (diffX > 0) {
+        scrollDirection.current = ScrollDirectionState.RIGHT;
+      } else {
+        scrollDirection.current = ScrollDirectionState.LEFT;
+      }
+
+      if (diffY > 0) {
+        scrollDirection.current = ScrollDirectionState.DOWN;
+      } else {
+        scrollDirection.current = ScrollDirectionState.UP;
+      }
+
+      previousScrollXY.current = {
+        x: scrollXY.current.x,
+        y: scrollXY.current.y,
+      };
+
+      handleCallback();
+    };
+
+    const scrollListener: () => void = () => {
+      const { pageYOffset: y, pageXOffset: x } = window;
+      scrollCallback({ x, y });
+    };
+
+    const scrollElementListener: () => void = () => {
+      const { scrollTop: y, scrollLeft: x } = ref.current;
+      scrollCallback({ x, y });
+    };
+
+    if (_refElement) {
       ref.current.addEventListener("scroll", scrollElementListener);
     } else {
       window.addEventListener("scroll", scrollListener);
     }
 
     return () => {
-      if (ref.current) {
+      if (_refElement) {
         ref.current.removeEventListener("scroll", scrollElementListener);
       } else {
         window.removeEventListener("scroll", scrollListener);
@@ -109,134 +259,5 @@ export const useScroll = (): {
     };
   }, []);
 
-  return {
-    handler: { ref },
-    ...scroll,
-    scrollDirection: _scrollDirection.current,
-    isScrolling,
-  };
-};
-
-type UseMeasureMeasurement = {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-  viewportLeft: number;
-  viewportTop: number;
-};
-
-export const useMeasure = (): {
-  handler: { ref: React.RefObject<any> };
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-  viewportLeft: number;
-  viewportTop: number;
-} => {
-  const ref = useRef<any>(null);
-  const [measurement, setMeasurement] = useState<UseMeasureMeasurement>({
-    left: 0,
-    top: 0,
-    width: 0,
-    height: 0,
-    viewportLeft: 0,
-    viewportTop: 0,
-  });
-
-  useEffect(() => {
-    const _refElement = ref.current ? ref.current : document.documentElement;
-
-    const _resizeObserver: () => void = function () {
-      // Only gives relative to viewport
-      const { left, top, width, height } = _refElement.getBoundingClientRect();
-      const { pageXOffset, pageYOffset } = window;
-      setMeasurement({
-        left: left + pageXOffset,
-        top: top + pageYOffset,
-        width,
-        height,
-        viewportLeft: left,
-        viewportTop: top,
-      });
-    };
-    _resizeObserver(); // Init
-    window.addEventListener("resize", _resizeObserver);
-
-    return () => window.removeEventListener("resize", _resizeObserver);
-  }, []);
-
-  return { handler: { ref }, ...measurement };
-};
-
-type useWindowDimensionMeasurement = { width: number; height: number };
-export const useWindowDimension = (): useWindowDimensionMeasurement => {
-  const [measurement, setMeasurement] = useState<useWindowDimensionMeasurement>(
-    { width: 0, height: 0 },
-  );
-  const [ro] = useState(
-    () =>
-      new ResizeObserver(([entry]) => {
-        const { clientWidth, clientHeight } = entry.target;
-        setMeasurement({
-          width: clientWidth,
-          height: clientHeight,
-        });
-      }),
-  );
-
-  useEffect(() => {
-    ro.observe(document.documentElement);
-
-    return () => ro.disconnect;
-  }, []);
-
-  return measurement; // { width, height }
-};
-
-export enum DirectionState {
-  UP = -1,
-  DOWN = 1,
-  RIGHT = 2,
-  LEFT = -2,
-  UNDETERMINED = 0,
-}
-
-type UseMouseMoveState = { mouseX: number; mouseY: number };
-export const useMouseMove = (): {
-  mouseX: number;
-  mouseY: number;
-  isMoving: boolean;
-} => {
-  const [isMoving, setIsMoving] = useState<boolean>(false);
-  const _isMoving = useRef<number>(-1);
-  const [pointerPosition, setPointerPosition] = useState<UseMouseMoveState>({
-    mouseX: 0,
-    mouseY: 0,
-  });
-
-  useEffect(() => {
-    const moveHandler = function (event: MouseEvent) {
-      if (_isMoving.current !== -1) {
-        setIsMoving(true);
-        clearTimeout(_isMoving.current);
-      }
-
-      _isMoving.current = setTimeout(() => {
-        setIsMoving(false);
-      }, 250);
-
-      setPointerPosition({
-        mouseX: event.clientX,
-        mouseY: event.clientY,
-      });
-    };
-
-    document.addEventListener("mousemove", moveHandler);
-
-    return () => document.removeEventListener("mousemove", moveHandler);
-  }, []);
-
-  return { ...pointerPosition, isMoving };
+  return () => ({ ref }); // ...bind()
 };

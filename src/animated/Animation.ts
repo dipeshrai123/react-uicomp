@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useRef, useEffect } from "react";
 import { useSpring, config as springConfig, useTransition } from "react-spring";
 import { bin } from "./Math";

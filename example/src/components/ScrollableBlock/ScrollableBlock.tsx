@@ -22,7 +22,7 @@ const Cards = () => {
   );
 };
 
-export default function HomePage() {
+export default function ScrollableBlockPage() {
   const [elements] = useState(50);
 
   return (

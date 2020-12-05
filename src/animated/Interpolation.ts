@@ -1,5 +1,3 @@
-/* eslint-disable no-prototype-builtins */
-/* eslint-disable no-unused-vars */
 import {
   rgbaToHex,
   hexToRgba,
@@ -208,7 +206,7 @@ const _colorProcessedString = (str: any) => {
   return str.replace(HEX_NAME_COLOR, function (match: any) {
     if (match.indexOf("#") !== -1) {
       return rgbaToHex(hexToRgba(match));
-    } else if (colorNames.hasOwnProperty(match)) {
+    } else if (Object.prototype.hasOwnProperty.call(colorNames, match)) {
       return colorNames[match];
     } else {
       throw new Error("String cannot be parsed!");
