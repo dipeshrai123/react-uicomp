@@ -1,9 +1,51 @@
-/* eslint-disable no-unused-vars */
 import { useRef, useState, useEffect } from "react";
 import ResizeObserver from "resize-observer-polyfill";
 import { ScrollState } from "./Constants";
-import { MeasurementType } from "./Types";
+// eslint-disable-next-line no-unused-vars
+import { MeasurementType, WindowDimensionType } from "./Types";
 
+// Handles outside click of any element.
+// callback is called when user clicks outside the reference element.
+// Usage:
+// useOutsideClick(elementRef, () => {...})
+export const useOutsideClick = (
+  elementRef: React.RefObject<HTMLElement>,
+  callback: (event: MouseEvent) => void,
+) => {
+  const callbackRef = useRef<(e: MouseEvent) => void>(null);
+
+  if (callbackRef.current === null) {
+    callbackRef.current = callback;
+  }
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (
+        !elementRef?.current?.contains(e.target as Element) &&
+        callbackRef.current
+      ) {
+        callbackRef.current(e);
+      }
+    };
+
+    if (callbackRef.current) {
+      document.addEventListener("click", handleOutsideClick, true);
+    }
+
+    return () => {
+      if (callbackRef.current) {
+        document.addEventListener("click", handleOutsideClick, true);
+      }
+    };
+  }, [callbackRef.current, elementRef]);
+};
+
+// Measure any HTMLElement renderered in DOM.
+// callback is called in first layout render & when element size is changed.
+// Usage:
+// useMeasure(({ left, top, width, height, vLeft, vTop }) => {...})
+// left and top accounts horizontal and vertical scrolled amount
+// vLeft and vTop gives relative to viewport
 export const useMeasure = (callback: (event: MeasurementType) => void) => {
   const ref = useRef(null);
   const callbackRef = useRef<(event: MeasurementType) => void>(null);
@@ -61,36 +103,47 @@ export const useMeasure = (callback: (event: MeasurementType) => void) => {
   return () => ({ ref }); // ...bind()
 };
 
-export const useOutsideClick = (
-  elementRef: React.RefObject<HTMLElement>,
-  callback: (event: MouseEvent) => void,
+// Gives width and height of viewport in callback
+// Resizeobserver for watching window resize
+// Usage:
+// useWindowDimension(({width, height}) => {...})
+export const useWindowDimension = (
+  callback: (event: WindowDimensionType) => void,
 ) => {
-  const callbackRef = useRef<(e: MouseEvent) => void>(null);
+  const windowDimensionsRef = useRef<WindowDimensionType>({
+    width: 0,
+    height: 0,
+  });
+  const callbackRef = useRef<(event: WindowDimensionType) => void>(null);
 
-  if (callbackRef.current === null) {
+  if (!callbackRef.current) {
     callbackRef.current = callback;
   }
 
-  useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (
-        !elementRef?.current?.contains(e.target as Element) &&
-        callbackRef.current
-      ) {
-        callbackRef.current(e);
-      }
-    };
-
+  const handleCallback: () => void = () => {
     if (callbackRef.current) {
-      document.addEventListener("click", handleOutsideClick, true);
+      callbackRef.current({
+        ...windowDimensionsRef.current,
+      });
     }
+  };
 
-    return () => {
-      if (callbackRef.current) {
-        document.addEventListener("click", handleOutsideClick, true);
-      }
-    };
-  }, [callbackRef.current, elementRef]);
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(([entry]) => {
+      const { clientWidth, clientHeight } = entry.target;
+
+      windowDimensionsRef.current = {
+        width: clientWidth,
+        height: clientHeight,
+      };
+
+      handleCallback();
+    });
+
+    resizeObserver.observe(document.documentElement);
+
+    return () => resizeObserver.unobserve(document.documentElement);
+  }, []);
 };
 
 // Todo: Re-structure without re-rendering ( callbacks )
@@ -182,30 +235,4 @@ export const useScroll = (): {
     scrollDirection: _scrollDirection.current,
     isScrolling,
   };
-};
-
-// Todo: Re-structure without re-rendering ( callbacks )
-type useWindowDimensionMeasurement = { width: number; height: number };
-export const useWindowDimension = (): useWindowDimensionMeasurement => {
-  const [measurement, setMeasurement] = useState<useWindowDimensionMeasurement>(
-    { width: 0, height: 0 },
-  );
-  const [ro] = useState(
-    () =>
-      new ResizeObserver(([entry]) => {
-        const { clientWidth, clientHeight } = entry.target;
-        setMeasurement({
-          width: clientWidth,
-          height: clientHeight,
-        });
-      }),
-  );
-
-  useEffect(() => {
-    ro.observe(document.documentElement);
-
-    return () => ro.disconnect;
-  }, []);
-
-  return measurement;
 };
