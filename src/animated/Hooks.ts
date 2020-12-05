@@ -1,8 +1,7 @@
-import { useRef, useState, useEffect } from "react";
+/* eslint-disable no-unused-vars */
+import { useRef, useEffect } from "react";
 import ResizeObserver from "resize-observer-polyfill";
-import { ScrollState } from "./Constants";
-// eslint-disable-next-line no-unused-vars
-import { MeasurementType, WindowDimensionType } from "./Types";
+import { MeasurementType, WindowDimensionType, ScrollEventType } from "./Types";
 
 // Handles outside click of any element.
 // callback is called when user clicks outside the reference element.
@@ -146,82 +145,106 @@ export const useWindowDimension = (
   }, []);
 };
 
-// Todo: Re-structure without re-rendering ( callbacks )
-type ScrollUseStateProp = { scrollX: number; scrollY: number };
-export const useScroll = (): {
-  handler: { ref: React.RefObject<any> };
-  scrollX: number;
-  scrollY: number;
-  scrollDirection: number;
-  isScrolling: boolean;
-} => {
-  const ref = useRef<any>(null);
-  const [scroll, setScroll] = useState<ScrollUseStateProp>({
-    scrollX: 0,
-    scrollY: 0,
+export enum ScrollState {
+  UP = -1,
+  DOWN = 1,
+  UNDETERMINED = 0,
+  RIGHT = 2,
+  LEFT = -2,
+}
+
+export const useScroll = (callback: (event: ScrollEventType) => void) => {
+  const ref = useRef(null);
+
+  const scrollXY = useRef<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
   });
-  const [isScrolling, setIsScrolling] = useState<boolean>(false);
-  const _isScrolling = useRef<number>(-1);
-  const _scrollDirection = useRef<number>(ScrollState.UNDETERMINED);
-  const _prevScrollY = useRef<number>(0);
+  const previousScrollXY = useRef<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const isScrolling = useRef<boolean>(false);
+  const scrollDirection = useRef<number>(ScrollState.UNDETERMINED);
+  const _isScrolling = useRef<number>(-1); // For checking scrolling and add throttle
 
-  const scrollListener: () => void = () => {
-    const { pageYOffset, pageXOffset } = window;
-    setScroll({ scrollX: pageXOffset, scrollY: pageYOffset });
+  const callbackRef = useRef<(event: ScrollEventType) => void>(null);
 
-    // Clear if scrolling
-    if (_isScrolling.current !== -1) {
-      setIsScrolling(true);
-      clearTimeout(_isScrolling.current);
+  if (!callbackRef.current) {
+    callbackRef.current = callback;
+  }
+
+  const handleCallback: () => void = () => {
+    if (callbackRef.current) {
+      callbackRef.current({
+        isScrolling: isScrolling.current,
+        scrollX: scrollXY.current.x,
+        scrollY: scrollXY.current.y,
+        scrollDirection: scrollDirection.current,
+      });
     }
-
-    _isScrolling.current = setTimeout(() => {
-      setIsScrolling(false);
-      _scrollDirection.current = ScrollState.UNDETERMINED; // reset
-    }, 250);
-
-    const diff = pageYOffset - _prevScrollY.current;
-    if (diff > 0) {
-      _scrollDirection.current = ScrollState.DOWN;
-    } else {
-      _scrollDirection.current = ScrollState.UP;
-    }
-    _prevScrollY.current = pageYOffset;
-  };
-
-  const scrollElementListener: () => void = () => {
-    const { scrollTop, scrollLeft } = ref.current;
-    setScroll({ scrollX: scrollLeft, scrollY: scrollTop });
-
-    // Clear if scrolling
-    if (_isScrolling.current !== -1) {
-      setIsScrolling(true);
-      clearTimeout(_isScrolling.current);
-    }
-
-    _isScrolling.current = setTimeout(() => {
-      setIsScrolling(false);
-      _scrollDirection.current = ScrollState.UNDETERMINED; // reset
-    }, 250);
-
-    const diff = scrollTop - _prevScrollY.current;
-    if (diff > 0) {
-      _scrollDirection.current = ScrollState.DOWN;
-    } else {
-      _scrollDirection.current = ScrollState.UP;
-    }
-    _prevScrollY.current = scrollTop;
   };
 
   useEffect(() => {
-    if (ref.current) {
+    const _refElement = ref.current;
+
+    const scrollCallback = ({ x, y }: { x: number; y: number }) => {
+      scrollXY.current = { x, y };
+
+      // Clear if scrolling
+      if (_isScrolling.current !== -1) {
+        isScrolling.current = true;
+        clearTimeout(_isScrolling.current);
+      }
+
+      _isScrolling.current = setTimeout(() => {
+        isScrolling.current = false;
+        scrollDirection.current = ScrollState.UNDETERMINED;
+
+        handleCallback(); // Throttle 250milliseconds
+      }, 250);
+
+      const diffX = scrollXY.current.x - previousScrollXY.current.x;
+      const diffY = scrollXY.current.y - previousScrollXY.current.y;
+
+      if (diffX > 0) {
+        scrollDirection.current = ScrollState.RIGHT;
+      } else {
+        scrollDirection.current = ScrollState.LEFT;
+      }
+
+      if (diffY > 0) {
+        scrollDirection.current = ScrollState.DOWN;
+      } else {
+        scrollDirection.current = ScrollState.UP;
+      }
+
+      previousScrollXY.current = {
+        x: scrollXY.current.x,
+        y: scrollXY.current.y,
+      };
+
+      handleCallback();
+    };
+
+    const scrollListener: () => void = () => {
+      const { pageYOffset: y, pageXOffset: x } = window;
+      scrollCallback({ x, y });
+    };
+
+    const scrollElementListener: () => void = () => {
+      const { scrollTop: y, scrollLeft: x } = ref.current;
+      scrollCallback({ x, y });
+    };
+
+    if (_refElement) {
       ref.current.addEventListener("scroll", scrollElementListener);
     } else {
       window.addEventListener("scroll", scrollListener);
     }
 
     return () => {
-      if (ref.current) {
+      if (_refElement) {
         ref.current.removeEventListener("scroll", scrollElementListener);
       } else {
         window.removeEventListener("scroll", scrollListener);
@@ -229,10 +252,5 @@ export const useScroll = (): {
     };
   }, []);
 
-  return {
-    handler: { ref },
-    ...scroll,
-    scrollDirection: _scrollDirection.current,
-    isScrolling,
-  };
+  return () => ({ ref }); // ...bind()
 };

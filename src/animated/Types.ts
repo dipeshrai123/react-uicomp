@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export type MeasurementType = {
   left: number;
   top: number;
@@ -8,3 +9,10 @@ export type MeasurementType = {
 };
 
 export type WindowDimensionType = { width: number; height: number };
+
+export type ScrollEventType = {
+  isScrolling: boolean;
+  scrollX: number;
+  scrollY: number;
+  scrollDirection: number;
+};
