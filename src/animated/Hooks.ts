@@ -14,7 +14,7 @@ export const useOutsideClick = (
 ) => {
   const callbackRef = useRef<(e: MouseEvent) => void>(null);
 
-  if (callbackRef.current === null) {
+  if (!callbackRef.current) {
     callbackRef.current = callback;
   }
 
