@@ -1,12 +1,12 @@
 # react-uicomp
 
-> Utility Library for Web Routing and Animation
+> Animation and component library for react
 
 [![NPM](https://img.shields.io/npm/v/react-uicomp.svg)](https://www.npmjs.com/package/react-uicomp) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Installation
 
-React UI Comp requires **react 16.13.1** or later, **react-dom 16.13.1** or later, **react-router-dom 5.2.0** or later.
+React UI Comp requires **react 16.13.1** or later, **react-dom 16.13.1** or later.
 
 ```bash
 #If you use npm
