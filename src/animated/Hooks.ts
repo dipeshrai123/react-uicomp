@@ -2,6 +2,7 @@
 import { useRef, useEffect } from "react";
 import ResizeObserver from "resize-observer-polyfill";
 import { MeasurementType, WindowDimensionType, ScrollEventType } from "./Types";
+import { clamp } from "./Math";
 
 // Handles outside click of any element.
 // callback is called when user clicks outside the reference element.
@@ -175,6 +176,9 @@ export const useScroll = (callback: (event: ScrollEventType) => void) => {
   const scrollDirection = useRef<number>(ScrollDirectionState.UNDETERMINED);
   const _isScrolling = useRef<number>(-1); // For checking scrolling and add throttle
 
+  const lastTimeStamp = useRef<number>(0);
+  const velocity = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
   const callbackRef = useRef<(event: ScrollEventType) => void>(null);
 
   if (!callbackRef.current) {
@@ -187,6 +191,8 @@ export const useScroll = (callback: (event: ScrollEventType) => void) => {
         isScrolling: isScrolling.current,
         scrollX: scrollXY.current.x,
         scrollY: scrollXY.current.y,
+        velocityX: velocity.current.x,
+        velocityY: velocity.current.y,
         scrollDirection: scrollDirection.current,
       });
     }
@@ -196,6 +202,11 @@ export const useScroll = (callback: (event: ScrollEventType) => void) => {
     const _refElement = ref.current;
 
     const scrollCallback = ({ x, y }: { x: number; y: number }) => {
+      const now: number = Date.now();
+      const deltaTime = Math.min(now - lastTimeStamp.current, 64);
+      lastTimeStamp.current = now;
+      const t = deltaTime / 1000; // seconds
+
       scrollXY.current = { x, y };
 
       // Clear if scrolling
@@ -207,6 +218,9 @@ export const useScroll = (callback: (event: ScrollEventType) => void) => {
       _isScrolling.current = setTimeout(() => {
         isScrolling.current = false;
         scrollDirection.current = ScrollDirectionState.UNDETERMINED;
+
+        // Reset Velocity
+        velocity.current = { x: 0, y: 0 };
 
         handleCallback(); // Throttle 250milliseconds
       }, 250);
@@ -225,6 +239,11 @@ export const useScroll = (callback: (event: ScrollEventType) => void) => {
       } else {
         scrollDirection.current = ScrollDirectionState.UP;
       }
+
+      velocity.current = {
+        x: clamp(diffX / t / 1000, -5, 5),
+        y: clamp(diffY / t / 1000, -5, 5),
+      };
 
       previousScrollXY.current = {
         x: scrollXY.current.x,

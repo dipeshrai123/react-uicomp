@@ -14,5 +14,7 @@ export type ScrollEventType = {
   isScrolling: boolean;
   scrollX: number;
   scrollY: number;
+  velocityX: number;
+  velocityY: number;
   scrollDirection: number;
 };
