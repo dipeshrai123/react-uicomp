@@ -11,3 +11,8 @@ export const clamp = (
 ) => {
   return Math.max(lowerbound, Math.min(value, upperbound));
 };
+
+// Linear Interpolation
+export const mix = (perc: number, val1: number, val2: number) => {
+  return val1 * (1 - perc) + val2 * perc;
+};
