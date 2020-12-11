@@ -7,10 +7,6 @@ import {
 } from "./Colors";
 import { SpringValue } from "react-spring";
 
-export const mix = (perc: number, val1: number, val2: number) => {
-  return val1 * (1 - perc) + val2 * perc;
-};
-
 type ExtrapolateType = "identity" | "extend" | "clamp";
 
 const _internalInterpolate = (
