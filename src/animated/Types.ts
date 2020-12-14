@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 export type MeasurementType = {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-  vLeft: number;
-  vTop: number;
+  left: number | Array<number>;
+  top: number | Array<number>;
+  width: number | Array<number>;
+  height: number | Array<number>;
+  vLeft: number | Array<number>;
+  vTop: number | Array<number>;
 };
 
 export type WindowDimensionType = { width: number; height: number };
