@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import ResizeObserver from "resize-observer-polyfill";
 import { MeasurementType, WindowDimensionType, ScrollEventType } from "./Types";
 import { clamp } from "./Math";
@@ -46,61 +46,114 @@ export const useOutsideClick = (
 // useMeasure(({ left, top, width, height, vLeft, vTop }) => {...})
 // left and top accounts horizontal and vertical scrolled amount
 // vLeft and vTop gives relative to viewport
+// All values will be array if bound to multiple elements
 export const useMeasure = (callback: (event: MeasurementType) => void) => {
   const ref = useRef(null);
+  const elementRefs = useRef([]);
   const callbackRef = useRef<(event: MeasurementType) => void>(null);
-  const measurementRef = useRef<MeasurementType>({
-    left: 0,
-    top: 0,
-    width: 0,
-    height: 0,
-    vLeft: 0,
-    vTop: 0,
-  });
 
   if (!callbackRef.current) {
     callbackRef.current = callback;
   }
 
-  const handleCallback: () => void = () => {
-    if (callbackRef.current) {
-      callbackRef.current({
-        ...measurementRef.current,
-      });
-    }
-  };
-
   useEffect(() => {
     const _refElement = ref.current || document.documentElement;
+    const _refElementsMultiple = elementRefs.current;
 
     const resizeObserver = new ResizeObserver(([entry]) => {
       const { left, top, width, height } = entry.target.getBoundingClientRect();
       const { pageXOffset, pageYOffset } = window;
 
-      measurementRef.current = {
-        left: left + pageXOffset,
-        top: top + pageYOffset,
-        width,
-        height,
-        vLeft: left,
-        vTop: top,
-      };
+      if (callbackRef.current) {
+        callbackRef.current({
+          left: left + pageXOffset,
+          top: top + pageYOffset,
+          width,
+          height,
+          vLeft: left,
+          vTop: top,
+        });
+      }
+    });
 
-      handleCallback();
+    const resizeObserverMultiple = new ResizeObserver((entries) => {
+      const left: Array<number> = [];
+      const top: Array<number> = [];
+      const width: Array<number> = [];
+      const height: Array<number> = [];
+      const vLeft: Array<number> = [];
+      const vTop: Array<number> = [];
+
+      entries.forEach((entry) => {
+        const {
+          left: _left,
+          top: _top,
+          width: _width,
+          height: _height,
+        } = entry.target.getBoundingClientRect();
+        const { pageXOffset, pageYOffset } = window;
+        const _pageLeft = _left + pageXOffset;
+        const _pageTop = _top + pageYOffset;
+
+        left.push(_pageLeft);
+        top.push(_pageTop);
+        width.push(_width);
+        height.push(_height);
+        vLeft.push(_left);
+        vTop.push(_top);
+      });
+
+      if (callbackRef.current) {
+        callbackRef.current({
+          left,
+          top,
+          width,
+          height,
+          vLeft,
+          vTop,
+        });
+      }
     });
 
     if (_refElement) {
-      resizeObserver.observe(_refElement);
+      if (
+        _refElement === document.documentElement &&
+        _refElementsMultiple.length > 0
+      ) {
+        _refElementsMultiple.forEach((element) => {
+          resizeObserverMultiple.observe(element.current);
+        });
+      } else {
+        resizeObserver.observe(_refElement);
+      }
     }
 
     return () => {
       if (_refElement) {
-        resizeObserver.observe(_refElement);
+        if (
+          _refElement === document.documentElement &&
+          _refElementsMultiple.length > 0
+        ) {
+          _refElementsMultiple.forEach((element) => {
+            resizeObserverMultiple.unobserve(element.current);
+          });
+        } else {
+          resizeObserver.unobserve(_refElement);
+        }
       }
     };
   }, []);
 
-  return () => ({ ref }); // ...bind()
+  return (index: number) => {
+    if (index === null || index === undefined) {
+      return { ref };
+    } else {
+      elementRefs.current[index] =
+        elementRefs.current[index] || React.createRef();
+
+      return { ref: elementRefs.current[index] };
+    }
+  }; // ...bind() or ...bind(index) for multiple
 };
 
 // Gives width and height of viewport in callback
@@ -148,7 +201,7 @@ export const useWindowDimension = (
 
 // Used to define the current scrolling direction with enums
 // Usage:
-// ScrollDirectionState.[UP, DOWN, LEFT, RIGHT] === event.scrollDirection
+// ScrollDirectionState.[UP, DOWN, LEFT, RIGHT, UNDETERMINED] === event.scrollDirection
 export enum ScrollDirectionState {
   UP = -1,
   DOWN = 1,

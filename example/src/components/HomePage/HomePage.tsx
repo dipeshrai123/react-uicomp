@@ -1,40 +1,55 @@
-import React, { useState, useEffect } from "react";
-import { AnimatedBlock, useAnimatedValue } from "react-uicomp";
+import React, { useState } from "react";
+import { useAnimatedValue, AnimatedBlock, useMeasure } from "react-uicomp";
 
-const Homepage = () => {
-  const [toggle, setToggle] = useState(false);
-  const animatedWidth = useAnimatedValue(100);
-  const animatedWidth2 = useAnimatedValue(animatedWidth.value);
+const ELEM_WIDTHS = ["10%", "20%", "12%"];
 
-  useEffect(() => {
-    animatedWidth.value = toggle ? 500 : 100;
-  }, [toggle, animatedWidth]);
+export default function Homepage() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [widths, setWidths] = useState<any>(() =>
+    Array(ELEM_WIDTHS.length).fill(0),
+  );
+  const [lefts, setLefts] = useState<any>(() =>
+    Array(ELEM_WIDTHS.length).fill(0),
+  );
+
+  const bind = useMeasure(({ width, left }) => {
+    setWidths(width);
+    setLefts(left);
+  });
+
+  const animatedWidth = useAnimatedValue(widths[activeIndex]);
+  const animatedLeft = useAnimatedValue(lefts[activeIndex]);
 
   return (
     <>
+      <div
+        style={{
+          display: "flex",
+        }}
+      >
+        {ELEM_WIDTHS.map((width, index) => (
+          <div
+            key={index}
+            {...bind(index)}
+            style={{
+              width,
+              height: 100,
+              marginRight: 10,
+              backgroundColor: "#3399ff",
+            }}
+            onClick={() => setActiveIndex(index)}
+          />
+        ))}
+      </div>
       <AnimatedBlock
         style={{
           width: animatedWidth.value,
-          height: 100,
+          height: 6,
+          backgroundColor: "#F00",
           position: "relative",
-          background: "#39F",
+          left: animatedLeft.value,
         }}
       />
-
-      <AnimatedBlock
-        style={{
-          width: animatedWidth2.value,
-          height: 100,
-          position: "relative",
-          background: "#f00",
-        }}
-      />
-
-      <div style={{ height: 10 }}></div>
-
-      <button onClick={() => setToggle((prev) => !prev)}>Open</button>
     </>
   );
-};
-
-export default Homepage;
+}
