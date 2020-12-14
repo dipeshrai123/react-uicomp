@@ -148,7 +148,7 @@ export const useWindowDimension = (
 
 // Used to define the current scrolling direction with enums
 // Usage:
-// ScrollDirectionState.[UP, DOWN, LEFT, RIGHT] === event.scrollDirection
+// ScrollDirectionState.[UP, DOWN, LEFT, RIGHT, UNDETERMINED] === event.scrollDirection
 export enum ScrollDirectionState {
   UP = -1,
   DOWN = 1,
