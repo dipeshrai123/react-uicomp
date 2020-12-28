@@ -1,7 +1,10 @@
 import { useRef, useEffect } from "react";
 import { useSpring, config as springConfig, useTransition } from "react-spring";
-import { bin } from "./Math";
 
+// Boolean to binary
+const bin = (booleanValue: boolean) => {
+  return booleanValue ? 1 : 0;
+};
 interface UseAnimatedValueConfig {
   onAnimationEnd?: (value: number) => void;
   listener?: (value: number) => void;

@@ -216,12 +216,12 @@ interface ExtrapolateConfig {
   extrapolateLeft?: ExtrapolateType;
 }
 
-export const interpolate = (
+export function interpolate(
   value: SpringValue<number> | number,
   inputRange: Array<number>,
   outputRange: Array<number | string>,
   extrapolateConfig?: ExtrapolateConfig,
-) => {
+) {
   if (value instanceof SpringValue) {
     // Animated Value
     return value.to({
@@ -299,13 +299,13 @@ export const interpolate = (
       throw new Error("Output range cannot be Empty");
     }
   }
-};
+}
 
 // INTERPOLATE FROM 0 TO 1
-export const bInterpolate = (
+export function bInterpolate(
   value: SpringValue<number> | number,
   outputRange: Array<number | string>,
   extrapolateConfig?: ExtrapolateConfig,
-) => {
+) {
   return interpolate(value, [0, 1], outputRange, extrapolateConfig);
-};
+}
