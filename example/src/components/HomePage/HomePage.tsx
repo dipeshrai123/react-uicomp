@@ -1,9 +1,19 @@
-import React from "react";
-import { rubberClamp } from "react-uicomp";
+import * as React from "react";
+import { useDrag, AnimatedBlock } from "react-uicomp";
 
 export default function Homepage() {
-  const x = rubberClamp(-100, 0, 100);
-  console.log(x);
+  const bind = useDrag((obj) => {
+    console.log(obj);
+  });
 
-  return <>HOMEPAGE</>;
+  return (
+    <AnimatedBlock
+      {...bind()}
+      style={{
+        width: 100,
+        height: 100,
+        background: "#3399ff",
+      }}
+    />
+  );
 }
