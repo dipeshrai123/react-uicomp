@@ -8,6 +8,7 @@ import DropdownPage from "./components/DropdownPage/DropdownPage";
 import ScrollableBlockPage from "./components/ScrollableBlock/ScrollableBlock";
 import AnimatedPage from "./components/AnimatedPage/Animated";
 import ScrollPage from "./components/ScrollPage/Scroll";
+import MeasuredTabsPage from "./components/MeasuredTabsPage/MeasuredTabsPage";
 
 import "./index.css";
 
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/scrollable-block" component={ScrollableBlockPage} />
         <Route path="/animated" component={AnimatedPage} />
         <Route path="/scroll" component={ScrollPage} />
+        <Route path="/measured-elements" component={MeasuredTabsPage} />
         <Route path="/" component={HomePage} />
       </Switch>
     </BrowserRouter>
