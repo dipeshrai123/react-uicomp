@@ -1,19 +1,28 @@
 import { useRef, useEffect } from "react";
 import { useSpring, config as springConfig, useTransition } from "react-spring";
-import { bin } from "./Math";
 
+// Boolean to binary
+const bin = (booleanValue: boolean) => {
+  return booleanValue ? 1 : 0;
+};
 interface UseAnimatedValueConfig {
   onAnimationEnd?: (value: number) => void;
   listener?: (value: number) => void;
   animationType?: "ease" | "elastic";
   duration?: number;
-  [prop: string]: any;
+  veloctiy?: number;
+  mass?: number;
+  friction?: number;
+  tension?: number;
 }
+
+type TargetObjectType = { value: any; immediate: boolean };
 
 export const useAnimatedValue = (
   initialValue: number | boolean,
   config?: UseAnimatedValueConfig,
 ) => {
+  const _isImmediate = useRef(false);
   const _initialValue: number =
     typeof initialValue === "boolean" ? bin(initialValue) : initialValue;
   const _prevValue = useRef(_initialValue);
@@ -29,6 +38,7 @@ export const useAnimatedValue = (
   const [props, set] = useSpring(() => ({
     value: _initialValue,
     config: { ..._config, ...restConfig },
+    immediate: _isImmediate.current,
   }));
 
   const _update = (updatedValue: number) => {
@@ -41,6 +51,7 @@ export const useAnimatedValue = (
       onChange: function ({ value }: { value: number }) {
         listener && listener(value);
       },
+      immediate: _isImmediate.current,
     });
   };
 
@@ -51,12 +62,20 @@ export const useAnimatedValue = (
     }
   }, [initialValue]);
 
-  const _targetObject: { value: any } = { value: props.value };
+  const _targetObject: TargetObjectType = {
+    value: props.value,
+    immediate: false,
+  };
   return new Proxy(_targetObject, {
-    set: function (target: { value: any }, key, value) {
+    set: function (target: TargetObjectType, key, value) {
       if (key === "value") {
         target.value = value;
         _update(value);
+        return true;
+      }
+
+      if (key === "immediate") {
+        _isImmediate.current = value;
         return true;
       }
 
@@ -65,6 +84,10 @@ export const useAnimatedValue = (
     get: function (_target, key) {
       if (key === "value") {
         return props.value;
+      }
+
+      if (key === "immediate") {
+        return _isImmediate.current;
       }
 
       return false;
@@ -77,7 +100,10 @@ interface UseMountedValueConfig {
   duration?: number;
   enterDuration?: number;
   exitDuration?: number;
-  [prop: string]: any;
+  veloctiy?: number;
+  mass?: number;
+  friction?: number;
+  tension?: number;
 }
 
 export const useMountedValue = (

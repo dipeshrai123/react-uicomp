@@ -2,11 +2,7 @@
 import React from "react";
 import { useOutsideClick } from "../animated";
 import { a, useTransition } from "react-spring";
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "./DropdownMenu";
+import { DropdownMenu } from "./DropdownMenu";
 import { AnimationType, getAnimationConfig } from "./Modules";
 
 type triggerElementArgType = {
@@ -201,29 +197,29 @@ export const Dropdown = ({
               }}
             >
               {options ? (
-                <DropdownMenu
+                <DropdownMenu.Container
                   style={containerStyle}
                   className={containerClassName}
                 >
                   {options.map(
                     ({ title, onClick, danger, style, type }, index) => {
                       if (type === "separator") {
-                        return <DropdownMenuSeparator key={index} />;
+                        return <DropdownMenu.Separator key={index} />;
                       } else {
                         return (
-                          <DropdownMenuItem
+                          <DropdownMenu.Item
                             key={index}
                             {...{ onClick, danger }}
                             className={itemClassName}
                             style={style || itemStyle}
                           >
                             {title}
-                          </DropdownMenuItem>
+                          </DropdownMenu.Item>
                         );
                       }
                     },
                   )}
-                </DropdownMenu>
+                </DropdownMenu.Container>
               ) : (
                 children
               )}

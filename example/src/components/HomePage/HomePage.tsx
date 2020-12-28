@@ -1,55 +1,64 @@
-import React, { useState } from "react";
-import { useAnimatedValue, AnimatedBlock, useMeasure } from "react-uicomp";
-
-const ELEM_WIDTHS = ["10%", "20%", "12%"];
+import * as React from "react";
+import {
+  useDrag,
+  AnimatedBlock,
+  useAnimatedValue,
+  clamp,
+  interpolate,
+} from "react-uicomp";
 
 export default function Homepage() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [widths, setWidths] = useState<any>(() =>
-    Array(ELEM_WIDTHS.length).fill(0),
-  );
-  const [lefts, setLefts] = useState<any>(() =>
-    Array(ELEM_WIDTHS.length).fill(0),
-  );
+  const CONTAINER_WIDTH = 60;
+  const ELEM_SIZE = CONTAINER_WIDTH / 2;
+  const movementX = React.useRef(0);
+  const offsetX = React.useRef(0);
+  const x = useAnimatedValue(0);
 
-  const bind = useMeasure(({ width, left }) => {
-    setWidths(width);
-    setLefts(left);
+  const bind = useDrag(({ down, movementX: mx }) => {
+    if (down) {
+      movementX.current = clamp(mx + offsetX.current, 0, ELEM_SIZE);
+      x.immediate = true;
+    } else {
+      movementX.current = movementX.current > ELEM_SIZE / 2 ? ELEM_SIZE : 0;
+      offsetX.current = movementX.current;
+      x.immediate = false;
+    }
+
+    x.value = movementX.current;
   });
 
-  const animatedWidth = useAnimatedValue(widths[activeIndex]);
-  const animatedLeft = useAnimatedValue(lefts[activeIndex]);
-
   return (
-    <>
-      <div
-        style={{
-          display: "flex",
-        }}
-      >
-        {ELEM_WIDTHS.map((width, index) => (
-          <div
-            key={index}
-            {...bind(index)}
-            style={{
-              width,
-              height: 100,
-              marginRight: 10,
-              backgroundColor: "#3399ff",
-            }}
-            onClick={() => setActiveIndex(index)}
-          />
-        ))}
-      </div>
+    <AnimatedBlock
+      style={{
+        width: CONTAINER_WIDTH,
+        height: ELEM_SIZE,
+        borderRadius: ELEM_SIZE,
+        border: interpolate(
+          x.value,
+          [0, ELEM_SIZE],
+          ["2px solid #e1e1e1", "2px solid #34c76c"],
+        ),
+        backgroundColor: interpolate(
+          x.value,
+          [0, ELEM_SIZE],
+          ["white", "#34c76cc"],
+        ),
+      }}
+    >
       <AnimatedBlock
+        {...bind()}
         style={{
-          width: animatedWidth.value,
-          height: 6,
-          backgroundColor: "#F00",
           position: "relative",
-          left: animatedLeft.value,
+          top: -1,
+          width: ELEM_SIZE,
+          height: ELEM_SIZE,
+          background: "white",
+          border: "1px solid #e1e1e1",
+          boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
+          borderRadius: ELEM_SIZE,
+          x: x.value,
         }}
       />
-    </>
+    </AnimatedBlock>
   );
 }
