@@ -18,3 +18,20 @@ export type ScrollEventType = {
   velocityY: number;
   scrollDirection: number;
 };
+
+export type DragEventType = {
+  down: boolean;
+  movementX: number;
+  movementY: number;
+  offsetX: number;
+  offsetY: number;
+  velocityX: number;
+  velocityY: number;
+  distanceX: number;
+  distanceY: number;
+  directionX: number;
+  directionY: number;
+  cancel: () => void;
+};
+
+export type Vector2 = { x: number; y: number };
