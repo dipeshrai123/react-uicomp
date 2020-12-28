@@ -17,9 +17,11 @@ export default function Homepage() {
   const bind = useDrag(({ down, movementX: mx }) => {
     if (down) {
       movementX.current = clamp(mx + offsetX.current, 0, ELEM_SIZE);
+      x.immediate = true;
     } else {
       movementX.current = movementX.current > ELEM_SIZE / 2 ? ELEM_SIZE : 0;
       offsetX.current = movementX.current;
+      x.immediate = false;
     }
 
     x.value = movementX.current;

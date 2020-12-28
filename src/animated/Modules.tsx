@@ -1,16 +1,12 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
-import { animated } from "react-spring";
+import { animated, AnimatedProps } from "react-spring";
 import { useAnimatedValue } from "./Animation";
 
 // Animated Block - can receive all props from useAnimatedValue() hook
-interface AnimatedBlockProps {
-  children?: React.ReactNode;
-  [name: string]: any;
-}
-
 export const AnimatedBlock = React.forwardRef(
   (
-    { children, ...rest }: AnimatedBlockProps,
+    { children, ...rest }: AnimatedProps<any>,
     ref: React.RefObject<HTMLDivElement>,
   ) => (
     <animated.div ref={ref} {...rest}>
