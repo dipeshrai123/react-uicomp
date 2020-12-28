@@ -18,7 +18,7 @@ const MenuContainer = styled.div`
   margin: 0px;
 `;
 
-export const DropdownMenu = (props: DropdownMenuProps) => {
+const DropdownMenuContainer = (props: DropdownMenuProps) => {
   const { children, style, className } = props;
   return <MenuContainer {...{ style, className }}>{children}</MenuContainer>;
 };
@@ -61,7 +61,7 @@ const Item = styled.button<Pick<DropdownMenuItemProps, "danger">>`
   }
 `;
 
-export const DropdownMenuItem = (props: DropdownMenuItemProps) => {
+const DropdownMenuItem = (props: DropdownMenuItemProps) => {
   const { children, danger = false, onClick, style, className } = props;
   return <Item {...{ danger, onClick, style, className }}>{children}</Item>;
 };
@@ -73,6 +73,12 @@ const Separator = styled.div`
   margin: 5px 0px;
 `;
 
-export const DropdownMenuSeparator = () => {
+const DropdownMenuSeparator = () => {
   return <Separator />;
+};
+
+export const DropdownMenu = {
+  Container: DropdownMenuContainer,
+  Item: DropdownMenuItem,
+  Separator: DropdownMenuSeparator,
 };
