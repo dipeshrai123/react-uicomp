@@ -71,7 +71,6 @@
     "dist"
   ],
   "dependencies": {
-    "react-spring": "^9.0.0-rc.3",
     "react-ui-animate": "^1.0.3",
     "styled-components": "^5.2.1"
   }
