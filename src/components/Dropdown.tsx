@@ -1,8 +1,10 @@
-/* eslint-disable no-unused-vars */
-import React from "react";
-import { useOutsideClick } from "react-ui-animate";
-import { a, useTransition } from "react-spring";
-import { DropdownMenu } from "./DropdownMenu";
+import * as React from "react";
+import {
+  useOutsideClick,
+  AnimatedBlock,
+  useMountedValue,
+  interpolate,
+} from "react-ui-animate";
 import { AnimationType, getAnimationConfig } from "../modules";
 
 type triggerElementArgType = {
@@ -17,48 +19,30 @@ type placementType =
   | "topright"
   | "topmiddle";
 
-type DropdownOptions = Array<{
-  title?: string;
-  onClick?: () => void;
-  danger?: boolean;
-  style?: React.CSSProperties;
-  type?: "item" | "separator";
-}>;
-
 interface DropdownProps {
   children?: React.ReactNode;
-  triggerElement: (elementArg: triggerElementArgType) => React.ReactNode;
+  trigger: (elementArg: triggerElementArgType) => React.ReactNode;
   active?: boolean;
   isAnimated?: boolean;
   animationType?: AnimationType;
   style?: Omit<React.CSSProperties, "transform" | "position" | "opacity">;
   placement?: placementType;
-  dismissOnOutsideClick?: boolean;
-  dismissOnInsideClick?: boolean;
-  toggleOnTriggerElementClick?: boolean;
-  options?: DropdownOptions;
-  containerStyle?: React.CSSProperties;
-  itemStyle?: React.CSSProperties;
-  containerClassName?: string;
-  itemClassName?: string;
+  outDismiss?: boolean;
+  inDismiss?: boolean;
+  triggerToggle?: boolean;
 }
 
 export const Dropdown = ({
   children,
-  triggerElement,
+  trigger,
   active = false,
   isAnimated = true,
   animationType = "expand",
   style,
   placement = "bottomleft",
-  dismissOnOutsideClick = true,
-  toggleOnTriggerElementClick = false,
-  dismissOnInsideClick = false,
-  options,
-  containerStyle,
-  itemStyle,
-  containerClassName,
-  itemClassName,
+  outDismiss = true,
+  inDismiss = false,
+  triggerToggle = false,
 }: DropdownProps) => {
   const containerRef: React.RefObject<HTMLDivElement> = React.useRef<HTMLDivElement>(
     null,
@@ -66,13 +50,25 @@ export const Dropdown = ({
 
   const [dropdownActive, setDropdownActive] = React.useState<boolean>(active);
 
-  const dropdownAnimation = useTransition(dropdownActive, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-    config: isAnimated ? getAnimationConfig(animationType) : { duration: 0 },
-  });
+  const config = isAnimated
+    ? getAnimationConfig(animationType)
+    : { enterDuration: 0.001, exitDuration: 0.001 };
 
+  const dropdownAnimation = useMountedValue(dropdownActive, [0, 1, 0], config);
+
+  // Open dropdown method
+  const openDropdown: () => void = React.useCallback(() => {
+    if (!dropdownActive) {
+      setDropdownActive(true);
+    }
+  }, [dropdownActive]);
+
+  // Open dropdown method
+  const closeDropdown: () => void = () => {
+    setDropdownActive(false);
+  };
+
+  // Toggle dropdown
   const toggleDropdown: () => void = React.useCallback(() => {
     if (dropdownActive) {
       closeDropdown();
@@ -81,23 +77,11 @@ export const Dropdown = ({
     }
   }, [dropdownActive]);
 
-  const openDropdown: () => void = React.useCallback(() => {
-    if (!dropdownActive) {
-      setDropdownActive(true);
-    }
-  }, [dropdownActive]);
-
-  const closeDropdown: () => void = () => {
-    setDropdownActive(false);
-  };
-
-  const handleOutsideClick: () => void = () => {
-    closeDropdown();
-  };
-
   // Handle outside click on container
-  if (dismissOnOutsideClick) {
-    useOutsideClick(containerRef, handleOutsideClick);
+  if (outDismiss) {
+    useOutsideClick(containerRef, () => {
+      closeDropdown();
+    });
   }
 
   const containerStyles: React.CSSProperties = {
@@ -155,75 +139,47 @@ export const Dropdown = ({
   };
 
   // DismissOnElementClick
-  const onClick = toggleOnTriggerElementClick ? toggleDropdown : openDropdown;
+  const onClick = triggerToggle ? toggleDropdown : openDropdown;
+
+  // INTERPOLATION
+  const minScale = animationType === "fade" ? 1 : 0.6;
+  const maxScale = 1;
+
+  let translateX: number;
+  if (placement === "bottommiddle" || placement === "topmiddle") {
+    translateX = -50;
+  } else {
+    translateX = 0;
+  }
 
   return (
     <span ref={containerRef} style={containerStyles}>
       <span {...{ onClick }} style={dropdownElementStyles}>
-        {triggerElement({
+        {trigger({
           active: dropdownActive,
         })}
       </span>
-      {dropdownAnimation((props, item) => {
+      {dropdownAnimation((animation, mounted) => {
         return (
-          item && (
-            <a.div
-              onClick={() => (dismissOnInsideClick ? closeDropdown() : false)}
+          mounted && (
+            <AnimatedBlock
+              onClick={() => (inDismiss ? closeDropdown() : false)}
               style={{
                 ...dropdownMenuStyles,
                 position: "absolute",
-                opacity: props.opacity,
-                transform: props.opacity
-                  .to({
-                    range: [0, 1],
-                    output: [0.6, 1],
-                  })
-                  .to((s: any) => {
-                    // Calculation for position
-                    if (placement === "bottommiddle") {
-                      return `scale(${
-                        animationType !== "fade" ? s : 1
-                      }) translateX(-50%)`;
-                    } else if (placement === "topmiddle") {
-                      return `scale(${
-                        animationType !== "fade" ? s : 1
-                      }) translateX(-50%)`;
-                    } else {
-                      return `scale(${
-                        animationType !== "fade" ? s : 1
-                      }) translateX(0%)`;
-                    }
-                  }),
+                opacity: animation.value,
+                transform: interpolate(
+                  animation.value,
+                  [0, 1],
+                  [
+                    `scale(${minScale}) translateX(${translateX}%)`,
+                    `scale(${maxScale}) translateX(${translateX}%)`,
+                  ],
+                ),
               }}
             >
-              {options ? (
-                <DropdownMenu.Container
-                  style={containerStyle}
-                  className={containerClassName}
-                >
-                  {options.map(
-                    ({ title, onClick, danger, style, type }, index) => {
-                      if (type === "separator") {
-                        return <DropdownMenu.Separator key={index} />;
-                      } else {
-                        return (
-                          <DropdownMenu.Item
-                            key={index}
-                            {...{ onClick, danger }}
-                            className={itemClassName}
-                            style={style || itemStyle}
-                          >
-                            {title}
-                          </DropdownMenu.Item>
-                        );
-                      }
-                    },
-                  )}
-                </DropdownMenu.Container>
-              ) : (
-                children
-              )}
-            </a.div>
+              {children}
+            </AnimatedBlock>
           )
         );
       })}

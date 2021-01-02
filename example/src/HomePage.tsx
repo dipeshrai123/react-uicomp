@@ -1,24 +1,27 @@
-import React, { useState } from "react";
-import { Modal } from "react-uicomp";
+import React from "react";
+import { Dropdown, Menu } from "react-uicomp";
 
 export default function Homepage() {
-  const [visible, setVisible] = useState(false);
-
   return (
-    <div>
-      <button onClick={() => setVisible(true)}>Open Modal</button>
-      <Modal visible={visible} onOutsideClick={() => setVisible(false)}>
-        Modal Content Goes Here...
-        <div
-          style={{
-            marginTop: 20,
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          <button onClick={() => setVisible(false)}>Close Modal</button>
-        </div>
-      </Modal>
+    <div
+      style={{
+        padding: 20,
+      }}
+    >
+      <Dropdown
+        trigger={() => <button style={{ width: 200 }}>Toggle Menu</button>}
+      >
+        <Menu.Container>
+          <Menu.Item onClick={() => false}>Item 1</Menu.Item>
+          <Menu.Item onClick={() => false}>Item 2</Menu.Item>
+          <Menu.Item onClick={() => false}>Item 3</Menu.Item>
+          <Menu.Item onClick={() => false}>Item 4</Menu.Item>
+          <Menu.Separator />
+          <Menu.Item onClick={() => false} danger>
+            Item 5
+          </Menu.Item>
+        </Menu.Container>
+      </Dropdown>
     </div>
   );
 }

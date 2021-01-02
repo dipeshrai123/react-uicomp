@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import styled from "styled-components";
 import { colors, fonts } from "../constants";
 
@@ -77,7 +77,7 @@ const DropdownMenuSeparator = () => {
   return <Separator />;
 };
 
-export const DropdownMenu = {
+export const Menu = {
   Container: DropdownMenuContainer,
   Item: DropdownMenuItem,
   Separator: DropdownMenuSeparator,

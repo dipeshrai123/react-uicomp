@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import * as React from "react";
 import { SpringCore, makeAnimatedComponent } from "react-ui-animate";
 import styled from "styled-components";
 import { colors, fonts } from "../constants";
@@ -84,8 +84,8 @@ export const Toast = ({
   dismissOnClick = false,
 }: ToastProps) => {
   const toastId = React.useRef(0);
-  const [items, setItems] = useState<Array<ItemObject>>([]);
-  const [refMap] = useState(new WeakMap());
+  const [items, setItems] = React.useState<Array<ItemObject>>([]);
+  const [refMap] = React.useState(new WeakMap());
 
   const onRest = (item: ItemObject) => {
     setItems((prev) => prev.filter((each) => each.key !== item.key));
@@ -109,7 +109,7 @@ export const Toast = ({
     },
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     child((toastObj: ToastObject) => {
       setItems((prev) => [
         ...prev,
@@ -162,7 +162,7 @@ export const Toast = ({
 };
 
 export const useToast = () => {
-  const ref = useRef<any>();
+  const ref = React.useRef<any>();
 
   return {
     handler: {

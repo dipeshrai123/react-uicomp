@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useRef } from "react";
+import * as React from "react";
 import {
   useOutsideClick,
   makeAnimatedComponent,
@@ -54,7 +54,7 @@ export const Modal = ({
   isAnimated = true,
   animationType = "expand",
 }: ModalProps) => {
-  const modalRef = useRef<HTMLElement>(null);
+  const modalRef = React.useRef<HTMLElement>(null);
   const initialConfig = isAnimated
     ? getAnimationConfig(animationType)
     : {
