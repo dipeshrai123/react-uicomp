@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React, { useRef } from "react";
+import { useOutsideClick } from "react-ui-animate";
 import { animated, useTransition, to } from "react-spring";
 import styled from "styled-components";
-import { AnimationType, getAnimationConfig, useOutsideClick } from "../modules";
+import { AnimationType, getAnimationConfig } from "../modules";
 
 const ContainerStyled = styled.div`
   position: fixed;
