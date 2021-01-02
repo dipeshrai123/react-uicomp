@@ -1,17 +1,24 @@
-import React from "react";
-import { Toast, useToast } from "react-uicomp";
+import React, { useState } from "react";
+import { Modal } from "react-uicomp";
 
 export default function Homepage() {
-  const { handler, toast } = useToast();
+  const [visible, setVisible] = useState(false);
 
   return (
     <div>
-      <button
-        onClick={() => toast({ message: "Hey, Toast!", type: "success" })}
-      >
-        Open Toast
-      </button>
-      <Toast {...handler} /> {/* Spread handler here */}
+      <button onClick={() => setVisible(true)}>Open Modal</button>
+      <Modal visible={visible} onOutsideClick={() => setVisible(false)}>
+        Modal Content Goes Here...
+        <div
+          style={{
+            marginTop: 20,
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button onClick={() => setVisible(false)}>Close Modal</button>
+        </div>
+      </Modal>
     </div>
   );
 }

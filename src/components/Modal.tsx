@@ -1,7 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useRef } from "react";
-import { useOutsideClick } from "react-ui-animate";
-import { animated, useTransition, to } from "react-spring";
+import {
+  useOutsideClick,
+  makeAnimatedComponent,
+  useMountedValue,
+  interpolate,
+} from "react-ui-animate";
 import styled from "styled-components";
 import { AnimationType, getAnimationConfig } from "../modules";
 
@@ -30,8 +34,8 @@ const ModalContentStyled = styled.div`
   font-family: Arial;
 `;
 
-const Container = animated(ContainerStyled);
-const ModalContent = animated(ModalContentStyled);
+const Container = makeAnimatedComponent(ContainerStyled);
+const ModalContent = makeAnimatedComponent(ModalContentStyled);
 
 interface ModalProps {
   children: React.ReactNode;
@@ -51,12 +55,15 @@ export const Modal = ({
   animationType = "expand",
 }: ModalProps) => {
   const modalRef = useRef<HTMLElement>(null);
-  const transitions = useTransition(visible, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0, config: { duration: isAnimated ? 100 : 0 } },
-    config: isAnimated ? getAnimationConfig(animationType) : { duration: 0 },
-  });
+  const initialConfig = isAnimated
+    ? getAnimationConfig(animationType)
+    : {
+        enterDuration: 0.001,
+        exitDuration: 0.001,
+      };
+  const config = { exitDuration: isAnimated ? 100 : 0, ...initialConfig };
+
+  const transitions = useMountedValue(visible, [0, 1, 0], config);
 
   // Handle outside click
   if (onOutsideClick) useOutsideClick(modalRef, onOutsideClick);
@@ -64,26 +71,24 @@ export const Modal = ({
   return (
     <div>
       {transitions(
-        (props, item) =>
-          item && (
-            <Container style={props}>
+        (animated, mounted) =>
+          mounted && (
+            <Container
+              style={{
+                opacity: animated.value,
+              }}
+            >
               <ModalContent
                 ref={modalRef}
                 style={{
                   ...style,
-                  transform: to(
+                  transform: interpolate(
+                    animated.value,
+                    [0, 1],
                     [
-                      props.opacity.to({
-                        range: [0, 1],
-                        output: [0.9, 1],
-                      }),
-                      props.opacity.to({
-                        range: [0, 1],
-                        output: [-50, 0],
-                      }),
+                      `scale(${0.9}) translateY(${-50}px)`,
+                      `scale(${1}) translateY(${0}px)`,
                     ],
-                    (scale, translateY) =>
-                      `scale(${scale}) translateY(${translateY}px)`,
                   ),
                 }}
               >
