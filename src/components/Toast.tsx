@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useTransition, animated } from "react-spring";
+import { SpringCore, makeAnimatedComponent } from "react-ui-animate";
 import styled from "styled-components";
 import { colors, fonts } from "../constants";
+
+const { useTransition } = SpringCore;
 
 type MessageType = "success" | "error";
 
@@ -53,7 +55,7 @@ const IconContainer = styled.div`
   top: 6px;
 `;
 
-const MasterContainerAnimated = animated(MasterContainer);
+const MasterContainerAnimated = makeAnimatedComponent(MasterContainer);
 
 type ToastObject = { message: string; type: MessageType };
 type ItemObject = { key: number; message: string; type: MessageType };
@@ -70,7 +72,6 @@ interface ToastProps {
   dismissOnClick?: boolean;
 }
 
-let id = 0;
 export const Toast = ({
   child,
   timeout = 4000,
@@ -82,6 +83,7 @@ export const Toast = ({
   closeIconVisible = true,
   dismissOnClick = false,
 }: ToastProps) => {
+  const toastId = React.useRef(0);
   const [items, setItems] = useState<Array<ItemObject>>([]);
   const [refMap] = useState(new WeakMap());
 
@@ -111,7 +113,11 @@ export const Toast = ({
     child((toastObj: ToastObject) => {
       setItems((prev) => [
         ...prev,
-        { key: id++, message: toastObj.message, type: toastObj.type },
+        {
+          key: toastId.current++,
+          message: toastObj.message,
+          type: toastObj.type,
+        },
       ]);
     });
   }, [child]);
