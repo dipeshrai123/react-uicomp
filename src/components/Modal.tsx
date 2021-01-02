@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import { useOutsideClick } from "../animated";
 import styled from "styled-components";
 import { animated, useTransition, to } from "react-spring";
-import { AnimationType, getAnimationConfig } from "./Modules";
+import { AnimationType, getAnimationConfig } from "../modules";
 
 const ContainerStyled = styled.div`
   position: fixed;

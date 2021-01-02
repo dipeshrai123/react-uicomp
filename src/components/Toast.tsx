@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTransition, animated } from "react-spring";
 import styled from "styled-components";
-import { colors, fonts } from "./Constants";
+import { colors, fonts } from "../constants";
 
 type MessageType = "success" | "error";
 

@@ -3,7 +3,7 @@ import React from "react";
 import { useOutsideClick } from "../animated";
 import { a, useTransition } from "react-spring";
 import { DropdownMenu } from "./DropdownMenu";
-import { AnimationType, getAnimationConfig } from "./Modules";
+import { AnimationType, getAnimationConfig } from "../modules";
 
 type triggerElementArgType = {
   active: boolean;
