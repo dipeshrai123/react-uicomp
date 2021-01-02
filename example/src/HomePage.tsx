@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Dropdown, Menu } from "react-uicomp";
 
 export default function Homepage() {
