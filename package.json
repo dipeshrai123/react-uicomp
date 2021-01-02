@@ -72,7 +72,7 @@
   ],
   "dependencies": {
     "react-spring": "^9.0.0-rc.3",
-    "resize-observer-polyfill": "^1.5.1",
+    "react-ui-animate": "^1.0.1",
     "styled-components": "^5.2.1"
   }
 }

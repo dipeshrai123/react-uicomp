@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { useOutsideClick } from "../animated";
+import { useOutsideClick } from "react-ui-animate";
 import { a, useTransition } from "react-spring";
 import { DropdownMenu } from "./DropdownMenu";
 import { AnimationType, getAnimationConfig } from "../modules";

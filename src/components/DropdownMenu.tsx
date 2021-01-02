@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { colors, fonts } from "./Constants";
+import { colors, fonts } from "../constants";
 
 // Menu
 interface DropdownMenuProps {
