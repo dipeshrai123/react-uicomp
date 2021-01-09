@@ -1,11 +1,13 @@
 import * as React from "react";
-import { Dropdown, Menu } from "react-uicomp";
+import { Dropdown, Menu, Collapse } from "react-uicomp";
 
 export default function Homepage() {
+  const [open, setOpen] = React.useState<boolean>(false);
   return (
     <div
       style={{
         padding: 20,
+        display: "flex",
       }}
     >
       <Dropdown
@@ -22,6 +24,11 @@ export default function Homepage() {
           </Menu.Item>
         </Menu.Container>
       </Dropdown>
+
+      <button onClick={() => setOpen((prev) => !prev)}>click</button>
+      <Collapse expand={open}>
+        <div>hello</div>
+      </Collapse>
     </div>
   );
 }

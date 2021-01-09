@@ -12,7 +12,11 @@ interface CollapseProps {
   expand: boolean;
   timeout?: number;
 }
-export function Collapse({ children, expand, timeout = 300 }: CollapseProps) {
+export const Collapse = ({
+  children,
+  expand,
+  timeout = 300,
+}: CollapseProps) => {
   const [divheight, setDivheight] = React.useState<any>(0);
   const dimension = useMeasure(({ height }) => {
     setDivheight(height);
@@ -36,4 +40,4 @@ export function Collapse({ children, expand, timeout = 300 }: CollapseProps) {
       </AnimatedBlock>
     </div>
   );
-}
+};
