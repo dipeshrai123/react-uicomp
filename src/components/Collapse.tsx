@@ -30,7 +30,7 @@ export function Collapse({ children, expand, timeout = 300 }: CollapseProps) {
           overflow: "hidden",
         }}
       >
-        <div style={{ overflow: "hidden" }} {...dimension()}>
+        <div style={{ overflow: "hidden" }} {...dimension(null)}>
           {children}
         </div>
       </AnimatedBlock>

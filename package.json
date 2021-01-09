@@ -71,7 +71,7 @@
     "dist"
   ],
   "dependencies": {
-    "react-ui-animate": "^1.0.7",
+    "react-ui-animate": "^1.0.8",
     "styled-components": "^5.2.1"
   }
 }
