@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Dropdown, Menu, Collapse } from "react-uicomp";
+import { Dropdown, Menu, Collapse, CollapseComp } from "react-uicomp";
 
 export default function Homepage() {
   const [open, setOpen] = React.useState<boolean>(false);
@@ -25,10 +25,19 @@ export default function Homepage() {
         </Menu.Container>
       </Dropdown>
 
-      <button onClick={() => setOpen((prev) => !prev)}>click</button>
-      <Collapse expand={open}>
-        <div>hello</div>
-      </Collapse>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <CollapseComp.Title
+          onClick={() => setOpen((prev) => !prev)}
+          expand={open}
+          style={{ width: 100 }}
+        >
+          Title
+        </CollapseComp.Title>
+
+        <Collapse expand={open}>
+          <CollapseComp.Body>Body</CollapseComp.Body>
+        </Collapse>
+      </div>
     </div>
   );
 }
