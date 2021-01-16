@@ -3,13 +3,13 @@ import styled from "styled-components";
 import { colors, fonts } from "../constants";
 
 // Menu
-interface DropdownMenuProps {
+interface MenuProps {
   children: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
 }
 
-const MenuContainer = styled.div`
+const StyledMenuContainer = styled.div`
   background-color: #ffffff;
   padding: 6px 0px;
   box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.08);
@@ -18,13 +18,17 @@ const MenuContainer = styled.div`
   margin: 0px;
 `;
 
-const DropdownMenuContainer = (props: DropdownMenuProps) => {
+const MenuContainer = (props: MenuProps) => {
   const { children, style, className } = props;
-  return <MenuContainer {...{ style, className }}>{children}</MenuContainer>;
+  return (
+    <StyledMenuContainer {...{ style, className }}>
+      {children}
+    </StyledMenuContainer>
+  );
 };
 
 // Menu Item
-interface DropdownMenuItemProps {
+interface MenuItemProps {
   children: React.ReactNode;
   danger?: boolean;
   style?: React.CSSProperties;
@@ -32,7 +36,7 @@ interface DropdownMenuItemProps {
   className?: string;
 }
 
-const Item = styled.button<Pick<DropdownMenuItemProps, "danger">>`
+const StyledMenuItem = styled.button<Pick<MenuItemProps, "danger">>`
   padding: 10px 24px;
   display: block;
   background-color: white;
@@ -61,24 +65,28 @@ const Item = styled.button<Pick<DropdownMenuItemProps, "danger">>`
   }
 `;
 
-const DropdownMenuItem = (props: DropdownMenuItemProps) => {
+const MenuItem = (props: MenuItemProps) => {
   const { children, danger = false, onClick, style, className } = props;
-  return <Item {...{ danger, onClick, style, className }}>{children}</Item>;
+  return (
+    <StyledMenuItem {...{ danger, onClick, style, className }}>
+      {children}
+    </StyledMenuItem>
+  );
 };
 
 // Menu Item Separator
-const Separator = styled.div`
+const StyledMenuSeparator = styled.div`
   width: 100%;
   border-bottom: 1px solid ${colors.light.backgroundColor};
   margin: 5px 0px;
 `;
 
-const DropdownMenuSeparator = () => {
-  return <Separator />;
+const MenuSeparator = () => {
+  return <StyledMenuSeparator />;
 };
 
 export const Menu = {
-  Container: DropdownMenuContainer,
-  Item: DropdownMenuItem,
-  Separator: DropdownMenuSeparator,
+  Container: MenuContainer,
+  Item: MenuItem,
+  Separator: MenuSeparator,
 };
