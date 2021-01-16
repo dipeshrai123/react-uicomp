@@ -3,5 +3,5 @@ export * from "./Menu";
 export * from "./Modal";
 export * from "./Toast";
 export * from "./Collapse";
-export * from "./CollapseComp";
+export * from "./Collapsible";
 export * from "./DiffHeader";
