@@ -27,17 +27,15 @@ export const Collapse = ({
   });
 
   return (
-    <div>
-      <AnimatedBlock
-        style={{
-          height: interpolate(open.value, [0, 1], [0, divheight]),
-          overflow: "hidden",
-        }}
-      >
-        <div style={{ overflow: "hidden" }} {...dimension(null)}>
-          {children}
-        </div>
-      </AnimatedBlock>
-    </div>
+    <AnimatedBlock
+      style={{
+        height: interpolate(open.value, [0, 1], [0, divheight]),
+        overflow: "hidden",
+      }}
+    >
+      <div style={{ overflow: "hidden" }} {...dimension(null)}>
+        {children}
+      </div>
+    </AnimatedBlock>
   );
 };
