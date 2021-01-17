@@ -2,7 +2,6 @@ import * as React from "react";
 import { useAnimatedValue, interpolate, AnimatedBlock } from "react-ui-animate";
 
 import styled from "styled-components";
-// import { colors } from "../constants";
 
 interface CollapseTitleProps {
   children: React.ReactNode;
@@ -18,7 +17,6 @@ const TitleContainer = styled.div`
   margin: 0px;
   cursor: pointer;
   display: flex;
-  flexdirection: row;
   justify-content: space-between;
 `;
 
@@ -113,7 +111,21 @@ const CollapseBody = (props: CollapseBodyProps) => {
   return <BodyContainer {...{ style, className }}>{children}</BodyContainer>;
 };
 
-export const CollapseComp = {
-  Title: CollapseTitle,
-  Body: CollapseBody,
-};
+const StyledCollapsible = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+interface CollapsibleProps {
+  children?: React.ReactNode;
+}
+
+export class Collapsible extends React.Component<CollapsibleProps> {
+  static Title = CollapseTitle;
+
+  static Body = CollapseBody;
+
+  render() {
+    return <StyledCollapsible>{this.props.children}</StyledCollapsible>;
+  }
+}
