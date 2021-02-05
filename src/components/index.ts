@@ -5,3 +5,4 @@ export * from "./Toast";
 export * from "./Collapse";
 export * from "./Collapsible";
 export * from "./DiffHeader";
+export * from "./Button";
