@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Button } from "react-uicomp";
 
 export default function Homepage() {
   return (
@@ -8,7 +9,7 @@ export default function Homepage() {
         display: "flex",
       }}
     >
-      CONTENT GOES HERE
+      <Button title="Click Me" />
     </div>
   );
 }
