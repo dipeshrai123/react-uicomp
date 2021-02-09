@@ -10,6 +10,8 @@ export default function RippleButtonPage() {
       }}
     >
       <RippleButton title="Click Me" />
+      <RippleButton title="Click Me" />
+      <RippleButton title="Click Me" />
     </div>
   );
 }

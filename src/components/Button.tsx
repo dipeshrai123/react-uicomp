@@ -123,7 +123,12 @@ export const RippleButton = React.forwardRef(
     >([]);
 
     return (
-      <div ref={containerRef}>
+      <div
+        ref={containerRef}
+        style={{
+          display: "inline-block",
+        }}
+      >
         <StyledButton
           ref={ref}
           {...rest}
