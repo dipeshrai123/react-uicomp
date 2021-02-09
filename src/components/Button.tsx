@@ -32,7 +32,17 @@ const StyledButton = styled.button`
   }
 `;
 
-const Ripple = ({ x, y }: { x: number; y: number }) => {
+const Ripple = ({
+  x,
+  y,
+  rippleStyle,
+  rippleClassName,
+}: {
+  x: number;
+  y: number;
+  rippleStyle?: React.CSSProperties;
+  rippleClassName?: string;
+}) => {
   const [opened, setOpened] = React.useState(true);
   const openRipple = useMountedValue(opened, [0, 1, 2], {
     duration: 400,
@@ -46,13 +56,15 @@ const Ripple = ({ x, y }: { x: number; y: number }) => {
     (animation, mounted) =>
       mounted && (
         <AnimatedBlock
+          className={rippleClassName}
           style={{
+            backgroundColor: colors.light.darkBorderColor,
+            ...rippleStyle,
             position: "absolute",
             left: x - 50,
             top: y - 50,
             width: 100,
             height: 100,
-            backgroundColor: colors.light.darkBorderColor,
             borderRadius: "50%",
             scale: animation.value,
             opacity: interpolate(animation.value, [0, 1, 2], [0, 0.3, 0]),
@@ -64,11 +76,46 @@ const Ripple = ({ x, y }: { x: number; y: number }) => {
 
 interface ButtonProps {
   title: string;
+  style?: React.CSSProperties;
+  className?: string;
+  textStyle?: Omit<React.CSSProperties, "zIndex" | "position">;
+  textClassName?: string;
+  rippleStyle?: Omit<
+    React.CSSProperties,
+    | "position"
+    | "left"
+    | "top"
+    | "width"
+    | "height"
+    | "borderRadius"
+    | "transform"
+  >;
+  rippleClassName?: string;
+  leftIcon?: React.ReactNode;
+  leftIconStyle?: React.CSSProperties;
+  leftIconClassName?: string;
+  rightIcon?: React.ReactNode;
+  rightIconStyle?: React.CSSProperties;
+  rightIconClassName?: string;
 }
 
 export const Button = React.forwardRef(
   (props: ButtonProps, ref: React.RefObject<HTMLButtonElement>) => {
-    const { title } = props;
+    const {
+      title,
+      style,
+      className,
+      textStyle,
+      textClassName,
+      rippleStyle,
+      rippleClassName,
+      leftIcon,
+      leftIconStyle,
+      leftIconClassName,
+      rightIcon,
+      rightIconStyle,
+      rightIconClassName,
+    } = props;
     const containerRef = React.useRef<HTMLDivElement>();
     const [ripples, setRipples] = React.useState<
       Array<{ x: number; y: number }>
@@ -88,14 +135,32 @@ export const Button = React.forwardRef(
               });
             }
           }}
+          {...{ style, className }}
         >
           <div
+            className={textClassName}
             style={{
+              ...textStyle,
               position: "relative",
               zIndex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
+            <span
+              className={leftIconClassName}
+              style={{ marginRight: 10, ...leftIconStyle }}
+            >
+              {leftIcon}
+            </span>
             {title}
+            <span
+              className={rightIconClassName}
+              style={{ marginLeft: 10, ...rightIconStyle }}
+            >
+              {rightIcon}
+            </span>
           </div>
           <div
             style={{
@@ -110,7 +175,12 @@ export const Button = React.forwardRef(
             }}
           >
             {ripples.map(({ x, y }, index) => {
-              return <Ripple {...{ x, y }} key={index} />;
+              return (
+                <Ripple
+                  {...{ x, y, rippleStyle, rippleClassName }}
+                  key={index}
+                />
+              );
             })}
           </div>
         </StyledButton>
