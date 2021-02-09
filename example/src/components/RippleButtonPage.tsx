@@ -1,7 +1,7 @@
 import * as React from "react";
 import { RippleButton } from "react-uicomp";
 
-export default function Homepage() {
+export default function RippleButtonPage() {
   return (
     <div
       style={{

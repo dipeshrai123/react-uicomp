@@ -58,7 +58,7 @@ const Ripple = ({
         <AnimatedBlock
           className={rippleClassName}
           style={{
-            backgroundColor: colors.light.darkBorderColor,
+            backgroundColor: "#a1a1a133",
             ...rippleStyle,
             position: "absolute",
             left: x - 50,
@@ -67,14 +67,14 @@ const Ripple = ({
             height: 100,
             borderRadius: "50%",
             scale: animation.value,
-            opacity: interpolate(animation.value, [0, 1, 2], [0, 0.3, 0]),
+            opacity: interpolate(animation.value, [0, 1, 2], [0, 1, 0]),
           }}
         />
       ),
   );
 };
 
-interface ButtonProps {
+interface RippleButtonProps extends React.ButtonHTMLAttributes<any> {
   title: string;
   style?: React.CSSProperties;
   className?: string;
@@ -99,8 +99,8 @@ interface ButtonProps {
   rightIconClassName?: string;
 }
 
-export const Button = React.forwardRef(
-  (props: ButtonProps, ref: React.RefObject<HTMLButtonElement>) => {
+export const RippleButton = React.forwardRef(
+  (props: RippleButtonProps, ref: React.RefObject<HTMLButtonElement>) => {
     const {
       title,
       style,
@@ -115,6 +115,7 @@ export const Button = React.forwardRef(
       rightIcon,
       rightIconStyle,
       rightIconClassName,
+      ...rest
     } = props;
     const containerRef = React.useRef<HTMLDivElement>();
     const [ripples, setRipples] = React.useState<
@@ -125,6 +126,7 @@ export const Button = React.forwardRef(
       <div ref={containerRef}>
         <StyledButton
           ref={ref}
+          {...rest}
           onClick={(e) => {
             if (!!containerRef.current) {
               const x = e.clientX - containerRef.current.offsetLeft;
