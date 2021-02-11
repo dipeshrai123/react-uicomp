@@ -97,6 +97,7 @@ interface RippleButtonProps extends React.ButtonHTMLAttributes<any> {
   rightIcon?: React.ReactNode;
   rightIconStyle?: React.CSSProperties;
   rightIconClassName?: string;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 export const RippleButton = React.forwardRef(
@@ -115,6 +116,7 @@ export const RippleButton = React.forwardRef(
       rightIcon,
       rightIconStyle,
       rightIconClassName,
+      onClick,
       ...rest
     } = props;
     const containerRef = React.useRef<HTMLDivElement>();
@@ -141,6 +143,8 @@ export const RippleButton = React.forwardRef(
                 return [...prev, { x, y }];
               });
             }
+
+            !!onClick && onClick(e);
           }}
           {...{ style, className }}
         >
