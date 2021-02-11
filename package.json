@@ -1,7 +1,7 @@
 {
   "name": "react-uicomp",
-  "version": "2.0.4",
-  "description": "Animation and component library for react",
+  "version": "3.0.0",
+  "description": "UI component library for react",
   "author": "dipeshrai123",
   "license": "MIT",
   "repository": {
@@ -71,8 +71,7 @@
     "dist"
   ],
   "dependencies": {
-    "react-spring": "^9.0.0-rc.3",
-    "resize-observer-polyfill": "^1.5.1",
+    "react-ui-animate": "^1.1.3",
     "styled-components": "^5.2.1"
   }
 }

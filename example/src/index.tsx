@@ -1,14 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 // IMPORT COMPONENTS
-import HomePage from "./components/HomePage/HomePage";
-import DropdownPage from "./components/DropdownPage/DropdownPage";
-import ScrollableBlockPage from "./components/ScrollableBlock/ScrollableBlock";
-import AnimatedPage from "./components/AnimatedPage/Animated";
-import ScrollPage from "./components/ScrollPage/Scroll";
-import MeasuredTabsPage from "./components/MeasuredTabsPage/MeasuredTabsPage";
+import HomePage from "./HomePage";
+import DiffHeader from "./components/DiffHeaderPage";
+import DropdownPage from "./components/DropdownPage";
+import CollapsiblePage from "./components/CollapsiblePage";
+import RippleButtonPage from "./components/RippleButtonPage";
+import ModalPage from "./components/ModalPage";
 
 import "./index.css";
 
@@ -16,11 +16,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <Switch>
+        <Route path="/modal" component={ModalPage} />
+        <Route path="/ripple-button" component={RippleButtonPage} />
+        <Route path="/collapsible" component={CollapsiblePage} />
         <Route path="/dropdown" component={DropdownPage} />
-        <Route path="/scrollable-block" component={ScrollableBlockPage} />
-        <Route path="/animated" component={AnimatedPage} />
-        <Route path="/scroll" component={ScrollPage} />
-        <Route path="/measured-elements" component={MeasuredTabsPage} />
+        <Route path="/diff-header" component={DiffHeader} />
         <Route path="/" component={HomePage} />
       </Switch>
     </BrowserRouter>

@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import * as React from "react";
 import { Modal } from "react-uicomp";
 
-const ModalPage = () => {
-  const [visible, setVisible] = useState(false);
+export default function ModalPage() {
+  const [visible, setVisible] = React.useState(false);
 
   return (
     <div>
-      <button onClick={() => setVisible(true)}>Open Modal</button>
-      <Modal visible={visible} onOutsideClick={() => setVisible(false)}>
-        Modal Content Goes Here...
-        <div>
-          <button onClick={() => setVisible(false)}>Close Modal</button>
-        </div>
+      <button onClick={() => setVisible((prev) => !prev)}>TOGGLE</button>
+
+      <div style={{ height: 2000 }} />
+      <Modal
+        visible={visible}
+        onOutsideClick={() => setVisible(false)}
+        disableScroll
+      >
+        CONTENT OF MODAL
       </Modal>
     </div>
   );
-};
-
-export default ModalPage;
+}

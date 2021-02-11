@@ -11,10 +11,3 @@ export const colors = {
     highlightColor: "#FFB17A",
   },
 };
-
-// Fonts
-export const fonts = {
-  family: {
-    arial: "Arial",
-  },
-};
