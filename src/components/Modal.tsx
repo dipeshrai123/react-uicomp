@@ -8,6 +8,7 @@ import {
 } from "react-ui-animate";
 import styled from "styled-components";
 import { AnimationType, getAnimationConfig } from "../modules";
+import { useScrollDisable } from "../hooks";
 
 const ContainerStyled = styled.div`
   position: fixed;
@@ -44,6 +45,7 @@ interface ModalProps {
   style?: Omit<React.CSSProperties, "transform">;
   isAnimated?: boolean;
   animationType?: AnimationType;
+  disableScroll?: boolean;
 }
 
 export const Modal = ({
@@ -53,6 +55,7 @@ export const Modal = ({
   style,
   isAnimated = true,
   animationType = "expand",
+  disableScroll = false,
 }: ModalProps) => {
   const modalRef = React.useRef<HTMLElement>(null);
   const initialConfig = isAnimated
@@ -67,6 +70,8 @@ export const Modal = ({
 
   // Handle outside click
   if (onOutsideClick) useOutsideClick(modalRef, onOutsideClick);
+
+  useScrollDisable(disableScroll && visible);
 
   return (
     <div>
