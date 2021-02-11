@@ -9,7 +9,7 @@ export default function RippleButtonPage() {
         display: "flex",
       }}
     >
-      <RippleButton title="Click Me" />
+      <RippleButton title="Click Me" onClick={() => console.log("OK")} />
       <RippleButton title="Click Me" />
       <RippleButton title="Click Me" />
     </div>
