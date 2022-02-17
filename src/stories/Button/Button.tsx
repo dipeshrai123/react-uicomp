@@ -133,7 +133,7 @@ export const Button = React.forwardRef((props: ButtonProps, ref: any) => {
       <StyledButton
         ref={ref}
         {...rest}
-        onClick={(e) => {
+        onMouseDown={(e) => {
           if (!!containerRef.current) {
             const x = e.clientX - containerRef.current.offsetLeft;
             const y = e.clientY - containerRef.current.offsetTop;
@@ -142,10 +142,9 @@ export const Button = React.forwardRef((props: ButtonProps, ref: any) => {
               return [...prev, { x, y }];
             });
           }
-
-          !!onClick && onClick(e);
         }}
         {...{ style, className }}
+        onClick={onClick}
       >
         <div
           className={textClassName}
