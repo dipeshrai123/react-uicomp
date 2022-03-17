@@ -52,13 +52,6 @@ Info.args = {
 };
 Info.storyName = 'Info Button';
 
-export const Ghost = Template.bind({});
-Ghost.args = {
-  title: 'Ghost Button',
-  variant: 'ghost',
-};
-Ghost.storyName = 'Ghost Button';
-
 export const IconButton = Template.bind({});
 IconButton.args = {
   variant: 'warning',
@@ -86,5 +79,6 @@ export const LoadingButton = Template.bind({});
 LoadingButton.args = {
   title: 'Loading Button',
   variant: 'primary',
+  loading: true,
 };
 LoadingButton.storyName = 'Loading state of a button';

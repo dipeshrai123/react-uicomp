@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { AnimatedBlock, interpolate, useMountedValue } from 'react-ui-animate';
 import styled from 'styled-components';
+
+import { LoadingIndicator } from '../../commons';
 import { colors } from '../../constants';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -18,146 +20,92 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   >;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-  variant?:
-    | 'default'
-    | 'primary'
-    | 'success'
-    | 'warning'
-    | 'danger'
-    | 'info'
-    | 'ghost';
+  variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info';
+  loading?: boolean;
+  disabled?: boolean;
 }
 
-const handleVariant = ({ variant }: Pick<ButtonProps, 'variant'>) => {
+const getVariantStyle = ({
+  backgroundColor,
+  hoverColor,
+  textColor,
+  disabled,
+}: {
+  backgroundColor: string;
+  hoverColor: string;
+  textColor: string;
+  disabled?: boolean;
+}) => {
+  return `
+    background-color: ${backgroundColor};
+    border: 1px solid ${backgroundColor};
+    color: ${textColor};
+    border: 1px solid ${colors.light.grey200};
+
+    ${() =>
+      disabled
+        ? ``
+        : `
+
+        &:hover {
+          background-color: ${hoverColor};
+        }
+    
+        &:active {
+          background-color: ${hoverColor};
+        }
+    `}
+  `;
+};
+
+const handleVariant = ({
+  variant,
+  disabled,
+}: Pick<ButtonProps, 'variant' | 'disabled'>) => {
   switch (variant) {
     case 'primary':
-      return `
-        background-color: ${colors.light.primary100};
-        border: 1px solid ${colors.light.primary100};
-        color: ${colors.light.white};
-
-        &:focus {
-          border: 1px solid ${colors.light.primary100};
-        }
-      
-        &:hover {
-          background-color: ${colors.light.primary200};
-        }
-      
-        &:active {
-          background-color: ${colors.light.primary200};
-        }
-      `;
+      return getVariantStyle({
+        backgroundColor: colors.light.primary100,
+        hoverColor: colors.light.primary200,
+        textColor: colors.light.white,
+        disabled,
+      });
     case 'danger':
-      return `
-        background-color: ${colors.light.red};
-        border: 1px solid ${colors.light.red};
-        color: ${colors.light.white};
-
-        &:focus {
-          border: 1px solid ${colors.light.red};
-        }
-      
-        &:hover {
-          background-color: ${colors.light.darkRed};
-        }
-      
-        &:active {
-          background-color: ${colors.light.darkRed};
-        }
-      `;
+      return getVariantStyle({
+        backgroundColor: colors.light.red,
+        hoverColor: colors.light.darkRed,
+        textColor: colors.light.white,
+        disabled,
+      });
     case 'info':
-      return `
-        background-color: ${colors.light.teal};
-        border: 1px solid ${colors.light.teal};
-        color: ${colors.light.white};
-
-        &:focus {
-          border: 1px solid ${colors.light.teal};
-        }
-      
-        &:hover {
-          background-color: ${colors.light.darkTeal};
-        }
-      
-        &:active {
-          background-color: ${colors.light.darkTeal};
-        }
-      `;
+      return getVariantStyle({
+        backgroundColor: colors.light.teal,
+        hoverColor: colors.light.darkTeal,
+        textColor: colors.light.white,
+        disabled,
+      });
     case 'success':
-      return `
-        background-color: ${colors.light.green};
-        border: 1px solid ${colors.light.green};
-        color: ${colors.light.white};
-      
-        &:hover {
-          background-color: ${colors.light.darkGreen};
-        }
-      
-        &:active {
-          background-color: ${colors.light.darkGreen};
-        }
-      
-        &:focus {
-          border: 1px solid ${colors.light.green};
-        }
-      `;
+      return getVariantStyle({
+        backgroundColor: colors.light.green,
+        hoverColor: colors.light.darkGreen,
+        textColor: colors.light.white,
+        disabled,
+      });
     case 'warning':
-      return `
-        background-color: ${colors.light.orange};
-        border: 1px solid ${colors.light.orange};
-        color: ${colors.light.white};
-
-        &:focus {
-          border: 1px solid ${colors.light.orange};
-        }
-      
-        &:hover {
-          background-color: ${colors.light.darkOrange};
-        }
-      
-        &:active {
-          background-color: ${colors.light.darkOrange};
-        }
-      `;
-    case 'ghost':
-      return `
-        background-color: rgba(255, 255, 255, 0);
-        border: 1px solid rgba(255, 255, 255, 0);
-        color: ${colors.light.black};
-        box-shadow: none;
-
-        &:focus {
-          border: 1px solid ${colors.light.grey300};
-        }
-      
-        &:hover {
-          background-color: ${colors.light.grey300};
-        }
-      
-        &:active {
-          background-color: ${colors.light.grey300};
-        }
-      `;
+      return getVariantStyle({
+        backgroundColor: colors.light.orange,
+        hoverColor: colors.light.darkOrange,
+        textColor: colors.light.white,
+        disabled,
+      });
     case 'default':
     default:
-      return `
-        background-color: ${colors.light.white};
-        border: 1px solid ${colors.light.grey200};
-        color: ${colors.light.black100};
-      
-        &:hover {
-          background-color: ${colors.light.grey200};
-        }
-      
-        &:active {
-          background-color: ${colors.light.grey200};
-        }
-      
-        &:focus {
-          border: 1px solid ${colors.light.grey200};
-        }
-      `;
+      return getVariantStyle({
+        backgroundColor: colors.light.white,
+        hoverColor: colors.light.grey200,
+        textColor: colors.light.black,
+        disabled,
+      });
   }
 };
 
@@ -234,6 +182,8 @@ export const Button = React.forwardRef(
       rightIcon,
       onClick,
       variant,
+      loading,
+      disabled,
       ...rest
     }: ButtonProps,
     ref: any
@@ -254,7 +204,7 @@ export const Button = React.forwardRef(
           ref={ref}
           {...rest}
           onMouseDown={(e) => {
-            if (!!containerRef.current) {
+            if (!!containerRef.current && !loading) {
               const x = e.clientX - containerRef.current.offsetLeft;
               const y = e.clientY - containerRef.current.offsetTop;
 
@@ -264,7 +214,13 @@ export const Button = React.forwardRef(
             }
           }}
           {...{ style, className, variant }}
-          onClick={onClick}
+          onClick={(e) => {
+            if (!loading) {
+              onClick && onClick(e);
+            }
+          }}
+          variant={variant}
+          disabled={loading || disabled}
         >
           <div
             style={{
@@ -276,18 +232,30 @@ export const Button = React.forwardRef(
               justifyContent: 'center',
             }}
           >
-            <span>{leftIcon}</span>
-            {title && (
-              <span
-                style={{
-                  marginLeft: leftIcon ? 10 : 0,
-                  marginRight: rightIcon ? 10 : 0,
-                }}
-              >
-                {title}
-              </span>
+            {loading ? (
+              <LoadingIndicator
+                color={
+                  variant === undefined || variant === 'default'
+                    ? colors.light.grey200
+                    : colors.light.grey400
+                }
+              />
+            ) : (
+              <>
+                <span>{leftIcon}</span>
+                {title && (
+                  <span
+                    style={{
+                      marginLeft: leftIcon ? 10 : 0,
+                      marginRight: rightIcon ? 10 : 0,
+                    }}
+                  >
+                    {title}
+                  </span>
+                )}
+                <span>{rightIcon}</span>
+              </>
             )}
-            <span>{rightIcon}</span>
           </div>
           <div
             style={{
