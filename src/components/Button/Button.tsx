@@ -37,24 +37,19 @@ const getVariantStyle = ({
   disabled?: boolean;
 }) => {
   return `
-    background-color: ${backgroundColor};
-    border: 1px solid ${backgroundColor};
-    color: ${textColor};
     border: 1px solid ${colors.light.grey200};
+    color: ${textColor};
+    background-color: ${backgroundColor};
 
-    ${() =>
-      disabled
-        ? ``
-        : `
-
-        &:hover {
-          background-color: ${hoverColor};
-        }
-    
-        &:active {
-          background-color: ${hoverColor};
-        }
-    `}
+    ${
+      !disabled &&
+      `
+      &:hover {
+        background-color: ${hoverColor};
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+      }
+      `
+    }
   `;
 };
 
@@ -110,17 +105,17 @@ const handleVariant = ({
 };
 
 const StyledButton = styled.button<ButtonProps>`
-  padding: 10px 14px;
+  padding: 14px 18px;
   display: block;
   outline: none;
-  border-radius: 4px;
+  border-radius: 10px;
   margin: 0px;
   cursor: pointer;
-  transition: background-color 0.3s;
   position: relative;
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.2s, background-color 0.3s;
 
-  ${({ variant }) => handleVariant({ variant })}
+  ${({ variant, disabled }) => handleVariant({ variant, disabled })}
 `;
 
 const Ripple = ({
@@ -154,7 +149,7 @@ const Ripple = ({
         <AnimatedBlock
           className={rippleClassName}
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.3)',
+            backgroundColor: 'rgba(0, 0, 0, 0.2)',
             ...rippleStyle,
             position: 'absolute',
             left: x - 40,
@@ -182,8 +177,8 @@ export const Button = React.forwardRef(
       rightIcon,
       onClick,
       variant,
-      loading,
-      disabled,
+      loading = false,
+      disabled = false,
       ...rest
     }: ButtonProps,
     ref: any
