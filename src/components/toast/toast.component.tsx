@@ -31,7 +31,7 @@ export { ToastContainer } from './toast.styled';
 const MasterContainerAnimated = makeAnimatedComponent(MasterContainer);
 const MessageContainerAnimated = makeAnimatedComponent(MessageContainer);
 
-export const Box = ({
+const Box = ({
   message,
   type,
   style,
