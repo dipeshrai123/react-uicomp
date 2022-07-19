@@ -14,7 +14,7 @@ import {
   AnimationConfigUtils,
   UseAnimatedValueConfig,
 } from 'react-ui-animate';
-import { useScrollDisable } from '../../hooks';
+import { useDisableScroll } from '../../hooks';
 
 import {
   BodyPropsType,
@@ -153,7 +153,7 @@ export const ModalContainer = ({
     }
   });
 
-  useScrollDisable(disableScroll && !!visible);
+  useDisableScroll(disableScroll && !!visible);
 
   return (
     <ModalContext.Provider value={{ closeModal, height }}>
@@ -277,7 +277,7 @@ export const ConfirmationModalContainer = ({
     closeModalOnClickCancel && closeModal();
   };
 
-  useScrollDisable(disableScroll && !!visible);
+  useDisableScroll(disableScroll && !!visible);
 
   return (
     <ModalContext.Provider value={{ closeModal, height }}>
