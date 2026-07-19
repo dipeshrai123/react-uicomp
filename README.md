@@ -1,24 +1,26 @@
 # react-uicomp
 
-> Animation and component library for react
+> Animated UI components for React, built on [react-ui-animate](https://github.com/dipeshrai123/react-ui-animate).
 
-[![NPM](https://img.shields.io/npm/v/react-uicomp.svg)](https://www.npmjs.com/package/react-uicomp) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![NPM](https://img.shields.io/npm/v/react-uicomp.svg)](https://www.npmjs.com/package/react-uicomp)
+
+This package is under active rebuild (v4). The previous v3 line (styled-components + react-ui-animate v1) is archived in `legacy/` for reference and is not part of the published build.
 
 ## Installation
 
-React UI Comp requires **react 16.13.1** or later, **react-dom 16.13.1** or later.
+React UI Comp requires **react 16.8** or later, **react-dom 16.8** or later.
 
 ```bash
-#If you use npm
 npm install react-uicomp
+```
 
-#If you use yarn
+```bash
 yarn add react-uicomp
 ```
 
 ## Documentation
 
-The official documentation are now published at http://react-uicomp.js.org/
+📖 Full guides, API reference, and examples: **[react-uicomp.js.org](https://react-uicomp.js.org/)**
 
 ## License
 
