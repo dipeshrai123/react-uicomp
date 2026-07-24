@@ -4,9 +4,8 @@ import {
   clamp,
   combine,
   useValue,
-  withDelay,
-  withSequence,
   withSpring,
+  withStagger,
 } from "react-ui-animate";
 import { clsx } from "../../shared/clsx";
 import styles from "./CascadingSettingsToggle.module.css";
@@ -83,9 +82,7 @@ function ChildRow({
   React.useEffect(() => {
     if (!hasMountedRef.current) return;
     const target = parentChecked ? measuredRef.current : 0;
-    const reveal = withSpring(target, REVEAL_SPRING);
-    const delayMs = index * 60;
-    setHeight(delayMs > 0 ? withSequence([withDelay(delayMs), reveal]) : reveal);
+    setHeight(withStagger(index, withSpring(target, REVEAL_SPRING), { each: 60 }));
   }, [parentChecked, index, setHeight]);
 
   const opacity = React.useMemo(

@@ -33,12 +33,11 @@ module.exports = {
     // Point directly at the compiled ESM file so babel-jest below can pick
     // it up and convert it to CJS like any other node_modules ESM package.
     '^react-ui-animate$': '<rootDir>/node_modules/react-ui-animate/dist/index.mjs',
-    // react-ui-animate is symlinked in via `npm link` for local development
-    // against an unpublished fix, and its own nested node_modules/react
-    // (installed for its own build/tests) would otherwise get resolved
-    // instead of this project's copy, causing a dual-React "Invalid hook
-    // call" error. Force every import of react/react-dom to this project's
-    // single copy regardless of which directory required it from.
+    // react-ui-animate's own nested node_modules/react (installed for its
+    // own build/tests) would otherwise get resolved instead of this
+    // project's copy, causing a dual-React "Invalid hook call" error. Force
+    // every import of react/react-dom to this project's single copy
+    // regardless of which directory required it from.
     '^react$': path.join(__dirname, 'node_modules/react'),
     '^react-dom$': path.join(__dirname, 'node_modules/react-dom'),
     '^react/jsx-runtime$': path.join(__dirname, 'node_modules/react/jsx-runtime'),

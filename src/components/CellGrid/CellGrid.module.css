@@ -1,0 +1,33 @@
+.grid {
+  position: relative;
+  display: grid;
+  border: 1px solid var(--ruc-color-secondary);
+  border-radius: var(--ruc-radius-md);
+  overflow: hidden;
+  font-family: var(--ruc-font-family);
+  outline: none;
+}
+
+.cell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  font-size: 13px;
+  border-right: 1px solid var(--ruc-color-secondary);
+  border-bottom: 1px solid var(--ruc-color-secondary);
+  cursor: cell;
+  box-sizing: border-box;
+}
+
+.selection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border: 2px solid var(--ruc-color-primary);
+  background-color: color-mix(in srgb, var(--ruc-color-primary) 10%, transparent);
+  box-sizing: border-box;
+  pointer-events: none;
+}

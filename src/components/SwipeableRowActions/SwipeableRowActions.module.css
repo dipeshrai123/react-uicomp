@@ -1,0 +1,45 @@
+.row {
+  position: relative;
+  overflow: hidden;
+  font-family: var(--ruc-font-family);
+}
+
+.actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  display: flex;
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 100%;
+  border: none;
+  background-color: var(--ruc-color-secondary);
+  color: var(--ruc-color-secondary-fg);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.action.danger {
+  background-color: var(--ruc-color-danger);
+  color: #ffffff;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  position: relative;
+  background-color: #ffffff;
+  touch-action: pan-y;
+}

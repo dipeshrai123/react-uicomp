@@ -55,7 +55,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type="button"
         disabled={disabled || loading}
-        aria-busy={loading || undefined}
+        // Stringified rather than a raw boolean: `animate.*` elements route
+        // every prop (not just animated ones) through a DOM-attribute setter
+        // that treats boolean values as HTML boolean attributes (present/
+        // absent), which is wrong for `aria-*` attributes — they're always
+        // string-valued ("true"/"false"), never presence-only.
+        aria-busy={loading ? "true" : undefined}
         className={clsx(
           styles.button,
           styles[variant],

@@ -1,0 +1,63 @@
+.stack {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 320px;
+  height: 0;
+  font-family: var(--ruc-font-family);
+}
+
+.toast {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  padding: 14px 36px 14px 16px;
+  border-radius: var(--ruc-radius-lg);
+  background-color: #0f172a;
+  color: #ffffff;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.3);
+  box-sizing: border-box;
+  touch-action: pan-y;
+}
+
+.toast.success {
+  background-color: #166534;
+}
+
+.toast.danger {
+  background-color: #7f1d1d;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.description {
+  margin-top: 2px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.12);
+  color: inherit;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}

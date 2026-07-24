@@ -3,6 +3,8 @@ import { animate, useValue, withSequence, withSpring } from "react-ui-animate";
 import { clsx } from "../../shared/clsx";
 import styles from "./LiveDataTable.module.css";
 
+const LAYOUT_SPRING = { stiffness: 500, damping: 40 };
+
 export interface DataTableColumn<T> {
   key: string;
   header: React.ReactNode;
@@ -23,7 +25,6 @@ export interface LiveDataTableProps<T> {
 
 type SortDirection = "asc" | "desc";
 
-const FLIP_SPRING = { stiffness: 500, damping: 40 };
 const FLASH_IN = { stiffness: 400, damping: 30 };
 const FLASH_OUT = { stiffness: 120, damping: 22 };
 
@@ -36,30 +37,8 @@ function Row<T>({
   columns: DataTableColumn<T>[];
   version: string | number | undefined;
 }) {
-  const rowRef = React.useRef<HTMLTableRowElement>(null);
-  const prevTopRef = React.useRef<number | null>(null);
   const prevVersionRef = React.useRef(version);
-  const [translateY, setTranslateY] = useValue(0);
   const [flash, setFlash] = useValue(0);
-
-  // Classic FLIP: diff this row's DOM position against where it was last
-  // commit, snap it back to the old spot with no animation, then spring it
-  // to rest — so a sort/filter/live update reads as the row *moving* there
-  // instead of the table just snapping to a new arrangement.
-  React.useLayoutEffect(() => {
-    const node = rowRef.current;
-    if (!node) return;
-
-    const newTop = node.getBoundingClientRect().top;
-    const prevTop = prevTopRef.current;
-
-    if (prevTop !== null && Math.abs(prevTop - newTop) > 0.5) {
-      setTranslateY(prevTop - newTop);
-      setTranslateY(withSpring(0, FLIP_SPRING));
-    }
-
-    prevTopRef.current = newTop;
-  });
 
   React.useEffect(() => {
     const prevVersion = prevVersionRef.current;
@@ -70,7 +49,11 @@ function Row<T>({
   }, [version, setFlash]);
 
   return (
-    <animate.tr ref={rowRef} className={styles.row} style={{ translateY }}>
+    <animate.tr
+      className={styles.row}
+      layout
+      layoutOptions={LAYOUT_SPRING}
+    >
       {columns.map((column) => (
         <td key={column.key} className={styles.cell}>
           <animate.span

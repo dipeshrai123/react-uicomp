@@ -2,9 +2,10 @@ import * as React from "react";
 import {
   animate,
   clamp,
+  Gesture,
   rubberClamp,
   snapTo,
-  useDrag,
+  useGesture,
   useValue,
   withSpring,
 } from "react-ui-animate";
@@ -57,30 +58,28 @@ export function SplitPane({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useDrag(
+  useGesture(
     dividerRef,
-    (e) => {
-      const { containerWidth, maxWidth } = bounds();
-
-      if (e.movement.x === 0 && e.movement.y === 0) {
+    Gesture.Pan()
+      .axis("x")
+      .onStart(() => {
         dragStartWidthRef.current = leftWidth.current;
-      }
-
-      const raw = dragStartWidthRef.current + e.movement.x;
-
-      if (e.down) {
+      })
+      .onUpdate((e) => {
+        const { maxWidth } = bounds();
+        const raw = dragStartWidthRef.current + e.movement.x;
         setLeftWidth(rubberClamp(raw, min, maxWidth, 0.2));
-        return;
-      }
-
-      const target = snapTo(clamp(raw, min, maxWidth), e.velocity.x, [
-        min,
-        containerWidth / 2,
-        maxWidth,
-      ]);
-      setLeftWidth(withSpring(target, RELEASE_SPRING));
-    },
-    { axis: "x" },
+      })
+      .onEnd((e) => {
+        const { containerWidth, maxWidth } = bounds();
+        const raw = dragStartWidthRef.current + e.movement.x;
+        const target = snapTo(clamp(raw, min, maxWidth), e.velocity.x, [
+          min,
+          containerWidth / 2,
+          maxWidth,
+        ]);
+        setLeftWidth(withSpring(target, RELEASE_SPRING));
+      }),
   );
 
   const resetToDefault = () => {

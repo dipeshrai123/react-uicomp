@@ -1,0 +1,42 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--ruc-radius-md);
+  font-family: var(--ruc-font-family);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.primary {
+  background-color: var(--ruc-color-primary);
+  color: var(--ruc-color-primary-fg);
+}
+
+.secondary {
+  background-color: var(--ruc-color-secondary);
+  color: var(--ruc-color-secondary-fg);
+}
+
+.ring {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.label {
+  display: inline-flex;
+}
