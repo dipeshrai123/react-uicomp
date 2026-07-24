@@ -1,0 +1,100 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--ruc-font-family);
+  border: 1px solid var(--ruc-color-secondary);
+  border-radius: var(--ruc-radius-lg);
+  overflow: hidden;
+}
+
+.parentRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+}
+
+.children {
+  border-top: 1px solid var(--ruc-color-secondary);
+}
+
+.childWrapper {
+  padding: 0 16px;
+  background-color: color-mix(in srgb, var(--ruc-color-secondary) 40%, transparent);
+}
+
+.childRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.parentLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ruc-color-secondary-fg);
+}
+
+.childLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ruc-color-secondary-fg);
+}
+
+.description {
+  font-size: 12px;
+  opacity: 0.65;
+}
+
+.switchTrack {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--ruc-color-secondary);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+  box-sizing: border-box;
+}
+
+.switchTrack:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.switchTrack:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ruc-color-focus-ring) 60%, transparent);
+}
+
+.switchOn {
+  background-color: var(--ruc-color-primary);
+}
+
+.switchThumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.3);
+  transition: transform 150ms ease;
+}
+
+.switchOn .switchThumb {
+  transform: translateX(16px);
+}

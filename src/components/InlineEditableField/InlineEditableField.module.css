@@ -1,0 +1,69 @@
+.display {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border: none;
+  border-radius: var(--ruc-radius-md);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: text;
+  box-sizing: border-box;
+}
+
+.display:hover:not(:disabled) {
+  background-color: rgba(59, 130, 246, 0.08);
+}
+
+.display:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ruc-color-focus-ring) 70%, transparent);
+}
+
+.display:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.text {
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.placeholder {
+  opacity: 0.5;
+  font-style: italic;
+}
+
+.flash {
+  position: absolute;
+  inset: -2px;
+  z-index: 0;
+  border-radius: var(--ruc-radius-md);
+  background-color: rgba(34, 197, 94, 0.22);
+  pointer-events: none;
+}
+
+.flashError {
+  background-color: rgba(239, 68, 68, 0.22);
+}
+
+.input {
+  max-width: 100%;
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border: 1px solid var(--ruc-color-primary);
+  border-radius: var(--ruc-radius-md);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  box-sizing: border-box;
+  outline: none;
+}

@@ -8,8 +8,12 @@
   --ruc-color-secondary-fg: #0f172a;
   --ruc-color-ghost-fg: #3b82f6;
   --ruc-color-focus-ring: #93c5fd;
+  --ruc-color-danger: #f87171;
+  --ruc-color-bar-bg: #0f172a;
+  --ruc-color-bar-fg: #ffffff;
 
   --ruc-radius-md: 8px;
+  --ruc-radius-lg: 12px;
 }
 
 /*

@@ -1,0 +1,116 @@
+.bar {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px 10px 20px;
+  background-color: var(--ruc-color-bar-bg);
+  color: var(--ruc-color-bar-fg);
+  border-radius: var(--ruc-radius-lg);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.28);
+  font-family: var(--ruc-font-family);
+  box-sizing: border-box;
+  z-index: 50;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background-color: var(--ruc-color-primary);
+  color: var(--ruc-color-primary-fg);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: var(--ruc-radius-md);
+  background-color: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.action:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.action:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ruc-color-focus-ring) 70%, transparent);
+}
+
+.action:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.action.danger {
+  color: var(--ruc-color-danger);
+}
+
+.actionIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-left: 4px;
+  border: none;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.clear:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
+.clear:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ruc-color-focus-ring) 70%, transparent);
+}

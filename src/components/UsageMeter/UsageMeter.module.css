@@ -1,0 +1,56 @@
+.meter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--ruc-font-family);
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ruc-color-secondary-fg);
+}
+
+.value {
+  font-size: 12px;
+  opacity: 0.65;
+  white-space: nowrap;
+}
+
+.track {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background-color: var(--ruc-color-secondary);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 999px;
+  transform-origin: left center;
+}
+
+.normal {
+  background-color: var(--ruc-color-primary);
+}
+
+.warn {
+  background-color: #f59e0b;
+}
+
+.danger {
+  background-color: var(--ruc-color-danger);
+}
