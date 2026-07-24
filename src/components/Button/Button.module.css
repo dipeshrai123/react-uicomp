@@ -1,0 +1,74 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: var(--ruc-radius-md);
+  font-family: var(--ruc-font-family);
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.fullWidth {
+  display: flex;
+  width: 100%;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sm {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.md {
+  padding: 10px 16px;
+  font-size: 14px;
+}
+
+.lg {
+  padding: 13px 22px;
+  font-size: 16px;
+}
+
+.primary {
+  background-color: var(--ruc-color-primary);
+  color: var(--ruc-color-primary-fg);
+}
+
+.primary:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ruc-color-focus-ring) 60%, transparent);
+}
+
+.secondary {
+  background-color: var(--ruc-color-secondary);
+  color: var(--ruc-color-secondary-fg);
+}
+
+.secondary:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ruc-color-focus-ring) 60%, transparent);
+}
+
+.ghost {
+  background-color: transparent;
+  color: var(--ruc-color-ghost-fg);
+}
+
+.ghost:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ruc-color-focus-ring) 60%, transparent);
+}

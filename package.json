@@ -8,7 +8,9 @@
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "sideEffects": false,
+  "sideEffects": [
+    "*.css"
+  ],
   "files": [
     "dist"
   ],
@@ -16,7 +18,8 @@
     ".": {
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./style.css": "./dist/style.css"
   },
   "repository": {
     "type": "git",
@@ -44,20 +47,31 @@
     "react-ui-animate": "^5.3.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@storybook/addon-a11y": "^10.5.2",
+    "@storybook/addon-docs": "^10.5.2",
+    "@storybook/react-vite": "^10.5.2",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^16.3.1",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.19.27",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
+    "babel-jest": "^30.4.1",
+    "concurrently": "^10.0.3",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "postcss": "^8.5.20",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "rimraf": "^6.1.2",
     "rollup": "^4.54.0",
     "rollup-plugin-dts": "^6.3.0",
+    "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-typescript2": "^0.36.0",
+    "storybook": "^10.5.2",
     "ts-jest": "^29.1.2",
     "typescript": "^5.9.3"
   },
@@ -70,9 +84,11 @@
   },
   "scripts": {
     "clean": "rimraf -rf dist .dts-temp",
-    "build": "npm run clean && rollup -c && rimraf -rf .dts-temp && npm run size",
+    "fonts": "node scripts/embed-fonts.mjs",
+    "build": "npm run fonts && npm run clean && rollup -c && rimraf -rf .dts-temp && npm run size",
     "size": "node -e \"const {gzipSync}=require('zlib');const {readFileSync}=require('fs');const raw=readFileSync('dist/index.mjs');const gz=gzipSync(raw);console.log('index.mjs: '+raw.length+' bytes raw / '+gz.length+' bytes gzip');\"",
     "start": "npm run clean && rollup -c -w",
+    "dev": "concurrently -n storybook,lib -c cyan,magenta \"npm run storybook\" \"npm run start\"",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -81,6 +97,8 @@
     "version:patch": "npm version patch",
     "version:alpha": "npm version prerelease --preid=alpha",
     "publish:next": "npm publish --tag next",
-    "publish:latest": "npm publish --tag latest"
+    "publish:latest": "npm publish --tag latest",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   }
 }

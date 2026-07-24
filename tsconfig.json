@@ -23,5 +23,14 @@
     "types": ["node", "@types/jest", "@types/react", "@types/react-dom"]
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist", "legacy", "legacy-example", "rollup.config.mjs", "**/__tests__/**"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "rollup.config.mjs",
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.stories.ts",
+    "**/*.stories.tsx"
+  ]
 }

@@ -1,0 +1,24 @@
+:root {
+  --ruc-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+
+  --ruc-color-primary: #3b82f6;
+  --ruc-color-primary-fg: #ffffff;
+  --ruc-color-secondary: #f1f5f9;
+  --ruc-color-secondary-fg: #0f172a;
+  --ruc-color-ghost-fg: #3b82f6;
+  --ruc-color-focus-ring: #93c5fd;
+
+  --ruc-radius-md: 8px;
+}
+
+/*
+ * Consumers importing this stylesheet (or the Storybook preview, which loads
+ * it the same way) get Inter applied as the default document font — without
+ * this, every component that doesn't set font-family itself falls back to
+ * the browser's serif/system default, which is why the library looked
+ * unstyled on first open.
+ */
+body {
+  font-family: var(--ruc-font-family);
+}

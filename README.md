@@ -4,7 +4,15 @@
 
 [![NPM](https://img.shields.io/npm/v/react-uicomp.svg)](https://www.npmjs.com/package/react-uicomp)
 
-This package is under active rebuild (v4). The previous v3 line (styled-components + react-ui-animate v1) is archived in `legacy/` for reference and is not part of the published build.
+This is a ground-up v4 rewrite, built fresh against the current react-ui-animate API. It is not compatible with the previous v3 line.
+
+## Development
+
+```bash
+npm run storybook   # view components live at http://localhost:6006
+npm test
+npm run build
+```
 
 ## Installation
 
