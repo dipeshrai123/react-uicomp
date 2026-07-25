@@ -29,7 +29,7 @@
 
 .action.danger {
   background-color: var(--ruc-color-danger);
-  color: #ffffff;
+  color: var(--ruc-color-primary-fg);
 }
 
 .icon {
@@ -40,6 +40,6 @@
 
 .content {
   position: relative;
-  background-color: #ffffff;
+  background-color: var(--ruc-color-surface);
   touch-action: pan-y;
 }

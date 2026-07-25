@@ -18,7 +18,7 @@
 }
 
 .track.confirmed {
-  background-color: color-mix(in srgb, #22c55e 25%, var(--ruc-color-secondary));
+  background-color: color-mix(in srgb, var(--ruc-color-success) 25%, var(--ruc-color-secondary));
 }
 
 .fill {
@@ -54,10 +54,10 @@
   justify-content: center;
   cursor: grab;
   touch-action: none;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
+  box-shadow: var(--ruc-shadow-sm);
 }
 
 .confirmed .thumb {
-  background-color: #22c55e;
+  background-color: var(--ruc-color-success);
   cursor: default;
 }

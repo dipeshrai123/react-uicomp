@@ -51,3 +51,12 @@ global.IntersectionObserver = class IntersectionObserver {
   }
   unobserve() {}
 } as any;
+
+// Mock ResizeObserver globally — jsdom doesn't implement it, and SplitPane
+// uses it to re-clamp pane widths when its container resizes.
+global.ResizeObserver = class ResizeObserver {
+  constructor() {}
+  disconnect() {}
+  observe() {}
+  unobserve() {}
+} as any;

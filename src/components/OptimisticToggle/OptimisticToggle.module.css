@@ -44,8 +44,8 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background-color: #ffffff;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.3);
+  background-color: var(--ruc-color-surface);
+  box-shadow: var(--ruc-shadow-sm);
 }
 
 .label {

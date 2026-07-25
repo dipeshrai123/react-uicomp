@@ -16,7 +16,7 @@
 }
 
 .display:hover:not(:disabled) {
-  background-color: rgba(59, 130, 246, 0.08);
+  background-color: color-mix(in srgb, var(--ruc-color-primary) 8%, transparent);
 }
 
 .display:focus-visible {
@@ -47,12 +47,12 @@
   inset: -2px;
   z-index: 0;
   border-radius: var(--ruc-radius-md);
-  background-color: rgba(34, 197, 94, 0.22);
+  background-color: color-mix(in srgb, var(--ruc-color-success) 22%, transparent);
   pointer-events: none;
 }
 
 .flashError {
-  background-color: rgba(239, 68, 68, 0.22);
+  background-color: color-mix(in srgb, var(--ruc-color-danger) 22%, transparent);
 }
 
 .input {

@@ -1,9 +1,7 @@
 import * as React from "react";
 import { animate, useValue, withTiming } from "react-ui-animate";
-import { clsx } from "../../shared/clsx";
+import { Button, type ButtonSize, type ButtonVariant } from "../Button/Button";
 import styles from "./CooldownButton.module.css";
-
-export type CooldownButtonVariant = "primary" | "secondary";
 
 export interface CooldownButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "style"> {
@@ -11,33 +9,38 @@ export interface CooldownButtonProps
   cooldownMs: number;
   onClick: () => void;
   /** @default "primary" */
-  variant?: CooldownButtonVariant;
+  variant?: ButtonVariant;
+  /** @default "md" */
+  size?: ButtonSize;
   style?: React.CSSProperties;
 }
 
-const RADIUS = 9;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+const RING_RADIUS: Record<ButtonSize, number> = { sm: 8, md: 9, lg: 10 };
 
 /**
  * A button that shows an animated countdown ring after being clicked and
  * stays disabled until it completes — the "resend code in 12s" / rate-limited
- * action pattern common to auth and abuse-prevention flows.
+ * action pattern common to auth and abuse-prevention flows. Composes Button
+ * so it inherits the same variants, sizing, hover/press spring, and focus
+ * ring as the rest of the kit.
  */
 export function CooldownButton({
   cooldownMs,
   onClick,
   variant = "primary",
+  size = "md",
   disabled = false,
-  className,
   children,
   ...rest
 }: CooldownButtonProps) {
   const [progress, setProgress] = useValue(0);
   const [active, setActive] = React.useState(false);
 
+  const radius = RING_RADIUS[size];
+  const circumference = 2 * Math.PI * radius;
   const dashoffset = React.useMemo(
-    () => progress.to((p) => CIRCUMFERENCE * (1 - p)),
-    [progress],
+    () => progress.to((p) => circumference * (1 - p)),
+    [progress, circumference],
   );
 
   const handleClick = () => {
@@ -54,40 +57,48 @@ export function CooldownButton({
   };
 
   return (
-    <button
+    <Button
       type="button"
-      className={clsx(styles.button, styles[variant], className)}
+      variant={variant}
+      size={size}
       disabled={disabled || active}
       aria-busy={active || undefined}
       onClick={handleClick}
+      leftIcon={
+        active && (
+          <svg
+            className={styles.ring}
+            style={{ width: radius * 2 + 4, height: radius * 2 + 4 }}
+            viewBox={`0 0 ${radius * 2 + 4} ${radius * 2 + 4}`}
+            aria-hidden="true"
+          >
+            <circle
+              cx={radius + 2}
+              cy={radius + 2}
+              r={radius}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              opacity="0.3"
+            />
+            <animate.circle
+              cx={radius + 2}
+              cy={radius + 2}
+              r={radius}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeDasharray={circumference}
+              strokeLinecap="round"
+              transform={`rotate(-90 ${radius + 2} ${radius + 2})`}
+              style={{ strokeDashoffset: dashoffset }}
+            />
+          </svg>
+        )
+      }
       {...rest}
     >
-      {active && (
-        <svg className={styles.ring} viewBox="0 0 24 24" aria-hidden="true">
-          <circle
-            cx="12"
-            cy="12"
-            r={RADIUS}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            opacity="0.3"
-          />
-          <animate.circle
-            cx="12"
-            cy="12"
-            r={RADIUS}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeDasharray={CIRCUMFERENCE}
-            strokeLinecap="round"
-            transform="rotate(-90 12 12)"
-            style={{ strokeDashoffset: dashoffset }}
-          />
-        </svg>
-      )}
-      <span className={styles.label}>{children}</span>
-    </button>
+      {children}
+    </Button>
   );
 }

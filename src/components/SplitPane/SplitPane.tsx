@@ -44,6 +44,9 @@ export function SplitPane({
   const dividerRef = React.useRef<HTMLDivElement>(null);
   const [leftWidth, setLeftWidth] = useValue(0);
   const dragStartWidthRef = React.useRef(0);
+  // Split position as a fraction of the container, so the pane keeps its
+  // proportion (rather than a stale px value) when the container resizes.
+  const splitFractionRef = React.useRef(defaultSplit);
 
   const bounds = React.useCallback(() => {
     const containerWidth = containerRef.current?.getBoundingClientRect().width ?? 0;
@@ -57,6 +60,17 @@ export function SplitPane({
     // Only the very first measurement should snap instantly (no spring).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  React.useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const observer = new ResizeObserver(() => {
+      const { containerWidth, maxWidth } = bounds();
+      setLeftWidth(clamp(containerWidth * splitFractionRef.current, min, maxWidth));
+    });
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [bounds, min, setLeftWidth]);
 
   useGesture(
     dividerRef,
@@ -78,12 +92,14 @@ export function SplitPane({
           containerWidth / 2,
           maxWidth,
         ]);
+        splitFractionRef.current = containerWidth > 0 ? target / containerWidth : defaultSplit;
         setLeftWidth(withSpring(target, RELEASE_SPRING));
       }),
   );
 
   const resetToDefault = () => {
     const { containerWidth, maxWidth } = bounds();
+    splitFractionRef.current = defaultSplit;
     setLeftWidth(
       withSpring(clamp(containerWidth * defaultSplit, min, maxWidth), RELEASE_SPRING),
     );

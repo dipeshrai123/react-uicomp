@@ -31,6 +31,11 @@ export interface SwipeableRowActionsProps {
 
 const SNAP_SPRING = { stiffness: 420, damping: 34 };
 
+// Only one row's actions should stay revealed at a time (the standard
+// swipe-list pattern) — this tracks whichever row is currently open across
+// all SwipeableRowActions instances so opening a new one closes the last.
+let activeRow: { id: object; close: () => void } | null = null;
+
 /**
  * Wraps row/list content so a horizontal swipe reveals contextual actions
  * (archive, delete) behind it — the mobile-web inbox/table pattern — with a
@@ -46,15 +51,27 @@ export function SwipeableRowActions({
   const contentRef = React.useRef<HTMLDivElement>(null);
   const [translateX, setTranslateX] = useValue(0);
   const dragStartXRef = React.useRef(0);
+  const idRef = React.useRef({});
   const totalWidth = actions.length * actionWidth;
 
   const close = React.useCallback(() => {
     setTranslateX(withSpring(0, SNAP_SPRING));
+    if (activeRow?.id === idRef.current) activeRow = null;
   }, [setTranslateX]);
 
   const open = React.useCallback(() => {
+    if (activeRow && activeRow.id !== idRef.current) {
+      activeRow.close();
+    }
+    activeRow = { id: idRef.current, close };
     setTranslateX(withSpring(-totalWidth, SNAP_SPRING));
-  }, [setTranslateX, totalWidth]);
+  }, [setTranslateX, totalWidth, close]);
+
+  React.useEffect(() => {
+    return () => {
+      if (activeRow?.id === idRef.current) activeRow = null;
+    };
+  }, []);
 
   useGesture(
     contentRef,

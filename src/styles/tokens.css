@@ -9,11 +9,24 @@
   --ruc-color-ghost-fg: #3b82f6;
   --ruc-color-focus-ring: #93c5fd;
   --ruc-color-danger: #f87171;
+  --ruc-color-danger-fg: #7f1d1d;
+  --ruc-color-success: #22c55e;
+  --ruc-color-success-fg: #166534;
+  --ruc-color-warning: #f59e0b;
   --ruc-color-bar-bg: #0f172a;
   --ruc-color-bar-fg: #ffffff;
 
+  --ruc-color-surface: #ffffff;
+  --ruc-color-surface-fg: #0f172a;
+  --ruc-color-border: #e2e8f0;
+  --ruc-color-backdrop: rgba(15, 23, 42, 0.5);
+
   --ruc-radius-md: 8px;
   --ruc-radius-lg: 12px;
+
+  --ruc-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.18);
+  --ruc-shadow-md: 0 8px 24px rgba(15, 23, 42, 0.28);
+  --ruc-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.35);
 }
 
 /*

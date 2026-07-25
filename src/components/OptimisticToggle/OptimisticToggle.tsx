@@ -67,10 +67,15 @@ export function OptimisticToggle({
   const [pending, setPending] = React.useState(false);
   const [rejected, setRejected] = React.useState(false);
   const { translateX, rollback } = useToggleMotion(optimistic);
+  const rejectedTimeoutRef = React.useRef<number>();
 
   React.useEffect(() => {
     setOptimistic(checked);
   }, [checked]);
+
+  React.useEffect(() => {
+    return () => window.clearTimeout(rejectedTimeoutRef.current);
+  }, []);
 
   const handleClick = async () => {
     if (disabled || pending) return;
@@ -85,7 +90,8 @@ export function OptimisticToggle({
       setOptimistic(!next);
       rollback();
       setRejected(true);
-      window.setTimeout(() => setRejected(false), 400);
+      window.clearTimeout(rejectedTimeoutRef.current);
+      rejectedTimeoutRef.current = window.setTimeout(() => setRejected(false), 400);
     } finally {
       setPending(false);
     }

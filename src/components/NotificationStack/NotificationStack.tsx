@@ -74,6 +74,7 @@ function Toast({
       animate={{
         opacity: withSpring(1, ENTER_SPRING),
         translateY: withSpring(-index * 8, ENTER_SPRING),
+        scale: withSpring(1 - index * 0.04, ENTER_SPRING),
       }}
       exit={{
         opacity: withSpring(0, EXIT_SPRING),

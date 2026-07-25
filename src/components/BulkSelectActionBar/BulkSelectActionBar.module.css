@@ -10,7 +10,7 @@
   background-color: var(--ruc-color-bar-bg);
   color: var(--ruc-color-bar-fg);
   border-radius: var(--ruc-radius-lg);
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.28);
+  box-shadow: var(--ruc-shadow-md);
   font-family: var(--ruc-font-family);
   box-sizing: border-box;
   z-index: 50;

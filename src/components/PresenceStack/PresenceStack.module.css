@@ -11,9 +11,9 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: 50%;
-  border: 2px solid #ffffff;
+  border: 2px solid var(--ruc-color-surface);
   margin-left: -8px;
-  color: #ffffff;
+  color: var(--ruc-color-primary-fg);
   font-weight: 700;
   box-sizing: border-box;
   overflow: hidden;
@@ -36,8 +36,8 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background-color: #22c55e;
-  border: 2px solid #ffffff;
+  background-color: var(--ruc-color-success);
+  border: 2px solid var(--ruc-color-surface);
   box-sizing: border-box;
   animation: ruc-presence-pulse 1.6s ease-in-out infinite;
 }
@@ -48,7 +48,7 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: 50%;
-  border: 2px solid #ffffff;
+  border: 2px solid var(--ruc-color-surface);
   margin-left: -8px;
   background-color: var(--ruc-color-secondary);
   color: var(--ruc-color-secondary-fg);

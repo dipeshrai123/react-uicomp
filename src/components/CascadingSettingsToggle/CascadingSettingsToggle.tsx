@@ -38,7 +38,16 @@ interface SwitchProps {
   disabled?: boolean;
 }
 
+const THUMB_SPRING = { stiffness: 500, damping: 32 };
+const THUMB_TRAVEL = 16;
+
 function Switch({ checked, onChange, disabled }: SwitchProps) {
+  const [translateX, setTranslateX] = useValue(checked ? THUMB_TRAVEL : 0);
+
+  React.useEffect(() => {
+    setTranslateX(withSpring(checked ? THUMB_TRAVEL : 0, THUMB_SPRING));
+  }, [checked, setTranslateX]);
+
   return (
     <button
       type="button"
@@ -48,7 +57,7 @@ function Switch({ checked, onChange, disabled }: SwitchProps) {
       className={clsx(styles.switchTrack, checked && styles.switchOn)}
       onClick={() => onChange(!checked)}
     >
-      <span className={styles.switchThumb} />
+      <animate.span className={styles.switchThumb} style={{ translateX }} />
     </button>
   );
 }

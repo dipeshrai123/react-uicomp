@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  background-color: #ffffff;
+  background-color: var(--ruc-color-surface);
   border-bottom: 1px solid var(--ruc-color-secondary);
   cursor: grab;
   touch-action: none;
@@ -19,5 +19,5 @@
 .item.dragging {
   cursor: grabbing;
   z-index: 1;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+  box-shadow: var(--ruc-shadow-sm);
 }

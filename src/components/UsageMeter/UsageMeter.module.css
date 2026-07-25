@@ -48,7 +48,7 @@
 }
 
 .warn {
-  background-color: #f59e0b;
+  background-color: var(--ruc-color-warning);
 }
 
 .danger {

@@ -46,6 +46,6 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-color: rgba(59, 130, 246, 0.15);
+  background-color: color-mix(in srgb, var(--ruc-color-primary) 15%, transparent);
   pointer-events: none;
 }

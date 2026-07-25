@@ -14,19 +14,19 @@
   width: 100%;
   padding: 14px 36px 14px 16px;
   border-radius: var(--ruc-radius-lg);
-  background-color: #0f172a;
-  color: #ffffff;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.3);
+  background-color: var(--ruc-color-bar-bg);
+  color: var(--ruc-color-bar-fg);
+  box-shadow: var(--ruc-shadow-md);
   box-sizing: border-box;
   touch-action: pan-y;
 }
 
 .toast.success {
-  background-color: #166534;
+  background-color: var(--ruc-color-success-fg);
 }
 
 .toast.danger {
-  background-color: #7f1d1d;
+  background-color: var(--ruc-color-danger-fg);
 }
 
 .title {
