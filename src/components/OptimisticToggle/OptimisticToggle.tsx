@@ -1,9 +1,9 @@
 import * as React from "react";
 import {
+  Easing,
   animate,
-  combine,
   useValue,
-  withSequence,
+  withKeyframes,
   withSpring,
 } from "react-ui-animate";
 import { clsx } from "../../shared/clsx";
@@ -20,33 +20,53 @@ export interface OptimisticToggleProps {
 }
 
 const THUMB_TRAVEL = 18;
-const SETTLE = { stiffness: 500, damping: 32 };
-const SHAKE = { stiffness: 900, damping: 12 };
+// Kept at/above critical damping (2 * sqrt(stiffness)) so it settles in one
+// smooth motion instead of ringing.
+const SETTLE = { stiffness: 500, damping: 46 };
+// Fixed-duration keyframes rather than a spring: a spring's velocity carries
+// over between legs of a back-and-forth sequence, so amplitude and timing
+// come out different every run. A decaying, timed wiggle looks the same
+// every time — the same curve used for the classic "wrong password" shake.
+const SHAKE_STEP_MS = 60;
+const shakeKeyframes = [-8, 8, -5, 5, -2, 2, 0].map((to) => ({
+  to,
+  duration: SHAKE_STEP_MS,
+  easing: Easing.ease,
+}));
 
 function useToggleMotion(checked: boolean) {
   const [progress, setProgress] = useValue(checked ? 1 : 0);
+  // Shakes the whole track in place, independent of the thumb's own
+  // position — kept as a separate value (applied to a different element)
+  // rather than summed into the thumb's translateX, so it never competes
+  // with the thumb's own slide animation on the same axis.
   const [shake, setShake] = useValue(0);
+  const isRollbackRef = React.useRef(false);
 
   React.useEffect(() => {
-    setProgress(withSpring(checked ? 1 : 0, SETTLE));
-  }, [checked, setProgress]);
+    const target = checked ? 1 : 0;
+    if (isRollbackRef.current) {
+      isRollbackRef.current = false;
+      // Reject feedback should read as "that didn't work", not as a second
+      // slow slide — so the thumb snaps back instantly and the shake is the
+      // only thing that animates.
+      setProgress(target);
+      setShake(withKeyframes(shakeKeyframes));
+      return;
+    }
+    setProgress(withSpring(target, SETTLE));
+  }, [checked, setProgress, setShake]);
 
   const rollback = React.useCallback(() => {
-    setShake(
-      withSequence([
-        withSpring(-6, SHAKE),
-        withSpring(6, SHAKE),
-        withSpring(0, { stiffness: 500, damping: 20 }),
-      ]),
-    );
-  }, [setShake]);
+    isRollbackRef.current = true;
+  }, []);
 
-  const translateX = React.useMemo(
-    () => combine([progress, shake], (p, s) => p * THUMB_TRAVEL + s),
-    [progress, shake],
+  const thumbX = React.useMemo(
+    () => progress.to((p) => p * THUMB_TRAVEL),
+    [progress],
   );
 
-  return { translateX, rollback };
+  return { thumbX, shake, rollback };
 }
 
 /**
@@ -66,7 +86,7 @@ export function OptimisticToggle({
   const [optimistic, setOptimistic] = React.useState(checked);
   const [pending, setPending] = React.useState(false);
   const [rejected, setRejected] = React.useState(false);
-  const { translateX, rollback } = useToggleMotion(optimistic);
+  const { thumbX, shake, rollback } = useToggleMotion(optimistic);
   const rejectedTimeoutRef = React.useRef<number>();
 
   React.useEffect(() => {
@@ -107,15 +127,16 @@ export function OptimisticToggle({
       style={style}
       onClick={handleClick}
     >
-      <span
+      <animate.span
         className={clsx(
           styles.track,
           optimistic && styles.on,
           rejected && styles.rejected,
         )}
+        style={{ translateX: shake }}
       >
-        <animate.span className={styles.thumb} style={{ translateX }} />
-      </span>
+        <animate.span className={styles.thumb} style={{ translateX: thumbX }} />
+      </animate.span>
       {label && <span className={styles.label}>{label}</span>}
     </button>
   );

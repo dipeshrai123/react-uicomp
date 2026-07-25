@@ -49,10 +49,13 @@ function CountBadge({ count }: { count: number }) {
       previousCount.current = count;
       // A quick overshoot-then-settle pulse reads as "this number just
       // changed" without relying on the digits themselves catching the eye.
+      // Damping is kept high enough (ratio > ~0.5) that if the count
+      // changes again before this settles, the new pulse doesn't compound
+      // with leftover oscillation from the last one into a bigger bounce.
       setPulse(
         withSequence([
-          withSpring(1.18, { stiffness: 520, damping: 12 }),
-          withSpring(1, { stiffness: 420, damping: 18 }),
+          withSpring(1.15, { stiffness: 500, damping: 26 }),
+          withSpring(1, { stiffness: 420, damping: 24 }),
         ]),
       );
     }

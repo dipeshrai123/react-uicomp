@@ -4,8 +4,14 @@
   border: 1px solid var(--ruc-color-secondary);
   border-radius: var(--ruc-radius-md);
   overflow: hidden;
+  background-color: var(--ruc-color-surface);
+  box-shadow: var(--ruc-shadow-sm);
   font-family: var(--ruc-font-family);
   outline: none;
+}
+
+.grid:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ruc-color-focus-ring) 60%, transparent);
 }
 
 .cell {
@@ -15,10 +21,16 @@
   align-items: center;
   padding: 8px 10px;
   font-size: 13px;
+  color: var(--ruc-color-surface-fg);
   border-right: 1px solid var(--ruc-color-secondary);
   border-bottom: 1px solid var(--ruc-color-secondary);
   cursor: cell;
   box-sizing: border-box;
+  transition: background-color 100ms ease;
+}
+
+.cell:hover {
+  background-color: color-mix(in srgb, var(--ruc-color-secondary) 50%, transparent);
 }
 
 .selection {
@@ -26,8 +38,10 @@
   top: 0;
   left: 0;
   z-index: 0;
+  border-radius: 2px;
   border: 2px solid var(--ruc-color-primary);
   background-color: color-mix(in srgb, var(--ruc-color-primary) 10%, transparent);
+  box-shadow: var(--ruc-shadow-sm);
   box-sizing: border-box;
   pointer-events: none;
 }
