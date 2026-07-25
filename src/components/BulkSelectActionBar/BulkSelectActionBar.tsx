@@ -1,10 +1,12 @@
 import * as React from "react";
 import {
   animate,
+  Easing,
   Presence,
   useValue,
   withSequence,
   withSpring,
+  withTiming,
 } from "react-ui-animate";
 import { clsx } from "../../shared/clsx";
 import styles from "./BulkSelectActionBar.module.css";
@@ -47,15 +49,20 @@ function CountBadge({ count }: { count: number }) {
   React.useEffect(() => {
     if (previousCount.current !== count) {
       previousCount.current = count;
-      // A quick overshoot-then-settle pulse reads as "this number just
-      // changed" without relying on the digits themselves catching the eye.
-      // Damping is kept high enough (ratio > ~0.5) that if the count
-      // changes again before this settles, the new pulse doesn't compound
-      // with leftover oscillation from the last one into a bigger bounce.
+      // A quick pop-then-settle pulse reads as "this number just changed"
+      // without relying on the digits themselves catching the eye. Timing
+      // (not spring) legs so the curve is identical every time regardless
+      // of how it's interrupted — a spring's overshoot depends on the
+      // velocity it's restarted with, which varies with rapid re-selects.
+      // Snap back to the 1 baseline first so every pulse — interrupted or
+      // not — starts from the same place instead of wherever the previous,
+      // still-running pulse happened to leave it (which is what caused the
+      // first leg to sometimes scale up, sometimes down).
+      setPulse(1);
       setPulse(
         withSequence([
-          withSpring(1.15, { stiffness: 500, damping: 26 }),
-          withSpring(1, { stiffness: 420, damping: 24 }),
+          withTiming(1.15, { duration: 110, easing: Easing.out(Easing.quad) }),
+          withTiming(1, { duration: 140, easing: Easing.out(Easing.cubic) }),
         ]),
       );
     }
